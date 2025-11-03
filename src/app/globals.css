@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@theme {
+  --color-primary: #f2f4f7;
+  --color-green: #8fd694;
+  --color-orange: #d8b58d;
+  --color-blue: #5ab5e0;
+}
+
+header {
+  background-image: url("/bg-header.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 450px;
+}
