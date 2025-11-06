@@ -2,7 +2,9 @@ import {Poetsen_One} from "next/font/google";
 
 import CardEstudios from "@/components/CardEstudios";
 import CardServices from "@/components/CardServices";
+import CardEnfoque from "@/components/CardEnfoque";
 import {Checked} from "@/components/ui/Icons";
+import Footer from "@/components/Footer";
 
 const poetsenOne = Poetsen_One({
   subsets: ["latin"],
@@ -17,7 +19,7 @@ export default function HomePage() {
         <h2 className={`${poetsenOne.className} pb-5 text-center text-4xl font-bold`}>
           Beneficios del Portal para nuestros Clientes
         </h2>
-        <ul className="flex flex-col items-start gap-3 text-center">
+        <ul className="flex flex-col items-start gap-3 text-center text-lg">
           <li className="flex items-center gap-3">
             Consultar el estado de tus estudios.
             <Checked />
@@ -124,6 +126,40 @@ export default function HomePage() {
           />
         </div>
       </section>
+      <section
+        className="mision flex flex-col items-center justify-center gap-10 py-20"
+        id="mision"
+      >
+        <h5 className={`text-5xl ${poetsenOne.className} font-bold text-[#1F648B]`}>Misión</h5>
+        <p className="px-10 text-lg font-semibold text-wrap xl:w-1/2">
+          Nuestra misión principal es brindar servicios integrales de salud laboral y chequeos
+          médicos especializados, priorizando el bienestar y la salud de nuestros clientes, desde
+          trabajadores de empresas hasta deportistas de alto y bajo rendimiento.
+        </p>
+      </section>
+      <section className="m-10 flex flex-col px-10" id="enfoque">
+        <h6 className={`${poetsenOne.className} pb-5 text-center text-4xl font-bold`}>
+          Nuestro Enfoque
+        </h6>
+        <div className="flex flex-wrap justify-center gap-10 md:gap-30">
+          <CardEnfoque
+            description="Cada servicio es diseñado según las necesidades específicas del cliente, garantizando atención adecuada y efectiva. "
+            image="/enfoque1.png"
+            title="Personalización"
+          />
+          <CardEnfoque
+            description="Contamos con un equipo de expertos en salud laboral y medicina deportiva que asegura una atención de calidad. "
+            image="/enfoque2.png"
+            title="Profesionalismo"
+          />
+          <CardEnfoque
+            description="Utilizamos herramientas y tecnología avanzada para la realización de chequeos y diagnósticos precisos. "
+            image="/enfoque3.png"
+            title="Innovación Tecnológica"
+          />
+        </div>
+      </section>
+      <Footer />
     </main>
   );
 }

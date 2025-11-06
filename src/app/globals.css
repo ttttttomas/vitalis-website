@@ -14,5 +14,12 @@ header {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  height: 450px;
+}
+
+.mision {
+  background-image: url("/bg-mision.png");
+}
+
+li{
+  list-style-type: circle;
 }

@@ -2,8 +2,8 @@ import type {Metadata} from "next";
 
 import {Open_Sans} from "next/font/google";
 
-import Header from "@/components/Header";
 import "./globals.css";
+import Header from "@/components/Header";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -19,10 +19,8 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="es">
-      <body className={`${openSans.className}bg-[#EDEDED]`}>
-        <Header />
-        {children}
-      </body>
+      <Header />
+      <body className={`${openSans.className} bg-[#ededed]`}>{children}</body>
     </html>
   );
 }
