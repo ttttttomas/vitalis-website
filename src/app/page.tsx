@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <main>
       <section className="m-10 flex flex-col px-10" id="beneficios">
-        <h2 className={`${poetsenOne.className} pb-5 text-center text-4xl font-bold`}>
+        <h2 className="pb-5 text-center text-4xl font-extrabold">
           Beneficios del Portal para nuestros Clientes
         </h2>
         <ul className="flex flex-col items-start gap-3 text-center text-lg">
@@ -39,7 +39,7 @@ export default function HomePage() {
         </ul>
       </section>
       <section className="m-10 flex flex-col px-10" id="servicios">
-        <h3 className={`${poetsenOne.className} pb-5 text-center text-4xl font-bold`}>Servicios</h3>
+        <h3 className="pb-5 text-center text-4xl font-extrabold">Servicios</h3>
         <div className="flex flex-wrap justify-center gap-20">
           <CardServices
             description="Controles médicos previos al ingreso laboral que aseguran la aptitud física y mental del postulante, cumpliendo con las normativas vigentes y priorizando la prevención de riesgos laborales."
@@ -69,9 +69,7 @@ export default function HomePage() {
         </div>
       </section>
       <section className="m-10 flex flex-col px-10" id="estudios">
-        <h4 className={`${poetsenOne.className} pb-5 text-center text-4xl font-bold`}>
-          Estudios que brindamos
-        </h4>
+        <h4 className="pb-5 text-center text-4xl font-extrabold">Estudios que brindamos</h4>
 
         <div className="flex flex-wrap justify-center gap-20">
           <CardEstudios
@@ -130,7 +128,7 @@ export default function HomePage() {
         className="mision flex flex-col items-center justify-center gap-10 py-20"
         id="mision"
       >
-        <h5 className={`text-5xl ${poetsenOne.className} font-bold text-[#1F648B]`}>Misión</h5>
+        <h5 className="text-5xl font-extrabold text-[#1F648B] italic">Misión</h5>
         <p className="px-10 text-lg font-semibold text-wrap xl:w-1/2">
           Nuestra misión principal es brindar servicios integrales de salud laboral y chequeos
           médicos especializados, priorizando el bienestar y la salud de nuestros clientes, desde
@@ -138,9 +136,7 @@ export default function HomePage() {
         </p>
       </section>
       <section className="m-10 flex flex-col px-10" id="enfoque">
-        <h6 className={`${poetsenOne.className} pb-5 text-center text-4xl font-bold`}>
-          Nuestro Enfoque
-        </h6>
+        <h6 className="pb-5 text-center text-4xl font-extrabold">Nuestro Enfoque</h6>
         <div className="flex flex-wrap justify-center gap-10 md:gap-30">
           <CardEnfoque
             description="Cada servicio es diseñado según las necesidades específicas del cliente, garantizando atención adecuada y efectiva. "
