@@ -54,7 +54,7 @@ export default function HomePage() {
           <CardServices
             description="Evaluaciones de salud para deportistas de bajo rendimiento, programas integrales para alto rendimiento, monitoreo y análisis físico, planes de prevención de lesiones y rehabilitación."
             image="/services3.png"
-            title="Evaluación de la salud general"
+            title="Evaluación de la salud deportiva"
           />
           <CardServices
             description="Tratamientos médicos no invasivos diseñados para mejorar el bienestar, la imagen personal y la confianza del paciente, combinando tecnología avanzada y atención profesional personalizada."
