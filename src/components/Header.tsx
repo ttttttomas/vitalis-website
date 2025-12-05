@@ -13,7 +13,7 @@ const Header = () => {
   }
 
   return (
-    <header className="relative flex h-[250px] items-start justify-start px-5 py-5 md:h-[450px] md:px-20 md:py-12">
+    <header className="header relative flex h-[250px] items-start justify-start px-5 py-5 md:h-[450px] md:px-20 md:py-12">
       <div className="absolute inset-0 top-0 right-0 bottom-0 left-0 h-full bg-white opacity-70" />
       <section className="z-20 flex h-20 flex-col items-start justify-between gap-5 md:h-full md:w-1/2">
         <div>

@@ -9,7 +9,7 @@
   --color-blue: #5ab5e0;
 }
 
-header {
+.header {
   background-image: url("/bg-header.png");
   background-repeat: no-repeat;
   background-size: cover;
