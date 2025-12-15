@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 
 import {Open_Sans} from "next/font/google";
+import {Suspense} from "react";
 
 import "./globals.css";
 import Header from "@/components/Header";
@@ -23,8 +24,12 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="es">
-      <Header />
-      <body className={`${openSans.className} bg-[#ededed]`}>{children}</body>
+      <body className={`${openSans.className} bg-[#ededed]`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Header />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }
