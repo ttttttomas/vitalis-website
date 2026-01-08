@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Link from "next/link";
+import {ArrowLeft} from '@/components/ui/Icons'
 
 export default function ContactPage() {
   const {register, handleSubmit} = useForm();
@@ -27,8 +29,9 @@ export default function ContactPage() {
     }
   });
   return (
-    <main className="md:mx-30 mx-5 flex justify-between">
-      <section className="flex flex-col justify-center w-full items-center gap-10 md:px-20 py-10">
+    <main className="md:px-30 contact flex justify-between">
+      <Link className="underline flex items-center gap-2 font-semibold text-2xl" href="/"><ArrowLeft /> Volver</Link>
+      <section className="flex flex-col justify-center w-full items-center gap-10 px-10 md:px-20 py-10">
         <img alt="Logo" className="mx-auto" src="/logo.png" width={140} />
         <h1 className="text-3xl font-bold">Contacto</h1>
         <h3 className="text-xl font-semibold">Comunicate con nosotros</h3>

@@ -4,7 +4,9 @@ import {Open_Sans} from "next/font/google";
 import {Suspense} from "react";
 
 import "./globals.css";
+import {AuthProvider} from "@/contexts/AuthContext";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -25,10 +27,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="es">
       <body className={`${openSans.className} bg-[#ededed]`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Header />
-        </Suspense>
-        {children}
+        <AuthProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Header />
+          </Suspense>
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

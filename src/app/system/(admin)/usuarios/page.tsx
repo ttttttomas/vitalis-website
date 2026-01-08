@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import {Clients, Lupa} from "@/components/ui/Icons";
+import {UserSVG, Lupa} from "@/components/ui/Icons";
 
-import Panel from "../components/Panel";
+import Panel from "../../components/Panel";
 
 interface UsersRow {
   nombre: string;
@@ -31,9 +31,12 @@ const USERS_DATA: UsersRow[] = [
 
 export default function SystemUsuariosPage() {
   return (
-    <Panel pageIcon={<Clients />} pageTitle="Usuarios" roles="admin" userLabel="Nombre - Admin">
+    <Panel pageIcon={<UserSVG />} pageTitle="Usuarios">
       <div className="flex flex-col items-end gap-5 overflow-x-auto">
-        <Link className="flex w-max items-center gap-2 rounded-xl border px-3 py-1" href="">
+        <Link
+          className="flex w-max items-center gap-2 rounded-xl border px-3 py-1"
+          href="/system/usuarios/add"
+        >
           <p className="text-sm">Agregar usuario</p>
           <p className="text-xl font-bold">+</p>
         </Link>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import {Clients, Trash} from "@/components/ui/Icons";
+import {Profesionals, Trash} from "@/components/ui/Icons";
 
-import Panel from "../components/Panel";
+import Panel from "../../components/Panel";
 
 const USERS_DATA: UsersRow[] = [
   {
@@ -31,7 +31,7 @@ interface UsersRow {
 
 export default function ProfessionalesAdminPage() {
   return (
-    <Panel pageIcon={<Clients />} pageTitle="Usuarios" roles="admin" userLabel="Nombre - Admin">
+    <Panel pageIcon={<Profesionals />} pageTitle="Profesionales">
       <div className="flex flex-col items-end gap-5 overflow-x-auto">
         <Link
           className="flex w-max items-center gap-2 rounded-xl border px-3 py-1"

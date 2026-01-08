@@ -16,6 +16,12 @@
   background-position: center;
 }
 
+.contact {
+  background-image: url("/fondo.png");
+  background-repeat: no-repeat;
+  background-size: cover; 
+}
+
 .mision {
   background-image: url("/bg-mision.png");
 }

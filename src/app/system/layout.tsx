@@ -3,10 +3,7 @@ import type {Metadata} from "next";
 import {Open_Sans} from "next/font/google";
 
 import "@/app/globals.css";
-import Footer from "@/components/Footer";
-import {Clients} from "@/components/ui/Icons";
-
-import Panel from "./components/Panel";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -27,8 +24,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="es">
       <body className={`${openSans.className} bg-[#ededed]`}>
-        {children}
-        <Footer />
+        <ProtectedRoute>{children}</ProtectedRoute>
       </body>
     </html>
   );

@@ -1,16 +1,7 @@
-import {Poetsen_One} from "next/font/google";
-
 import CardEstudios from "@/components/CardEstudios";
 import CardServices from "@/components/CardServices";
 import CardEnfoque from "@/components/CardEnfoque";
 import {Checked} from "@/components/ui/Icons";
-import Footer from "@/components/Footer";
-
-const poetsenOne = Poetsen_One({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
 
 export default function HomePage() {
   return (
@@ -155,7 +146,6 @@ export default function HomePage() {
           />
         </div>
       </section>
-      <Footer />
     </main>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 import {useRef, useState} from "react";
+import Link from "next/link";
 
 import {Clients, Lupa} from "@/components/ui/Icons";
 
-import Panel from "../components/Panel";
+import Panel from "../../components/Panel";
 
 type Mode = "empresas" | "pacientes";
 
@@ -53,13 +54,15 @@ const PACIENTES_DATA: PacienteRow[] = [
 
 export default function ClientesAdminPage() {
   const [mode, setMode] = useState<Mode>("empresas");
-  const [selectedClient, setSelectedClient] = useState();
+  const [selectedClient, setSelectedClient] = useState<
+    EmpresaRow | PacienteRow | Record<string, never> | null
+  >(null);
   const isEmpresas = mode === "empresas";
   const [fileName, setFileName] = useState<string>("Sin archivos seleccionados");
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const handleSelectClient = (client) => {
-    // setSelectedClient(client);
+  const handleSelectClient = (client: EmpresaRow | PacienteRow) => {
+    setSelectedClient(client);
   };
 
   const openModal = () => {
@@ -73,7 +76,7 @@ export default function ClientesAdminPage() {
   };
 
   return (
-    <Panel pageIcon={<Clients />} pageTitle="Clientes" roles="admin" userLabel="Nombre - Admin">
+    <Panel pageIcon={<Clients />} pageTitle="Clientes">
       <div className="w-full">
         {/* Header verde con toggle */}
         <div className="grid grid-cols-2 text-center text-sm font-semibold text-white">
@@ -163,12 +166,17 @@ export default function ClientesAdminPage() {
                         </button>
                       </td>
                       <td className="px-3 py-2">
-                        <button className="cursor-pointer text-xs underline">Acceder</button>
+                        <Link
+                          className="cursor-pointer text-xs underline"
+                          href="/system/medical-history/1"
+                        >
+                          Acceder
+                        </Link>
                       </td>
                     </tr>
-                    //   <div className="px-3 py-2 text-center">
-                    //     <button className="px-2 py-1 text-xs text-white">🗑</button>
-                    //   </div>
+                    // <div className="px-3 py-2 text-center">
+                    //   <button className="px-2 py-1 text-xs text-white">🗑</button>
+                    // </div>
                   ))}
             </tbody>
           </table>
