@@ -40,7 +40,7 @@ export default function SystemUsuariosPage() {
           <p className="text-sm">Agregar usuario</p>
           <p className="text-xl font-bold">+</p>
         </Link>
-        <table className="w-full text-xs">
+        <table className="w-full overflow-x-auto text-xs">
           <thead>
             <tr className="bg-[#3A3A3A] text-white">
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Nombre completo</th>

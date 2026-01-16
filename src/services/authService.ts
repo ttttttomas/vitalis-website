@@ -1,8 +1,14 @@
-import type {UserAdmin, UserCompany, UserPatient, UserProfesional} from "@/types";
+import type {
+  AuthenticatedUser,
+  UserAdmin,
+  UserCompany,
+  UserPatient,
+  UserProfessional,
+} from "@/types";
 
 import {apiClient} from "@/lib/axios";
 
-export type User = UserAdmin | UserCompany | UserPatient | UserProfesional;
+export type User = UserAdmin | UserCompany | UserPatient | UserProfessional;
 
 interface LoginCredentials {
   email: string;
@@ -12,13 +18,14 @@ interface LoginCredentials {
 interface LoginResponse {
   access_token: string;
   token_type: string;
+  user: User;
 }
 
 export const authService = {
   /**
    * Login de usuario
    */
-  async login(credentials: LoginCredentials): Promise<{token: string; user: User}> {
+  async login(credentials: LoginCredentials): Promise<{token: string; user: AuthenticatedUser}> {
     const formData = new URLSearchParams();
 
     formData.append("email", credentials.email);
@@ -28,20 +35,16 @@ export const authService = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      withCredentials: true,
     });
 
-    const {access_token} = response.data;
-
-    // Guardar token
-    localStorage.setItem("access_token", access_token);
-
-    // Obtener datos del usuario
+    // El backend establece la cookie Authorization automáticamente
+    // Obtener datos completos del usuario desde /me
     const user = await this.getCurrentUser();
 
-    // Guardar usuario en localStorage
-    localStorage.setItem("user", JSON.stringify(user));
+    console.log("user", user);
 
-    return {token: access_token, user};
+    return {token: response.data.access_token, user};
   },
 
   /**
@@ -49,23 +52,24 @@ export const authService = {
    */
   async logout(): Promise<void> {
     try {
-      await apiClient.post("/logout");
+      await apiClient.post("/logout", null, {
+        withCredentials: true,
+      });
     } catch (_error: unknown) {
       console.error("Error during logout:", _error);
-    } finally {
-      // Limpiar localStorage
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("user");
     }
+    // El backend elimina la cookie Authorization automáticamente
   },
 
   /**
    * Obtener usuario actual
    */
-  async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get<User>("/me");
+  async getCurrentUser(): Promise<AuthenticatedUser> {
+    const response = await apiClient.get("/me", {
+      withCredentials: true,
+    });
 
-    return response.data;
+    return response.data as AuthenticatedUser;
   },
 
   /**
@@ -73,37 +77,13 @@ export const authService = {
    */
   async verifyToken(): Promise<boolean> {
     try {
-      await apiClient.get("/verify-token");
+      await apiClient.get("/verify-token", {
+        withCredentials: true,
+      });
 
       return true;
     } catch (_error) {
       return false;
-    }
-  },
-
-  /**
-   * Obtener token guardado
-   */
-  getStoredToken(): string | null {
-    if (typeof window === "undefined") return null;
-
-    return localStorage.getItem("access_token");
-  },
-
-  /**
-   * Obtener usuario guardado
-   */
-  getStoredUser(): User | null {
-    if (typeof window === "undefined") return null;
-
-    const userStr = localStorage.getItem("user");
-
-    if (!userStr) return null;
-
-    try {
-      return JSON.parse(userStr) as User;
-    } catch {
-      return null;
     }
   },
 };

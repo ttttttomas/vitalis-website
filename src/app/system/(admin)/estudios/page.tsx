@@ -18,7 +18,7 @@ export default function StudiesPanelPage() {
       </div>
       {/* Tabla de Estudios */}
       <div className="mt-6 overflow-hidden rounded-lg">
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse overflow-x-auto">
           <thead>
             <tr className="bg-neutral-800 text-white">
               <th className="border-b border-neutral-700 px-6 py-4 text-left text-sm font-medium">

@@ -26,12 +26,12 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="es">
-      <body className={`${openSans.className} bg-[#ededed]`}>
+      <body className={`${openSans.className} flex min-h-screen flex-col bg-[#ededed]`}>
         <AuthProvider>
           <Suspense fallback={<div>Loading...</div>}>
             <Header />
           </Suspense>
-          {children}
+          <main className="flex-1">{children}</main>
           <Footer />
         </AuthProvider>
       </body>

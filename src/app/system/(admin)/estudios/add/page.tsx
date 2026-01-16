@@ -22,7 +22,7 @@ export default function page() {
         <label htmlFor="descripcion">Imagen del estudio *</label>
         <input
           required
-          className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
+          className="w-full rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
           id="imagen"
           type="file"
         />

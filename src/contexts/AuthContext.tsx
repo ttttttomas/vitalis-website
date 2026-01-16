@@ -2,10 +2,15 @@
 
 import {createContext, use, useEffect, useState} from "react";
 
-import {authService, type User} from "@/services/authService";
+import type {UserAdmin, UserCompany, UserPatient, UserProfessional, UserProfile} from "@/types";
+
+import {authService} from "@/services/authService";
+
+type User = UserAdmin | UserCompany | UserPatient | UserProfessional;
 
 interface AuthContextType {
   user: User | null;
+  profile: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -16,42 +21,28 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({children}: {children: React.ReactNode}) {
-  const [user, setUser] = useState<User | null>({
-    id: "123",
-    name: "Admin",
-    email: "admin@admin.com",
-    role: "profesional",
-    first_name: "admin",
-    last_name: "admin",
-    licence_number: "123",
-    speciality: "Medicina",
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Verificar si hay sesión al cargar la app
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const storedUser = authService.getStoredUser();
-        const storedToken = authService.getStoredToken();
+        // Verificar si hay cookie de sesión válida
+        const isValid = await authService.verifyToken();
 
-        if (storedUser && storedToken) {
-          // Verificar si el token es válido
-          const isValid = await authService.verifyToken();
+        if (isValid) {
+          // Obtener datos del usuario
+          const data = await authService.getCurrentUser();
 
-          if (isValid) {
-            setUser(storedUser);
-          } else {
-            // Token inválido, limpiar
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("user");
-          }
+          setUser(data.user);
+          setProfile(data.profile);
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
-        // Limpiar en caso de error
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("user");
+        setUser(null);
+        setProfile(null);
       } finally {
         setIsLoading(false);
       }
@@ -63,9 +54,10 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const {user: loggedUser} = await authService.login({email, password});
+      const {user: authData} = await authService.login({email, password});
 
-      setUser(loggedUser);
+      setUser(authData.user);
+      setProfile(authData.profile);
     } finally {
       setIsLoading(false);
     }
@@ -76,6 +68,7 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     try {
       await authService.logout();
       setUser(null);
+      setProfile(null);
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +76,14 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
 
   const refreshUser = async () => {
     try {
-      const currentUser = await authService.getCurrentUser();
+      const data = await authService.getCurrentUser();
 
-      setUser(currentUser);
-      localStorage.setItem("user", JSON.stringify(currentUser));
+      setUser(data.user);
+      setProfile(data.profile);
     } catch (error: unknown) {
       console.error("Error refreshing user:", error);
+      setUser(null);
+      setProfile(null);
     }
   };
 
@@ -96,6 +91,7 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     <AuthContext
       value={{
         user,
+        profile,
         isAuthenticated: !!user,
         isLoading,
         login,

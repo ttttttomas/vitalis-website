@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 
-import type {Roles, UserAdmin, UserCompany, UserPatient, UserProfesional} from "@/types";
+import type {Roles} from "@/types";
 
 import {
   Clients,
@@ -16,6 +16,8 @@ import {
   UserSVG,
 } from "@/components/ui/Icons";
 import {useAuth} from "@/contexts/AuthContext";
+
+import FullPanelSkeleton from "./FullPanelSkeleton";
 
 interface NavItem {
   label: string;
@@ -31,17 +33,17 @@ const navByRole: Record<Roles, NavItem[]> = {
     {label: "Estudios", href: "/system/estudios", icon: <Estudies />},
     {label: "Soporte", href: "/system/soporte", icon: <Support />},
   ],
-  empresa: [
+  company: [
     {label: "Empleados", href: "/system/empleados", icon: <Clients />},
     {label: "Mis datos", href: "/system/mis-datos-empresa", icon: <Users />},
     {label: "Soporte", href: "/system/soporte-empresa", icon: <Support />},
   ],
-  pacientes: [
+  patient: [
     {label: "Mis estudios", href: "/system/estudios-pacientes", icon: <Clients />},
     {label: "Mis datos", href: "/system/mis-datos-pacientes", icon: <Users />},
     {label: "Soporte", href: "/system/soporte-pacientes", icon: <Support />},
   ],
-  profesional: [
+  professional: [
     {label: "Pacientes", href: "/system/pacientes-profesional", icon: <Pacientes />},
     {label: "Mis datos", href: "/system/mis-datos-profesional", icon: <Users />},
   ],
@@ -53,38 +55,23 @@ interface DashboardLayoutProps {
   pageIcon?: React.ReactNode; // iconito izquierda del título
 }
 
-// Función helper para obtener el rol del usuario
-function getUserRole(user: UserAdmin | UserCompany | UserPatient | UserProfesional): Roles {
-  if ("role" in user) {
-    return user.role;
-  }
-  if ("company_name" in user) {
-    return "empresa";
-  }
-  if ("licence_number" in user) {
-    return "profesional";
-  }
-
-  return "pacientes"; // paciente -> empleado
-}
-
 // Función helper para obtener el label del usuario
-function getUserLabel(user: UserAdmin | UserCompany | UserPatient | UserProfesional): string {
-  if ("role" in user) {
+function getUserLabel(user: NonNullable<ReturnType<typeof useAuth>["user"]>): string {
+  if (user.role === "admin") {
     // Admin
-    return `${user.first_name} ${user.last_name} - ${user.role === "admin" ? "Administrador" : user.role === "empresa" ? "Empresa" : user.role === "profesional" ? "Profesional" : "Paciente"}`;
+    return `${user.first_name} ${user.last_name} - Administrador`;
   }
-  if ("company_name" in user) {
+  if (user.role === "company") {
     // Company
     return `${user.company_name} - Empresa`;
   }
-  if ("licence_number" in user) {
+  if (user.role === "professional") {
     // Professional
     return `${user.first_name} ${user.last_name} - Profesional - ${user.speciality}`;
   }
 
   // Patient
-  return `${user.first_name} ${user.last_name}`;
+  return `${user.first_name} ${user.last_name} - Paciente`;
 }
 
 export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutProps) {
@@ -93,12 +80,11 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
   const {user, logout} = useAuth();
 
   if (!user) {
-    return null;
+    return <FullPanelSkeleton />;
   }
 
-  const userRole = getUserRole(user);
   const userLabel = getUserLabel(user);
-  const navItems = navByRole[userRole];
+  const navItems = navByRole[user.role];
 
   const handleLogout = async () => {
     await logout();
@@ -106,10 +92,20 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
   };
 
   return (
-    <main className="flex items-start justify-center bg-[#f2f2f2] px-4 py-32">
+    <main className="flex min-h-screen items-start justify-center bg-[#f2f2f2] px-0 py-0 md:px-4 md:py-32">
       {/* Logo flotante superior */}
       <div className="relative w-full max-w-6xl">
-        <div className="absolute -top-10 left-1/2 z-20 -translate-x-1/6">
+        {/* Logo en móvil - centrado arriba */}
+        <div className="flex justify-center bg-[#f2f2f2] pt-8 pb-4 md:hidden">
+          <img
+            alt="Vitalis"
+            className="size-20 rounded-full border-4 border-[#F2F4F7] bg-[#F2F4F7]"
+            src="/logo.png"
+          />
+        </div>
+
+        {/* Logo desktop - flotante */}
+        <div className="absolute -top-10 left-1/2 z-20 hidden -translate-x-1/2 md:block">
           <img
             alt="Vitalis"
             className="size-24 rounded-full border-10 border-[#F2F4F7] bg-[#F2F4F7]"
@@ -118,41 +114,41 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
         </div>
 
         {/* Card principal */}
-        <section className="mt-6 flex w-full overflow-hidden rounded-3xl bg-white shadow-sm">
-          {/* Sidebar */}
-          <aside className="flex w-64 flex-col justify-between rounded-l-3xl bg-[#64BDEB] py-8">
-            <div className="flex flex-col gap-8">
-              {/* Logo dentro de sidebar */}
-              <div className="flex justify-center">
-                <img alt="Vitalis" className="size-20 rounded-full" src="/logo.png" />
-              </div>
+        <section className="flex w-full flex-col overflow-hidden rounded-none bg-white shadow-sm md:mt-6 md:flex-row md:rounded-3xl">
+          {/* Sidebar / Top Navigation */}
+          <aside className="flex w-full flex-col bg-[#64BDEB] md:w-64 md:rounded-l-3xl md:py-8">
+            {/* Navegación horizontal en móvil */}
+            <nav className="mx-2 flex w-full flex-row items-center justify-center gap-1 px-4 py-4 md:mt-4 md:flex-col md:items-start md:justify-start md:gap-2 md:px-0">
+              {navItems.map((item) => {
+                const isActive = pathname.startsWith(item.href);
 
-              {/* Menú */}
-              <nav className="mt-4 flex flex-col">
-                {navItems.map((item) => {
-                  const isActive = pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    className={`flex items-center justify-center gap-3 rounded-lg px-4 py-3 text-sm transition-all md:w-full md:justify-start md:px-6 ${
+                      isActive
+                        ? "bg-white text-black md:rounded-l-full md:rounded-r-none"
+                        : "text-white hover:bg-white/15"
+                    }`}
+                    href={item.href}
+                  >
+                    {item.icon}
+                    <span className="hidden text-lg md:block">{item.label}</span>
+                  </Link>
+                );
+              })}
 
-                  return (
-                    <Link
-                      key={item.href}
-                      className={`flex items-center gap-3 px-6 py-3 text-sm ${
-                        isActive
-                          ? "rounded-l-full bg-white text-black"
-                          : "text-white hover:bg-white/15"
-                      }`}
-                      href={item.href}
-                    >
-                      {/* placeholder icon */}
-                      {item.icon}
-                      <span className="text-lg">{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
+              {/* Botón logout en móvil (icono) */}
+              <button
+                className="flex cursor-pointer items-center justify-center gap-3 rounded-lg px-4 py-3 text-sm text-white transition-all hover:bg-white/15 md:hidden"
+                onClick={() => void handleLogout()}
+              >
+                <Logout />
+              </button>
+            </nav>
 
-            {/* Soporte + Cerrar sesión */}
-            <div className="mt-8 flex flex-col gap-2 px-6 text-sm text-white">
+            {/* Botón logout solo desktop */}
+            <div className="mt-auto hidden flex-col gap-2 px-6 pt-8 text-sm text-white md:flex">
               <button
                 className="flex cursor-pointer gap-2 text-left hover:underline"
                 onClick={() => void handleLogout()}
@@ -164,24 +160,26 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
           </aside>
 
           {/* Contenido */}
-          <section className="flex-1 rounded-3xl bg-[#F2F4F7] px-10 py-8">
-            <header className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+          <section className="flex-1 bg-[#F2F4F7] px-4 py-6 md:rounded-3xl md:px-10 md:py-8">
+            <header className="mb-4 flex flex-col gap-3 md:mb-0 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center justify-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black/5">
                   {pageIcon ?? <span className="h-4 w-4 rounded-sm border border-black" />}
                 </div>
-                <h1 className="text-xl font-semibold text-black">{pageTitle}</h1>
+                <h1 className="text-center text-lg font-semibold text-black md:text-xl">
+                  {pageTitle}
+                </h1>
               </div>
 
-              <div className="flex items-center gap-2 text-sm text-black">
-                <span>{userLabel}</span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-full text-[15px]">
+              <div className="flex items-center justify-center gap-2 text-xs text-black md:text-sm">
+                <span className="truncate">{userLabel}</span>
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[15px]">
                   <UserSVG />
                 </span>
               </div>
             </header>
             {/* Slot de contenido */}
-            <div className="h-full rounded-2xl p-6">{children}</div>
+            <div className="h-full rounded-2xl p-2 md:p-6">{children}</div>
           </section>
         </section>
       </div>

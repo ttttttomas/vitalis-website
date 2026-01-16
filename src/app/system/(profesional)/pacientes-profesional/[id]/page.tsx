@@ -14,9 +14,9 @@ export default function EstudiosPacientesPage() {
         Volver
       </Link>
       <section className="my-5 flex flex-col gap-5">
+        {/* <EstudiosCard />
         <EstudiosCard />
-        <EstudiosCard />
-        <EstudiosCard />
+        <EstudiosCard /> */}
       </section>
     </Panel>
   );

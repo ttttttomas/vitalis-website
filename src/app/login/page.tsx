@@ -22,7 +22,7 @@ export default function LoginPage() {
     try {
       await login(email, password);
       // Redirigir al sistema después de login exitoso
-      router.push("/system/clientes");
+      router.push("/system");
     } catch (err: unknown) {
       console.error("Login error:", err);
       setError("Credenciales inválidas. Por favor, intenta nuevamente.");
@@ -49,7 +49,9 @@ export default function LoginPage() {
                 name="email"
                 placeholder="Correo electrónico"
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
             </div>
 

@@ -59,7 +59,9 @@ export default function ClientesAdminPage() {
   >(null);
   const isEmpresas = mode === "empresas";
   const [fileName, setFileName] = useState<string>("Sin archivos seleccionados");
+  const [studyType, setStudyType] = useState<string>("");
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const [date, setDate] = useState<string>("");
 
   const handleSelectClient = (client: EmpresaRow | PacienteRow) => {
     setSelectedClient(client);
@@ -73,6 +75,20 @@ export default function ClientesAdminPage() {
   const closeModal = () => {
     setSelectedClient(null);
     setMode("empresas");
+  };
+
+  const handleChangeStudyType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStudyType(e.target.value);
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // if (!fileName || !studyType || !date) {
+    //   alert("Por favor, completa todos los campos");
+
+    //   return;
+    // }
+    console.log({selectedClient, fileName, studyType, date});
+    console.log(fileRef.current?.files);
   };
 
   return (
@@ -186,12 +202,15 @@ export default function ClientesAdminPage() {
         <section className="bg-primary fixed top-1/2 left-1/2 z-50 max-h-[95vh] w-[80%] max-w-5xl -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl shadow-2xl">
           <div className="flex w-full flex-col items-center justify-center gap-6 bg-[#f4f6f8] px-6 py-10">
             <img alt="Logo" className="w-28" src="/logo.png" />
-            <form className="w-full max-w-3xl space-y-4">
+            <form className="w-full max-w-3xl space-y-4" onSubmit={handleSubmit}>
               {/* Fecha */}
               <div className="relative">
                 <input
+                  required
                   className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
                   type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                 />
                 {/* Icono calendario (opcional, porque type=date ya trae uno en muchos navegadores) */}
                 <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
@@ -203,9 +222,9 @@ export default function ClientesAdminPage() {
               <div className="relative">
                 <select
                   className="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
-                  defaultValue=""
+                  onChange={handleChangeStudyType}
                 >
-                  <option disabled className="text-gray-400" value="">
+                  <option disabled className="text-gray-400" value="Estudio">
                     Estudio realizado
                   </option>
                   <option value="Electrocardiograma">Electrocardiograma</option>
@@ -242,7 +261,7 @@ export default function ClientesAdminPage() {
                 />
 
                 <button
-                  className="flex cursor-pointer items-center gap-3 text-gray-900"
+                  className="flex w-full cursor-pointer items-center gap-3 text-gray-900"
                   type="button"
                   onClick={() => fileRef.current?.click()}
                 >
