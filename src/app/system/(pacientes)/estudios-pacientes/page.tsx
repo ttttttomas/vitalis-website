@@ -21,12 +21,9 @@ export default function EstudiosPacientesPage() {
     if (patient_id) {
       const getStudies = async () => {
         try {
-          const response = await apiClient.get<{studies: Studies[]}>(
-            `studies/?patient_id=${patient_id}`,
-            {
-              withCredentials: true,
-            },
-          );
+          const response = await apiClient.get<{studies: Studies[]}>(`studies/${patient_id}`, {
+            withCredentials: true,
+          });
 
           setStudies(response.data.studies);
           setIsLoading(false);
@@ -43,9 +40,9 @@ export default function EstudiosPacientesPage() {
   return (
     <Panel pageIcon={<Clients />} pageTitle="Mis estudios">
       {isLoading ? (
-        <p className="font-semibold">Cargando estudios...</p>
+        <p className="my-auto text-center font-semibold">Cargando estudios...</p>
       ) : studies.length === 0 ? (
-        <p className="font-semibold">No hay estudios</p>
+        <p className="my-auto text-center font-semibold">No tienes estudios aún.</p>
       ) : (
         <section className="flex flex-col gap-5">
           {studies.map((study: Studies) => (

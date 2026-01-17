@@ -5,6 +5,7 @@ import {createContext, use, useEffect, useState} from "react";
 import type {UserAdmin, UserCompany, UserPatient, UserProfessional, UserProfile} from "@/types";
 
 import {authService} from "@/services/authService";
+import {dataService} from "@/services/dataService";
 
 type User = UserAdmin | UserCompany | UserPatient | UserProfessional;
 

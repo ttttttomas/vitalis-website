@@ -52,7 +52,7 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
         <div>
           <div className="flex items-center gap-2 text-sm">
             <p>Estudio:</p>
-            <b>{studies.id}</b>
+            <b>{studies.study_type}</b>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <p>Realizado el:</p>

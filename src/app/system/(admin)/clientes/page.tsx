@@ -1,8 +1,11 @@
 "use client";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Link from "next/link";
 
+import {UserPatient} from "@/types";
+
 import {Clients, Lupa} from "@/components/ui/Icons";
+import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
 
@@ -39,36 +42,32 @@ const EMPRESAS_DATA: EmpresaRow[] = [
   // repetí o reemplazá con tu data real
 ];
 
-const PACIENTES_DATA: PacienteRow[] = [
-  {
-    nombreCompleto: "Adrián Perez",
-    dni: "11111111",
-    fechaNacimiento: "01/01/1990",
-    email: "correo@gmail.com",
-    telefono: "1121212121",
-    obraSocial: "-",
-    password: "******",
-  },
-  // repetí o reemplazá con tu data real
-];
-
 export default function ClientesAdminPage() {
   const [mode, setMode] = useState<Mode>("empresas");
-  const [selectedClient, setSelectedClient] = useState<
-    EmpresaRow | PacienteRow | Record<string, never> | null
-  >(null);
+  const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const isEmpresas = mode === "empresas";
+  const [patients, setPatients] = useState<UserPatient[]>([]);
   const [fileName, setFileName] = useState<string>("Sin archivos seleccionados");
   const [studyType, setStudyType] = useState<string>("");
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [date, setDate] = useState<string>("");
 
-  const handleSelectClient = (client: EmpresaRow | PacienteRow) => {
-    setSelectedClient(client);
+  const handleClick = (id: string) => () => {
+    setSelectedClient(id);
+    openModal();
   };
 
+  useEffect(() => {
+    const getPatients = async () => {
+      const patients = await dataService.getPatients();
+
+      setPatients(patients);
+    };
+
+    void getPatients();
+  }, [patients]);
+
   const openModal = () => {
-    setSelectedClient({});
     setMode("empresas");
   };
 
@@ -82,13 +81,21 @@ export default function ClientesAdminPage() {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (!fileName || !studyType || !date) {
-    //   alert("Por favor, completa todos los campos");
+    if (!fileName || !studyType || !date) {
+      alert("Por favor, completa todos los campos");
 
-    //   return;
-    // }
-    console.log({selectedClient, fileName, studyType, date});
-    console.log(fileRef.current?.files);
+      return;
+    }
+
+    const f = new FormData();
+
+    f.append("file", fileRef.current?.files?.[0]);
+    f.append("study_type", studyType);
+    f.append("status", "pending");
+
+    dataService.postStudie(selectedClient).then((res) => {
+      console.log(res);
+    });
   };
 
   return (
@@ -164,20 +171,23 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">{row.password}</td>
                     </tr>
                   ))
-                : PACIENTES_DATA.map((row, idx) => (
+                : patients.map((row, idx) => (
                     <tr
                       key={idx}
                       className="text-md border-t border-[#4A4A4A] bg-[#333333] text-white"
                     >
-                      <td className="px-3 py-2">{row.nombreCompleto}</td>
+                      <td className="px-3 py-2">{row.first_name}</td>
                       <td className="px-3 py-2">{row.dni}</td>
-                      <td className="px-3 py-2">{row.fechaNacimiento}</td>
+                      <td className="px-3 py-2">{row.date_of_birth}</td>
                       <td className="px-3 py-2">{row.email}</td>
-                      <td className="px-3 py-2">{row.telefono}</td>
-                      <td className="px-3 py-2">{row.obraSocial}</td>
-                      <td className="px-3 py-2">{row.password}</td>
+                      <td className="px-3 py-2">{row.phone}</td>
+                      <td className="px-3 py-2">{row.role}</td>
+                      <td className="px-3 py-2">{row.role}</td>
                       <td className="px-3 py-2">
-                        <button className="cursor-pointer text-xs underline" onClick={openModal}>
+                        <button
+                          className="cursor-pointer text-xs underline"
+                          onClick={handleClick(row.id)}
+                        >
                           Subir
                         </button>
                       </td>
