@@ -15,16 +15,16 @@ interface UsersRow {
 
 const USERS_DATA: UsersRow[] = [
   {
-    nombre: "Vitalis",
-    apellido: "Vitalis",
+    nombre: "Empleado1",
+    apellido: "Empleado1",
     dni: "11111111",
     fecha_nacimiento: "1990-01-01",
     obra_social: "11111111",
     puesto: "11111111",
   },
   {
-    apellido: "Vitalis",
-    nombre: "Vitalis",
+    apellido: "Empleado2",
+    nombre: "Empleado2",
     dni: "11111111",
     fecha_nacimiento: "1990-01-01",
     obra_social: "11111111",

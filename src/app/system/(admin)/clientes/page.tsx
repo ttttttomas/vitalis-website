@@ -65,7 +65,7 @@ export default function ClientesAdminPage() {
     };
 
     void getPatients();
-  }, [patients]);
+  }, []);
 
   const openModal = () => {
     setMode("empresas");
@@ -79,23 +79,24 @@ export default function ClientesAdminPage() {
   const handleChangeStudyType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStudyType(e.target.value);
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!fileName || !studyType || !date) {
-      alert("Por favor, completa todos los campos");
+
+    if (!selectedClient) {
+      console.error("No client selected");
 
       return;
     }
 
     const f = new FormData();
 
-    f.append("file", fileRef.current?.files?.[0]);
+    f.append("study_files", fileRef.current?.files?.[0]);
     f.append("study_type", studyType);
     f.append("status", "pending");
 
-    dataService.postStudie(selectedClient).then((res) => {
-      console.log(res);
-    });
+    const res = await dataService.postStudie(selectedClient, f);
+
+    console.log(res);
   };
 
   return (

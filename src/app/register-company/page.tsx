@@ -110,7 +110,7 @@ export default function RegisterPage() {
                 Ya tengo cuenta
               </Link>
               <Link className="text-gray-500 hover:underline" href="/register" type="button">
-                Registro empresa
+                Registro paciente
               </Link>
             </div>
 

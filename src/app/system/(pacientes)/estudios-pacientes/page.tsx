@@ -44,7 +44,7 @@ export default function EstudiosPacientesPage() {
       ) : studies.length === 0 ? (
         <p className="my-auto text-center font-semibold">No tienes estudios aún.</p>
       ) : (
-        <section className="flex flex-col gap-5">
+        <section className="flex max-h-82 flex-col gap-5 overflow-y-scroll md:px-10">
           {studies.map((study: Studies) => (
             <EstudiosCard key={study.id} studies={study} />
           ))}

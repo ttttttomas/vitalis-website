@@ -63,11 +63,13 @@ function getUserLabel(user: NonNullable<ReturnType<typeof useAuth>["user"]>): st
   }
   if (user.role === "company") {
     // Company
-    return `${user.company_name} - Empresa`;
+    // return `${user.name }- Empresa`;
+    return `Nombre de empresa - Empresa`;
   }
   if (user.role === "professional") {
     // Professional
-    return `${user.first_name} ${user.last_name} - Profesional - ${user.speciality}`;
+    // return `${user.first_name} ${user.last_name} - Profesional - ${user.speciality}`;
+    return `${user.first_name} ${user.last_name} - Profesional`;
   }
 
   // Patient

@@ -23,9 +23,12 @@ export const dataService = {
     return response.data as UserPatient[];
   },
 
-  async postStudie(pacient_id: string): Promise<any> {
-    const response = await apiClient.post(`/studies/patient/${pacient_id}`, {
+  async postStudie(pacient_id: string, formData: FormData): Promise<any> {
+    const response = await apiClient.post(`/studies/patient/${pacient_id}`, formData, {
       withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
     return response.data;

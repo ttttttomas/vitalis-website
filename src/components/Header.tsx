@@ -26,8 +26,8 @@ const Header = () => {
           necesidades de cada cliente.
         </p>
         <div className="flex gap-5">
-          <Link href="/">
-            <button className="cursor-pointer rounded-lg bg-gray-300 px-4 py-2 text-xs font-normal md:text-xl">
+          <Link href="/register">
+            <button className="bg-orange cursor-pointer rounded-lg px-4 py-2 text-xs font-normal md:text-xl">
               Registrarse
             </button>
           </Link>
@@ -39,8 +39,8 @@ const Header = () => {
         </div>
       </section>
       <section className="z-20 flex h-20 flex-col items-end justify-between gap-5 md:h-full md:w-1/2">
-        <Link href="/">
-          <button className="cursor-pointer rounded-lg bg-gray-300 px-4 py-1 text-xs font-normal text-nowrap md:text-lg">
+        <Link href="/login">
+          <button className="bg-orange cursor-pointer rounded-lg px-4 py-1 text-xs font-normal text-nowrap md:text-lg">
             Iniciar sesión
           </button>
         </Link>

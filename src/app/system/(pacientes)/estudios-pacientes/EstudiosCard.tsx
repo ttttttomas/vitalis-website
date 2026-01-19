@@ -34,19 +34,19 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pendiente":
-        return "bg-yellow-500";
+      case "pending":
+        return "text-yellow-200";
       case "completado":
-        return "bg-green-500";
+        return "text-green-200";
       case "cancelado":
-        return "bg-red-500";
+        return "text-red-200";
       default:
-        return "bg-gray-500";
+        return "text-gray-200";
     }
   };
 
   return (
-    <section className="bg-blue flex w-full items-center justify-between gap-5 rounded-xl p-5 text-white">
+    <section className="bg-blue md:text-md flex w-full items-center justify-between gap-5 rounded-xl p-5 text-sm text-white">
       <div className="flex gap-2">
         <img alt="image-estudie" className="size-10" src="/estudios1.png" />
         <div>
@@ -60,11 +60,14 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col justify-center gap-2">
         <p>
-          Estado: <b className={getStatusColor(studies.status)}>{studies.status}</b>
+          Estado:{" "}
+          <b className={getStatusColor(studies.status)}>
+            {studies.status === "pending" ? "Pendiente" : studies.study_type}
+          </b>
         </p>
-        <button className="underline" onClick={() => void downloadStudy()}>
+        <button className="cursor-pointer underline" onClick={() => void downloadStudy()}>
           Descargar PDF
         </button>
       </div>

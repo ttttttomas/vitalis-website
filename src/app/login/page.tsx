@@ -80,9 +80,9 @@ export default function LoginPage() {
             </button>
 
             <div className="mt-2 flex items-center justify-between text-sm">
-              <Link className="text-gray-500 hover:underline" href="#">
+              {/* <Link className="text-gray-500 hover:underline" href="#">
                 ¿Olvidaste tu contraseña?
-              </Link>
+              </Link> */}
               <Link className="text-gray-500 hover:underline" href="/register">
                 No tengo cuenta
               </Link>
