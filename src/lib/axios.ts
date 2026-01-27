@@ -21,8 +21,8 @@ apiClient.interceptors.response.use(
         localStorage.removeItem("access_token");
         localStorage.removeItem("user");
 
-        // Redirigir a login solo si no estamos ya en login
-        if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+        // Solo redirigir a login si estamos en una ruta protegida (/system)
+        if (typeof window !== "undefined" && window.location.pathname.startsWith("/system")) {
           window.location.href = "/login";
         }
       }

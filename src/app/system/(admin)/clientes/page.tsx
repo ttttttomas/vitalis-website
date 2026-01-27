@@ -139,21 +139,17 @@ export default function ClientesAdminPage() {
                     Correo electrónico <Lupa />
                   </th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
-                  <th className="px-3 py-2 text-left">Contraseña</th>
+                  {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
                 </tr>
               ) : (
                 <tr className="bg-[#3A3A3A] text-white">
-                  <th className="px-3 py-2 text-left">
-                    Nombre completo <Lupa />
-                  </th>
+                  <th className="px-3 py-2 text-left">Nombre completo</th>
                   <th className="px-3 py-2 text-left">DNI</th>
                   <th className="px-3 py-2 text-left">Fecha de nacimiento</th>
                   <th className="px-3 py-2 text-left">Correo electrónico</th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
-                  <th className="px-3 py-2 text-left">
-                    Obra social <Lupa />
-                  </th>
-                  <th className="px-3 py-2 text-left">Contraseña</th>
+                  <th className="px-3 py-2 text-left">Obra social</th>
+                  {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
                   <th className="px-3 py-2 text-left">Resultados</th>
                   <th className="px-3 py-2 text-left">Ficha</th>
                 </tr>
@@ -169,7 +165,7 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">{row.dniCuit}</td>
                       <td className="px-3 py-2">{row.email}</td>
                       <td className="px-3 py-2">{row.telefono}</td>
-                      <td className="px-3 py-2">{row.password}</td>
+                      {/* <td className="px-3 py-2">{row.password}</td> */}
                     </tr>
                   ))
                 : patients.map((row, idx) => (
@@ -183,7 +179,7 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">{row.email}</td>
                       <td className="px-3 py-2">{row.phone}</td>
                       <td className="px-3 py-2">{row.role}</td>
-                      <td className="px-3 py-2">{row.role}</td>
+                      {/* <td className="px-3 py-2">{row.role}</td> */}
                       <td className="px-3 py-2">
                         <button
                           className="cursor-pointer text-xs underline"
@@ -195,7 +191,7 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">
                         <Link
                           className="cursor-pointer text-xs underline"
-                          href="/system/medical-history/1"
+                          href={`/system/medical-history/${row.id}`}
                         >
                           Acceder
                         </Link>

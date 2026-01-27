@@ -100,7 +100,7 @@ export default function Footer() {
               </svg>
               <p>| Inicio</p>
             </Link>
-            <Link className="flex items-center gap-1" href="/">
+            <Link className="flex items-center gap-1" href="/login">
               <svg
                 fill="none"
                 height="18"
@@ -126,7 +126,7 @@ export default function Footer() {
 
               <p>| Iniciar sesión</p>
             </Link>
-            <Link className="flex items-center gap-1" href="/">
+            <Link className="flex items-center gap-1" href="/register">
               <svg
                 fill="none"
                 height="18"
@@ -142,7 +142,7 @@ export default function Footer() {
 
               <p>| Registro</p>
             </Link>
-            <Link className="flex items-center gap-1" href="/">
+            <Link className="flex items-center gap-1" href="/contact">
               <svg
                 fill="none"
                 height="18"
