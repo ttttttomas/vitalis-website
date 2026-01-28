@@ -1,8 +1,7 @@
 "use client";
 import {useState, useEffect, use, useCallback} from "react";
-import {ArrowLeft} from "lucide-react";
-import Link from "next/link";
-import {useForm} from "react-hook-form";
+import {ArrowLeft, Printer} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 import {MedicalRecord} from "@/types";
 
@@ -12,7 +11,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {Switch} from "@/components/ui/switch";
 import {dataService} from "@/services/dataService";
 
 import {MedicalHistoryHeader} from "../components/MedicalHistoryHeader";
@@ -61,6 +59,7 @@ interface PageProps {
 
 export default function MedicalHistoryPage({params}: PageProps) {
   const patientId = use(params).id;
+  const router = useRouter();
 
   const [medicalRecord, setMedicalRecord] = useState<MedicalRecord | null>(null);
   const [loading, setLoading] = useState(true);
@@ -146,7 +145,12 @@ export default function MedicalHistoryPage({params}: PageProps) {
     }
   }, [medicalRecord, registry, patientId]);
 
-  if (loading) return <div className="mx-auto p-6">Cargando...</div>;
+  if (loading)
+    return (
+      <div className="mt-50 flex h-full w-full items-center justify-center">
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-blue-600" />
+      </div>
+    );
   if (!medicalRecord)
     return (
       <div className="mx-auto p-6">
@@ -157,17 +161,16 @@ export default function MedicalHistoryPage({params}: PageProps) {
   return (
     <main className="mx-30 my-10">
       <section className="flex items-start justify-between">
-        <Link className="mt-20 flex items-center gap-1 font-bold" href="/system/usuarios">
+        <button className="mt-20 flex items-center gap-1 font-bold" onClick={() => router.back()}>
           <ArrowLeft />
           Volver al Portal
-        </Link>
+        </button>
         <MedicalHistoryHeader error={error} saved={saved} saving={saving} onSave={handleSaveAll} />
         <div className="text-md mt-20 flex h-full flex-col items-end justify-between gap-2 font-medium">
-          <div className="flex items-center justify-between gap-3">
-            <p>Vista Clasica</p>
-            <Switch className="bg-blue-500" />
-            <p>Vista Moderna</p>
-          </div>
+          <button className="flex cursor-pointer items-center gap-2 font-bold">
+            <Printer className="text-blue" />
+            <p className="text-blue">Imprimir</p>
+          </button>
         </div>
       </section>
 
@@ -373,7 +376,7 @@ export default function MedicalHistoryPage({params}: PageProps) {
         </Accordion>
         <Accordion collapsible type="single">
           <AccordionItem value="item-final">
-            <AccordionTrigger>Firma Digital y Matrícula</AccordionTrigger>
+            <AccordionTrigger>Firma Digital y Matrícula *</AccordionTrigger>
             <AccordionContent>
               <div className="relative">
                 <img alt="Logo" className="absolute top-0 right-0" src="/logo.png" width={60} />

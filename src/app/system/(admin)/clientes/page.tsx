@@ -2,7 +2,7 @@
 import {useEffect, useRef, useState} from "react";
 import Link from "next/link";
 
-import {UserPatient} from "@/types";
+import {UserCompany, UserPatient} from "@/types";
 
 import {Clients, Lupa} from "@/components/ui/Icons";
 import {dataService} from "@/services/dataService";
@@ -11,46 +11,17 @@ import Panel from "../../components/Panel";
 
 type Mode = "empresas" | "pacientes";
 
-interface EmpresaRow {
-  nombreEmpresa: string;
-  responsable: string;
-  dniCuit: string;
-  email: string;
-  telefono: string;
-  password: string;
-}
-
-interface PacienteRow {
-  nombreCompleto: string;
-  dni: string;
-  fechaNacimiento: string;
-  email: string;
-  telefono: string;
-  obraSocial: string;
-  password: string;
-}
-
-const EMPRESAS_DATA: EmpresaRow[] = [
-  {
-    nombreEmpresa: "Vitalis",
-    responsable: "Adrián Pérez",
-    dniCuit: "11111111",
-    email: "empresa@gmail.com",
-    telefono: "1121212121",
-    password: "******",
-  },
-  // repetí o reemplazá con tu data real
-];
-
 export default function ClientesAdminPage() {
   const [mode, setMode] = useState<Mode>("empresas");
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const isEmpresas = mode === "empresas";
   const [patients, setPatients] = useState<UserPatient[]>([]);
+  const [companies, setCompanies] = useState<UserCompany[]>([]);
   const [fileName, setFileName] = useState<string>("Sin archivos seleccionados");
   const [studyType, setStudyType] = useState<string>("");
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [date, setDate] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleClick = (id: string) => () => {
     setSelectedClient(id);
@@ -60,8 +31,11 @@ export default function ClientesAdminPage() {
   useEffect(() => {
     const getPatients = async () => {
       const patients = await dataService.getPatients();
+      const companies = await dataService.getCompanie();
 
       setPatients(patients);
+      setCompanies(companies);
+      setLoading(false);
     };
 
     void getPatients();
@@ -91,6 +65,7 @@ export default function ClientesAdminPage() {
     const f = new FormData();
 
     const file = fileRef.current?.files?.[0];
+
     if (file) {
       f.append("study_files", file);
     }
@@ -101,6 +76,16 @@ export default function ClientesAdminPage() {
 
     console.log(res);
   };
+
+  if (loading) {
+    return (
+      <Panel pageIcon={<Clients />} pageTitle="Clientes">
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-blue-600" />
+        </div>
+      </Panel>
+    );
+  }
 
   return (
     <Panel pageIcon={<Clients />} pageTitle="Clientes">
@@ -161,13 +146,13 @@ export default function ClientesAdminPage() {
 
             <tbody>
               {isEmpresas
-                ? EMPRESAS_DATA.map((row, idx) => (
+                ? companies.map((row, idx) => (
                     <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
-                      <td className="px-3 py-2">{row.nombreEmpresa}</td>
-                      <td className="px-3 py-2">{row.responsable}</td>
-                      <td className="px-3 py-2">{row.dniCuit}</td>
+                      <td className="px-3 py-2">{row.name}</td>
+                      <td className="px-3 py-2">{row.responsable_name}</td>
+                      <td className="px-3 py-2">{row.cuit}</td>
                       <td className="px-3 py-2">{row.email}</td>
-                      <td className="px-3 py-2">{row.telefono}</td>
+                      <td className="px-3 py-2">{row.phone}</td>
                       {/* <td className="px-3 py-2">{row.password}</td> */}
                     </tr>
                   ))

@@ -1,35 +1,39 @@
+"use client";
 import Link from "next/link";
+import {useEffect, useState} from "react";
 
-import {Profesionals, Trash} from "@/components/ui/Icons";
+import {UserProfessional} from "@/types";
+
+import {Profesionals} from "@/components/ui/Icons";
+import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
 
-const USERS_DATA: UsersRow[] = [
-  {
-    nombre: "Vitalis",
-    dni: "11111111",
-    email: "empresa@gmail.com",
-    telefono: "1121212121",
-    password: "******",
-  },
-  {
-    nombre: "Vitalis",
-    dni: "11111111",
-    email: "empresa@gmail.com",
-    telefono: "1121212121",
-    password: "******",
-  },
-];
-
-interface UsersRow {
-  nombre: string;
-  dni: string;
-  email: string;
-  telefono: string;
-  password: string;
-}
-
 export default function ProfessionalesAdminPage() {
+  const [users, setUsers] = useState<UserProfessional[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const users = await dataService.getUsersFilters("professional");
+
+      setUsers(users as UserProfessional[]);
+      setLoading(false);
+    };
+
+    void getUsers();
+  }, []);
+
+  if (loading) {
+    return (
+      <Panel pageIcon={<Profesionals />} pageTitle="Profesionales">
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-blue-600" />
+        </div>
+      </Panel>
+    );
+  }
+
   return (
     <Panel pageIcon={<Profesionals />} pageTitle="Profesionales">
       <div className="flex flex-col items-end gap-5 overflow-x-auto">
@@ -47,20 +51,20 @@ export default function ProfessionalesAdminPage() {
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">DNI</th>
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Correo electrónico</th>
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Teléfono</th>
-              <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Contraseña</th>
               <th className="px-3 py-2 text-left">Profesion</th>
             </tr>
           </thead>
 
           <tbody>
-            {USERS_DATA.map((row, idx) => (
+            {users.map((row, idx) => (
               <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.nombre}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">
+                  {row.first_name + " " + row.last_name}
+                </td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni}</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.email}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.telefono}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.password}</td>
-                <td className="px-3 py-2 text-left">Clinico</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.phone}</td>
+                <td className="px-3 py-2 text-left">{row.speciality}</td>
               </tr>
             ))}
           </tbody>

@@ -1,6 +1,11 @@
+"use client";
 import Link from "next/link";
+import {useEffect, useState} from "react";
 
-import {Trash, Users} from "@/components/ui/Icons";
+import {UserCompany, UserPatient} from "@/types";
+
+import {Users} from "@/components/ui/Icons";
+import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
 
@@ -33,6 +38,36 @@ const USERS_DATA: UsersRow[] = [
 ];
 
 export default function EmpleadosPage() {
+  // const [companie, setCompanie] = useState<UserCompany | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [employees, setEmployees] = useState<UserPatient[]>([]);
+
+  useEffect(() => {
+    const data = async () => {
+      try {
+        // const res = await dataService.getCompanie();
+        const res2 = await dataService.getPatientsFilters();
+
+        setEmployees(res2);
+        // setCompanie(res);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void data();
+  }, []);
+
+  if (loading)
+    return (
+      <Panel pageIcon={<Users />} pageTitle="Empleados">
+        <p>Cargando...</p>
+      </Panel>
+    );
+
   return (
     <Panel pageIcon={<Users />} pageTitle="Empleados">
       <div className="flex flex-col items-end gap-5 overflow-x-auto">
@@ -59,15 +94,15 @@ export default function EmpleadosPage() {
           </thead>
 
           <tbody>
-            {USERS_DATA.map((row, idx) => (
+            {employees.map((row, idx) => (
               <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.nombre}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.first_name}</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.fecha_nacimiento}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.obra_social}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.puesto}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.date_of_birth}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.social_security}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">Empleado</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2 text-center underline">
-                  <Link href="/system/empleados/1">Ver</Link>
+                  <Link href={`/system/empleados/${row.id}`}>Ver</Link>
                 </td>
                 <td className="px-3 py-2 text-center underline">
                   <button className="cursor-pointer">

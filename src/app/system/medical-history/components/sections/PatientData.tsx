@@ -30,7 +30,7 @@ export const PatientDataSection = React.memo(({defaultValues, registerSection}: 
   return (
     <section className="flex flex-col items-center gap-5 px-5">
       <div className="mt-7 flex w-full justify-between text-2xl font-bold">
-        <p>Datos del paciente</p>
+        <p>Datos del paciente *</p>
         <p>Empresa</p>
       </div>
       <div className="flex w-full justify-between gap-2">

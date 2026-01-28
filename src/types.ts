@@ -7,6 +7,9 @@ export interface UserAdmin {
   role: "admin";
   first_name: string;
   last_name: string;
+  dni: string;
+  phone: string;
+  password: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -29,6 +32,7 @@ export interface UserProfessional {
   licence_number: string;
   speciality: string;
   first_name: string;
+  dni: number;
   last_name: string;
   role: "professional";
   phone: string;
@@ -43,6 +47,7 @@ export interface UserCompany {
   company_name: string;
   responsable_name: string;
   cuit: string;
+  name: string;
   company_phone: string;
   company_address: string;
   first_name?: string;
@@ -62,8 +67,10 @@ export interface UserPatient {
   last_name: string;
   dni: string;
   date_of_birth: string;
+  social_security: string;
   phone: string;
   insurance?: string;
+  company_id?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }

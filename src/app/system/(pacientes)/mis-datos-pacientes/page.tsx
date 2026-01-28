@@ -47,7 +47,7 @@ export default function MisDatosPacientesPage() {
           Obra social
         </label>
         <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">
-          {user?.role === "patient" ? (user as any).insurance : "N/A"}
+          {user?.role === "patient" ? (user as any).social_security : "N/A"}
         </p>
       </form>
     </Panel>

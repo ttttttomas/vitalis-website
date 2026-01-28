@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 
 import type {Roles} from "@/types";
 
@@ -16,6 +17,7 @@ import {
   UserSVG,
 } from "@/components/ui/Icons";
 import {useAuth} from "@/contexts/AuthContext";
+import {dataService} from "@/services/dataService";
 
 import FullPanelSkeleton from "./FullPanelSkeleton";
 
@@ -45,6 +47,7 @@ const navByRole: Record<Roles, NavItem[]> = {
   ],
   professional: [
     {label: "Pacientes", href: "/system/pacientes-profesional", icon: <Pacientes />},
+    {label: "Estudios", href: "/system/estudios-profesional", icon: <Estudies />},
     {label: "Mis datos", href: "/system/mis-datos-profesional", icon: <Users />},
   ],
 };
@@ -64,7 +67,28 @@ function getUserLabel(user: NonNullable<ReturnType<typeof useAuth>["user"]>): st
   if (user.role === "company") {
     // Company
     // return `${user.name }- Empresa`;
-    return `Nombre de empresa - Empresa`;
+    const [name, setName] = useState<string>("");
+
+    useEffect(() => {
+      const data = async () => {
+        try {
+          const res = await dataService.getCompanie();
+          const company = res[0];
+
+          setName(company.name);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      void data();
+    }, []);
+
+    if (name === "") {
+      return "Cargando...";
+    }
+
+    return `${name} - Empresa`;
   }
   if (user.role === "professional") {
     // Professional
@@ -168,7 +192,7 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black/5">
                   {pageIcon ?? <span className="h-4 w-4 rounded-sm border border-black" />}
                 </div>
-                <h1 className="text-center text-lg font-semibold text-black md:text-xl">
+                <h1 className="text-center text-sm font-semibold text-black lg:text-lg">
                   {pageTitle}
                 </h1>
               </div>
