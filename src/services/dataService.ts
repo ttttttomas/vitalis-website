@@ -146,7 +146,7 @@ export const dataService = {
    * Obtener datos de empresa
    */
   async getCompanie(): Promise<UserCompany[]> {
-    const response = await apiClient.get(`/companies`, {
+    const response = await apiClient.get(`/companies/`, {
       withCredentials: true,
     });
 
