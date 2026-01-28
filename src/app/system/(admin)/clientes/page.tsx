@@ -90,7 +90,10 @@ export default function ClientesAdminPage() {
 
     const f = new FormData();
 
-    f.append("study_files", fileRef.current?.files?.[0]);
+    const file = fileRef.current?.files?.[0];
+    if (file) {
+      f.append("study_files", file);
+    }
     f.append("study_type", studyType);
     f.append("status", "pending");
 

@@ -14,6 +14,7 @@ export default function EstudiosPacientesPage() {
       created_by_user_id: "a929f739-3a4a-4b27-8f9e-341565783237",
       study_type: "Espirometria",
       status: "pending",
+      study_file: "mock.pdf",
       created_at: "2026-01-17 20:40:21",
       files: [
         {
@@ -34,6 +35,7 @@ export default function EstudiosPacientesPage() {
       created_by_user_id: "b9f6d48b-52a3-4a58-8584-1a1684b8f2da",
       study_type: "string",
       status: "string",
+      study_file: "mock.pdf",
       created_at: "2026-01-17 15:58:06",
       files: [
         {
@@ -53,6 +55,7 @@ export default function EstudiosPacientesPage() {
       created_by_user_id: "b9f6d48b-52a3-4a58-8584-1a1684b8f2da",
       study_type: "string",
       status: "string",
+      study_file: "mock.pdf",
       created_at: "2026-01-17 15:49:22",
       files: [
         {
