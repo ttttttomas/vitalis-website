@@ -27,7 +27,7 @@ export default function page() {
     const fetchData = async () => {
       try {
         const [patientsRes, companiesRes] = await Promise.all([
-          dataService.getPatientsFilters(),
+          dataService.getPatients(),
           dataService.getCompanie(),
         ]);
 
