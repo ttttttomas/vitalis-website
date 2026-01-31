@@ -52,6 +52,7 @@ const languageLintingConfig = defineConfig([
           caughtErrorsIgnorePattern: "^_.*?$",
         },
       ],
+      "eslint-disable-next-line no-console": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-confusing-void-expression": "off",
       "@typescript-eslint/ban-ts-comment": "off",
@@ -79,6 +80,7 @@ const reactLintingConfig = defineConfig([
   eslintPluginReactCompiler.configs.recommended,
   {
     rules: {
+      "eslint-disable-next-line no-console": "off",
       "@eslint-react/no-useless-fragment": "error",
       "@eslint-react/no-missing-key": "warn",
       "react/no-array-index-key": "off",
@@ -118,6 +120,7 @@ const nextLintingConfig = defineConfig([
   },
   {
     rules: {
+      "eslint-disable-next-line no-console": "off",
       "@next/next/no-img-element": "off",
     },
   },
@@ -139,6 +142,7 @@ const importLintingConfig = defineConfig([
   eslintPluginImport.flatConfigs.typescript,
   {
     rules: {
+      "eslint-disable-next-line no-console": "off",
       "import/no-default-export": "off",
       "import/no-named-as-default-member": "off",
       "import/named": "off",
@@ -179,6 +183,7 @@ const prettierLintingConfig = defineConfig([
   eslintPluginPrettierRecommended,
   {
     rules: {
+      "eslint-disable-next-line no-console": "off",
       "prettier/prettier": [
         "warn",
         {

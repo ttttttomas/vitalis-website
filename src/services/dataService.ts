@@ -5,6 +5,7 @@ import type {
   UserProfessional,
   MedicalRecord,
   Studies,
+  StudiesCategory,
 } from "@/types";
 
 import {apiClient} from "@/lib/axios";
@@ -31,6 +32,17 @@ export const dataService = {
   },
 
   /**
+   * Obtener todos los profesionales
+   */
+  async getProfessionals(): Promise<UserProfessional[]> {
+    const response = await apiClient.get(`/admin/users/getProfessionals`, {
+      withCredentials: true,
+    });
+
+    return response.data.users as UserProfessional[];
+  },
+
+  /**
    * Obtener paciente por ID
    */
   async getPatientById(patient_id: string): Promise<UserPatient> {
@@ -42,9 +54,45 @@ export const dataService = {
   },
 
   /**
+   * Obtener categorias de estudios
+   */
+  async getCategories(): Promise<StudiesCategory[]> {
+    const response = await apiClient.get(`/studies/admin/get_study_categories`, {
+      withCredentials: true,
+    });
+
+    return response.data.studies_categories as StudiesCategory[];
+  },
+
+  /**
+   * Crear categoria de estudio
+   */
+  async createCategory(formData: FormData): Promise<StudiesCategory> {
+    const response = await apiClient.post("/studies/admin/create_study_category", formData, {
+      withCredentials: true,
+      headers: {"Content-Type": "multipart/form-data"},
+    });
+
+    return response.data as StudiesCategory;
+  },
+
+  /**
+   * Eliminar categoria de estudio
+   */
+  async deleteCategory(category_id: string): Promise<any> {
+    const response = await apiClient.delete(`/studies/admin/delete_study_category/${category_id}`, {
+      withCredentials: true,
+    });
+
+    return response.data;
+  },
+
+  /**
    * Subir un estudio para un paciente
    */
   async postStudie(pacient_id: string, formData: FormData): Promise<any> {
+    // `https://saludvitalis.org/MdpuF8KsXiRArNlHtl6pXO2XyLSJMTQ8_Vitalis/api/studies/patient/${pacient_id}`,
+
     const response = await apiClient.post(`/studies/patient/${pacient_id}`, formData, {
       withCredentials: true,
       headers: {
@@ -59,7 +107,7 @@ export const dataService = {
    * @param patient_id - ID del paciente
    */
   async getStudiesByPatientId(patient_id: string): Promise<Studies[]> {
-    const response = await apiClient.get(`/studies/${patient_id}`, {
+    const response = await apiClient.get(`/studies/patient/${patient_id}`, {
       withCredentials: true,
     });
 

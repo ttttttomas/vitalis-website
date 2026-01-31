@@ -1,3 +1,5 @@
+import {AxiosResponse} from "axios";
+
 import {Studies} from "@/types";
 
 import {apiClient} from "@/lib/axios";
@@ -5,33 +7,40 @@ import {apiClient} from "@/lib/axios";
 export default function EstudiosCard({studies}: {studies: Studies}) {
   const downloadStudy = async () => {
     try {
-      // Hacer petición al backend para obtener el archivo
-      const response = await apiClient.get(`/studies/${studies.id}/files`, {
-        responseType: "blob", // Importante para archivos binarios
+      const response: AxiosResponse<Blob> = await apiClient.get(`/studies/files/${studies.id}`, {
+        responseType: "blob",
         withCredentials: true,
       });
 
-      // Crear un URL temporal para el blob
-      const blob = new Blob([response.data], {type: "application/pdf"});
+      const headers = response.headers as Record<string, string | undefined>;
+      const contentDisposition = headers["content-disposition"];
+
+      let filename = `study-${studies.id}.pdf`;
+
+      if (typeof contentDisposition === "string") {
+        // filename*=UTF-8''...  o  filename="..."
+        const match = /filename\*?=(?:UTF-8''|")?([^";]+)"?/i.exec(contentDisposition);
+
+        if (match?.[1]) filename = decodeURIComponent(match[1]);
+      }
+
+      const blob = response.data; // ya es Blob
       const url = window.URL.createObjectURL(blob);
 
-      // Crear un elemento <a> temporal para descargar
       const link = document.createElement("a");
 
       link.href = url;
-      link.download = studies.id;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
 
-      // Limpiar
-      document.body.removeChild(link);
+      link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error descargando el estudio:", error);
       alert("Error al descargar el archivo. Por favor, intenta nuevamente.");
     }
   };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":

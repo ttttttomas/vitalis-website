@@ -169,12 +169,12 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">{row.role}</td>
                       {/* <td className="px-3 py-2">{row.role}</td> */}
                       <td className="px-3 py-2">
-                        <button
+                        <Link
                           className="cursor-pointer text-xs underline"
-                          onClick={handleClick(row.id)}
+                          href={`/system/clientes/${row.id}`}
                         >
-                          Subir
-                        </button>
+                          Ver
+                        </Link>
                       </td>
                       <td className="px-3 py-2">
                         <Link

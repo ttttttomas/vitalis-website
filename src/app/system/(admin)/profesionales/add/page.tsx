@@ -26,11 +26,11 @@ export default function AddProfessionalPage() {
       const response = await dataService.createUserProfessional(data);
 
       console.log(response);
-      alert("Usuario agregado correctamente");
+      alert("Profesional agregado correctamente");
       router.push("/system/profesionales");
     } catch (error) {
       console.log(error);
-      alert("Error al agregar usuario");
+      alert("Error al agregar profesional");
     }
   };
 

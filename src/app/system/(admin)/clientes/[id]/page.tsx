@@ -1,20 +1,19 @@
 "use client";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 
 import {Studies} from "@/types";
 
 import {Clients} from "@/components/ui/Icons";
-import {useAuth} from "@/contexts/AuthContext";
 import {dataService} from "@/services/dataService";
+import EstudiosCard from "@/app/system/(pacientes)/estudios-pacientes/EstudiosCard";
+import Panel from "@/app/system/components/Panel";
+interface PageProps {
+  params: Promise<{id: string}>;
+}
 
-import Panel from "../../components/Panel";
-
-import EstudiosCard from "./EstudiosCard";
-
-export default function EstudiosPacientesPage() {
-  const {profile} = useAuth();
+export default function ClientesEstudiosPage({params}: PageProps) {
   const [studies, setStudies] = useState<Studies[]>([]);
-  const patient_id = profile?.patient_id;
+  const patient_id = use(params).id;
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export default function EstudiosPacientesPage() {
   }, [patient_id]);
 
   return (
-    <Panel pageIcon={<Clients />} pageTitle="Mis estudios">
+    <Panel pageIcon={<Clients />} pageTitle="Estudios - Paciente">
       {isLoading ? (
         <p className="my-auto text-center font-semibold">Cargando estudios...</p>
       ) : studies.length === 0 ? (

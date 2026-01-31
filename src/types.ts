@@ -14,6 +14,13 @@ export interface UserAdmin {
   updatedAt?: string;
 }
 
+export interface StudiesCategory {
+  name: string;
+  image: string;
+  url_image?: string;
+  id?: string;
+}
+
 export interface Studies {
   id: string;
   patient_id: string;
@@ -26,8 +33,11 @@ export interface Studies {
 }
 
 export interface UserProfessional {
-  id: string;
+  id?: string;
+  professional_id: string;
   email: string;
+  name?: string;
+  lastname?: string;
   password: string;
   licence_number: string;
   speciality: string;

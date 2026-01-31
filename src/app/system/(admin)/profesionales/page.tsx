@@ -15,9 +15,9 @@ export default function ProfessionalesAdminPage() {
 
   useEffect(() => {
     const getUsers = async () => {
-      const users = await dataService.getUsersFilters("professional");
+      const users = await dataService.getProfessionals();
 
-      setUsers(users as UserProfessional[]);
+      setUsers(users);
       setLoading(false);
     };
 
@@ -56,10 +56,13 @@ export default function ProfessionalesAdminPage() {
           </thead>
 
           <tbody>
-            {users.map((row, idx) => (
-              <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
+            {users.map((row) => (
+              <tr
+                key={row.professional_id}
+                className="border-t border-[#4A4A4A] bg-[#333333] text-white"
+              >
                 <td className="border-r border-[#4A4A4A] px-3 py-2">
-                  {row.first_name + " " + row.last_name}
+                  {`${row.name ?? ""} ${row.lastname ?? ""}`.trim()}
                 </td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni}</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.email}</td>
