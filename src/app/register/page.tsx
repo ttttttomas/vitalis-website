@@ -1,6 +1,58 @@
+"use client";
 import Link from "next/link";
+import {useForm} from "react-hook-form";
+import {useRouter} from "next/navigation";
+
+import {authService} from "@/services/authService";
+
+interface RegisterFormData {
+  first_name: string;
+  dni: string;
+  date_of_birth: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone: string;
+  insurance?: string;
+}
 
 export default function RegisterPage() {
+  const {register, handleSubmit, watch} = useForm<RegisterFormData>();
+  const router = useRouter();
+
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
+  const passwordsMatch = !confirmPassword || password === confirmPassword;
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      if (data.password !== data.confirmPassword) {
+        return;
+      }
+      await authService.register(data);
+      alert("Usuario registrado exitosamente");
+      router.push("/login");
+    } catch (error: unknown) {
+      // Axios lanza excepciones para status 4xx/5xx
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as {response?: {status?: number; data?: {detail?: string}}};
+
+        if (axiosError.response?.status === 400) {
+          const detail =
+            axiosError.response.data?.detail &&
+            "Ya existe un usuario con ese DNI o correo electrónico. Por favor, revise los datos.";
+
+          alert(detail);
+
+          return;
+        }
+      }
+      console.error("Error al registrar:", error);
+      alert("Error al registrar usuario. Por favor, intente nuevamente.");
+    }
+  });
+
   return (
     <main className="bg-blue flex items-center justify-center py-10">
       <section className="grid max-h-screen w-full max-w-5xl grid-cols-1 overflow-hidden rounded-3xl bg-white pb-10 md:grid-cols-2">
@@ -8,17 +60,23 @@ export default function RegisterPage() {
         <div className="flex flex-col justify-start p-12">
           <h1 className="mb-8 text-4xl font-bold text-black">Registro</h1>
 
-          <form className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void onSubmit(e);
+            }}
+          >
             {/* Nombre completo */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-black" htmlFor="fullName">
-                Nombre completo <span className="text-red-500">*</span>
+              <label className="text-sm text-black" htmlFor="first_name">
+                Nombre <span className="text-red-500">*</span>
               </label>
               <input
                 className="rounded-md border px-3 py-2"
-                id="fullName"
-                name="fullName"
+                id="first_name"
                 type="text"
+                {...register("first_name")}
               />
             </div>
 
@@ -27,19 +85,24 @@ export default function RegisterPage() {
               <label className="text-sm text-black" htmlFor="dni">
                 Número de documento (DNI) <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="dni" name="dni" type="text" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="dni"
+                type="text"
+                {...register("dni")}
+              />
             </div>
 
             {/* Fecha de nacimiento */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-black" htmlFor="birthdate">
+              <label className="text-sm text-black" htmlFor="date_of_birth">
                 Fecha de nacimiento <span className="text-red-500">*</span>
               </label>
               <input
                 className="rounded-md border px-3 py-2"
-                id="birthdate"
-                name="birthdate"
+                id="date_of_birth"
                 type="date"
+                {...register("date_of_birth")}
               />
             </div>
 
@@ -48,7 +111,12 @@ export default function RegisterPage() {
               <label className="text-sm text-black" htmlFor="email">
                 Correo electrónico <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="email" name="email" type="email" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="email"
+                type="email"
+                {...register("email")}
+              />
             </div>
 
             {/* Contraseña */}
@@ -60,12 +128,21 @@ export default function RegisterPage() {
                 <input
                   className="w-full rounded-md border px-3 py-2 pr-10"
                   id="password"
-                  name="password"
                   type="password"
+                  {...register("password")}
                 />
                 <button
                   className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-500"
                   type="button"
+                  onClick={() => {
+                    const input = document.getElementById("password") as HTMLInputElement;
+
+                    if (input.type === "password") {
+                      input.type = "text";
+                    } else {
+                      input.type = "password";
+                    }
+                  }}
                 >
                   👁
                 </button>
@@ -79,18 +156,30 @@ export default function RegisterPage() {
               </label>
               <div className="relative">
                 <input
-                  className="w-full rounded-md border px-3 py-2 pr-10"
+                  className={`w-full rounded-md border px-3 py-2 pr-10 ${!passwordsMatch ? "border-red-500" : ""}`}
                   id="confirmPassword"
-                  name="confirmPassword"
                   type="password"
+                  {...register("confirmPassword")}
                 />
                 <button
                   className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-500"
                   type="button"
+                  onClick={() => {
+                    const input = document.getElementById("confirmPassword") as HTMLInputElement;
+
+                    if (input.type === "password") {
+                      input.type = "text";
+                    } else {
+                      input.type = "password";
+                    }
+                  }}
                 >
                   👁
                 </button>
               </div>
+              {!passwordsMatch && (
+                <p className="text-sm text-red-500">Las contraseñas no coinciden</p>
+              )}
             </div>
 
             {/* Teléfono */}
@@ -98,19 +187,24 @@ export default function RegisterPage() {
               <label className="text-sm text-black" htmlFor="phone">
                 Teléfono de contacto <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="phone" name="phone" type="tel" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="phone"
+                type="tel"
+                {...register("phone")}
+              />
             </div>
 
             {/* Obra social */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-black" htmlFor="obraSocial">
+              <label className="text-sm text-black" htmlFor="insurance">
                 Obra social
               </label>
               <input
                 className="rounded-md border px-3 py-2"
-                id="obraSocial"
-                name="obraSocial"
+                id="insurance"
                 type="text"
+                {...register("insurance")}
               />
             </div>
 

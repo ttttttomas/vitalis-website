@@ -111,6 +111,8 @@ export const dataService = {
       withCredentials: true,
     });
 
+    console.log(response);
+
     if (!response.data) throw new Error("Error fetching studies");
 
     return response.data.studies as Studies[];

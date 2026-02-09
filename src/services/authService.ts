@@ -21,6 +21,17 @@ interface LoginResponse {
   user: User;
 }
 
+interface RegisterPatientFormData {
+  first_name: string;
+  dni: string;
+  date_of_birth: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone: string;
+  insurance?: string;
+}
+
 export const authService = {
   /**
    * Login de usuario
@@ -42,9 +53,42 @@ export const authService = {
     // Obtener datos completos del usuario desde /me
     const user = await this.getCurrentUser();
 
-    console.log("user", user);
-
     return {token: response.data.access_token, user};
+  },
+
+  /**
+   * Register de pacientes particulares
+   */
+  async register(userData: RegisterPatientFormData): Promise<any> {
+    const formData = new URLSearchParams();
+
+    formData.append("first_name", userData.first_name);
+    formData.append("dni", userData.dni);
+    formData.append("date_of_birth", userData.date_of_birth);
+    formData.append("email", userData.email);
+    formData.append("password", userData.password);
+    formData.append("phone", userData.phone);
+    if (userData.insurance) {
+      formData.append("insurance", userData.insurance);
+    }
+
+    const response = await apiClient.post("/auth/register/patient", formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      withCredentials: true,
+    });
+
+    return response as any;
+  },
+
+  /**
+   * Registar para empresas
+   */
+  async registerCompany(userData: User): Promise<void> {
+    await apiClient.post("/auth/register/company", userData, {
+      withCredentials: true,
+    });
   },
 
   /**

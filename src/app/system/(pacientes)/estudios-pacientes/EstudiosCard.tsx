@@ -1,5 +1,3 @@
-import {AxiosResponse} from "axios";
-
 import {Studies} from "@/types";
 
 import {apiClient} from "@/lib/axios";
@@ -7,35 +5,27 @@ import {apiClient} from "@/lib/axios";
 export default function EstudiosCard({studies}: {studies: Studies}) {
   const downloadStudy = async () => {
     try {
-      const response: AxiosResponse<Blob> = await apiClient.get(`/studies/files/${studies.id}`, {
-        responseType: "blob",
+      // Hacer petición al backend para obtener la URL del archivo
+      const response = await apiClient.get<{
+        url: string;
+        original_filename: string;
+        mime_type: string;
+      }>(`/studies/files/${studies.id}/`, {
         withCredentials: true,
       });
 
-      const headers = response.headers as Record<string, string | undefined>;
-      const contentDisposition = headers["content-disposition"];
-
-      let filename = `study-${studies.id}.pdf`;
-
-      if (typeof contentDisposition === "string") {
-        // filename*=UTF-8''...  o  filename="..."
-        const match = /filename\*?=(?:UTF-8''|")?([^";]+)"?/i.exec(contentDisposition);
-
-        if (match?.[1]) filename = decodeURIComponent(match[1]);
-      }
-
-      const blob = response.data; // ya es Blob
-      const url = window.URL.createObjectURL(blob);
+      const {url, original_filename} = response.data;
 
       const link = document.createElement("a");
 
       link.href = url;
-      link.download = filename;
+      link.download = original_filename;
+      link.target = "_blank"; // Abrir en nueva pestaña por si el navegador no descarga directamente
       document.body.appendChild(link);
       link.click();
 
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      // Limpiar
+      document.body.removeChild(link);
     } catch (error) {
       console.error("Error descargando el estudio:", error);
       alert("Error al descargar el archivo. Por favor, intenta nuevamente.");
