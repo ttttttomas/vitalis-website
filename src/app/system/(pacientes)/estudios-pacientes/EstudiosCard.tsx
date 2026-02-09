@@ -10,7 +10,7 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
         url: string;
         original_filename: string;
         mime_type: string;
-      }>(`/studies/files/${studies.id}/`, {
+      }>(`/studies/files/${studies.id}`, {
         withCredentials: true,
       });
 
