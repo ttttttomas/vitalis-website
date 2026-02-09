@@ -1,0 +1,320 @@
+"use client";
+
+import { useRef, useState, useEffect, useCallback } from "react";
+import { uploadSignature } from "@/services/signatureService";
+
+type UploadStatus = "idle" | "saving" | "success" | "error";
+
+interface SignatureCanvasProps {
+  /** Ancho máximo del canvas en px (default 500) */
+  width?: number;
+  /** Alto del canvas en px (default 250) */
+  height?: number;
+  /** Color del trazo (default "#000") */
+  strokeColor?: string;
+  /** Grosor del trazo en px (default 2) */
+  strokeWidth?: number;
+  /** Callback que recibe el Blob PNG de la firma al guardar */
+  onSave?: (blob: Blob) => void;
+  /** Callback al subir la firma exitosamente a la API */
+  onUploadSuccess?: (data: unknown) => void;
+  /** Callback al fallar la subida de la firma */
+  onUploadError?: (error: unknown) => void;
+  /** Subir automáticamente a la API al guardar (default true) */
+  uploadOnSave?: boolean;
+}
+
+export default function SignatureCanvas({
+  width = 500,
+  height = 250,
+  strokeColor = "#000",
+  strokeWidth = 2,
+  onSave,
+  onUploadSuccess,
+  onUploadError,
+  uploadOnSave = true,
+}: SignatureCanvasProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pathsRef = useRef<{ x: number; y: number }[][]>([]);
+  const currentPathRef = useRef<{ x: number; y: number }[]>([]);
+
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(true);
+  const [status, setStatus] = useState<UploadStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // ---------- Canvas setup & retina scaling ----------
+
+  const setupCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const containerWidth = container.clientWidth;
+    const canvasWidth = Math.min(containerWidth, width);
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvasWidth * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${height}px`;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
+
+    // Redibujar trazos existentes después de redimensionar
+    redrawPaths(ctx);
+  }, [width, height, strokeColor, strokeWidth]);
+
+  useEffect(() => {
+    setupCanvas();
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new ResizeObserver(() => {
+      setupCanvas();
+    });
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, [setupCanvas]);
+
+  // ---------- Helpers ----------
+
+  const redrawPaths = (ctx: CanvasRenderingContext2D) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+    for (const path of pathsRef.current) {
+      if (path.length < 2) continue;
+      ctx.beginPath();
+      ctx.moveTo(path[0].x, path[0].y);
+      for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i].x, path[i].y);
+      }
+      ctx.stroke();
+    }
+  };
+
+  const getCoordinates = useCallback(
+    (e: React.MouseEvent | React.TouchEvent): { x: number; y: number } | null => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = parseFloat(canvas.style.width) / rect.width;
+      const scaleY = parseFloat(canvas.style.height) / rect.height;
+
+      if ("touches" in e) {
+        const touch = e.touches[0];
+        if (!touch) return null;
+        return {
+          x: (touch.clientX - rect.left) * scaleX,
+          y: (touch.clientY - rect.top) * scaleY,
+        };
+      }
+
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY,
+      };
+    },
+    [],
+  );
+
+  // ---------- Drawing handlers ----------
+
+  const startDrawing = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      e.preventDefault();
+      const coords = getCoordinates(e);
+      if (!coords) return;
+
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+
+      currentPathRef.current = [coords];
+      ctx.beginPath();
+      ctx.moveTo(coords.x, coords.y);
+      setIsDrawing(true);
+      setIsEmpty(false);
+      if (status !== "idle") setStatus("idle");
+    },
+    [getCoordinates, status],
+  );
+
+  const draw = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      e.preventDefault();
+      if (!isDrawing) return;
+
+      const coords = getCoordinates(e);
+      if (!coords) return;
+
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+
+      currentPathRef.current.push(coords);
+      ctx.lineTo(coords.x, coords.y);
+      ctx.stroke();
+    },
+    [isDrawing, getCoordinates],
+  );
+
+  const stopDrawing = useCallback(() => {
+    if (isDrawing && currentPathRef.current.length > 0) {
+      pathsRef.current.push([...currentPathRef.current]);
+      currentPathRef.current = [];
+    }
+    setIsDrawing(false);
+  }, [isDrawing]);
+
+  // ---------- Actions ----------
+
+  const handleClear = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    pathsRef.current = [];
+    currentPathRef.current = [];
+    setIsEmpty(true);
+    setStatus("idle");
+    setErrorMessage("");
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    pathsRef.current.pop();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
+    redrawPaths(ctx);
+
+    if (pathsRef.current.length === 0) {
+      setIsEmpty(true);
+    }
+  }, [strokeColor, strokeWidth]);
+
+  const handleSave = useCallback(async () => {
+    const canvas = canvasRef.current;
+    if (!canvas || isEmpty) return;
+
+    setStatus("saving");
+    setErrorMessage("");
+
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((b) => resolve(b), "image/png");
+    });
+
+    if (!blob) {
+      setStatus("error");
+      setErrorMessage("No se pudo generar la imagen de la firma.");
+      return;
+    }
+
+    // Callback con el blob crudo
+    onSave?.(blob);
+
+    if (!uploadOnSave) {
+      setStatus("success");
+      return;
+    }
+
+    try {
+      const data = await uploadSignature(blob);
+      setStatus("success");
+      onUploadSuccess?.(data);
+    } catch (err: unknown) {
+      setStatus("error");
+      const message =
+        err instanceof Error ? err.message : "Error al subir la firma. Intente nuevamente.";
+      setErrorMessage(message);
+      onUploadError?.(err);
+    }
+  }, [isEmpty, onSave, uploadOnSave, onUploadSuccess, onUploadError]);
+
+  // ---------- Render ----------
+
+  return (
+    <div ref={containerRef} className="flex w-full flex-col items-center gap-4" style={{ maxWidth: width }}>
+      <p className="text-sm text-gray-500">
+        Dibuje su firma en el recuadro
+      </p>
+
+      <canvas
+        ref={canvasRef}
+        role="img"
+        aria-label="Área de firma digital"
+        className="w-full cursor-crosshair rounded-lg border-2 border-dashed border-gray-300 bg-white touch-none"
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
+        onTouchStart={startDrawing}
+        onTouchMove={draw}
+        onTouchEnd={stopDrawing}
+      />
+
+      {/* Status feedback */}
+      {status === "success" && (
+        <p className="text-sm font-medium text-green-600">
+          Firma guardada correctamente.
+        </p>
+      )}
+      {status === "error" && (
+        <p className="text-sm font-medium text-red-600">
+          {errorMessage}
+        </p>
+      )}
+
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={handleUndo}
+          disabled={isEmpty || status === "saving"}
+          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Deshacer
+        </button>
+        <button
+          type="button"
+          onClick={handleClear}
+          disabled={status === "saving"}
+          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Limpiar
+        </button>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={isEmpty || status === "saving"}
+          className="rounded-lg bg-[#d8b58d] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#c9a67e] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {status === "saving" ? "Guardando..." : "Guardar firma"}
+        </button>
+      </div>
+    </div>
+  );
+}
