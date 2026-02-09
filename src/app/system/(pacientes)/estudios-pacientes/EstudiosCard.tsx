@@ -5,27 +5,28 @@ import {apiClient} from "@/lib/axios";
 export default function EstudiosCard({studies}: {studies: Studies}) {
   const downloadStudy = async () => {
     try {
-      // Hacer petición al backend para obtener el archivo
-      const response = await apiClient.get(`/studies/${studies.id}/files`, {
-        responseType: "blob", // Importante para archivos binarios
+      // Hacer petición al backend para obtener la URL del archivo
+      const response = await apiClient.get<{
+        url: string;
+        original_filename: string;
+        mime_type: string;
+      }>(`/studies/files/${studies.id}/`, {
         withCredentials: true,
       });
 
-      // Crear un URL temporal para el blob
-      const blob = new Blob([response.data], {type: "application/pdf"});
-      const url = window.URL.createObjectURL(blob);
+      const {url, original_filename} = response.data;
 
       // Crear un elemento <a> temporal para descargar
       const link = document.createElement("a");
 
       link.href = url;
-      link.download = studies.id;
+      link.download = original_filename;
+      link.target = "_blank"; // Abrir en nueva pestaña por si el navegador no descarga directamente
       document.body.appendChild(link);
       link.click();
 
       // Limpiar
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error descargando el estudio:", error);
       alert("Error al descargar el archivo. Por favor, intenta nuevamente.");

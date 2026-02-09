@@ -2,6 +2,7 @@
 import {useState, useEffect, use, useCallback} from "react";
 import {ArrowLeft, Printer} from "lucide-react";
 import {useRouter} from "next/navigation";
+import {pdf} from "@react-pdf/renderer";
 
 import {MedicalRecord} from "@/types";
 
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/accordion";
 import {dataService} from "@/services/dataService";
 
+import {MedicalHistoryPDF} from "../components/MedicalHistoryPDF";
 import {MedicalHistoryHeader} from "../components/MedicalHistoryHeader";
 import {EvaluationTypeSection} from "../components/sections/EvaluationTypeSection";
 import {useFormRegistry} from "../useFormRegistry";
@@ -68,6 +70,19 @@ export default function MedicalHistoryPage({params}: PageProps) {
   const [error, setError] = useState<string | null>(null);
 
   const registry = useFormRegistry<MedicalRecord>();
+
+  const handlePrint = async () => {
+    if (!medicalRecord) return;
+    try {
+      const blob = await pdf(<MedicalHistoryPDF medicalRecord={medicalRecord} />).toBlob();
+      const url = URL.createObjectURL(blob);
+
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Error printing PDF:", error);
+      setError("Error generando el PDF para impresión.");
+    }
+  };
 
   // GET devuelve array -> elegimos el primero (después si querés elegimos por created_at)
   useEffect(() => {
@@ -161,13 +176,19 @@ export default function MedicalHistoryPage({params}: PageProps) {
   return (
     <main className="mx-30 my-10">
       <section className="flex items-start justify-between">
-        <button className="mt-20 flex items-center gap-1 font-bold" onClick={() => router.back()}>
+        <button
+          className="mt-20 flex cursor-pointer items-center gap-1 font-bold"
+          onClick={() => router.back()}
+        >
           <ArrowLeft />
           Volver al Portal
         </button>
         <MedicalHistoryHeader error={error} saved={saved} saving={saving} onSave={handleSaveAll} />
         <div className="text-md mt-20 flex h-full flex-col items-end justify-between gap-2 font-medium">
-          <button className="flex cursor-pointer items-center gap-2 font-bold">
+          <button
+            className="flex cursor-pointer items-center gap-2 font-bold"
+            onClick={() => void handlePrint()}
+          >
             <Printer className="text-blue" />
             <p className="text-blue">Imprimir</p>
           </button>

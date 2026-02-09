@@ -147,6 +147,7 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
             <nav className="mx-2 flex w-full flex-row items-center justify-center gap-1 px-4 py-4 md:mt-4 md:flex-col md:items-start md:justify-start md:gap-2 md:px-0">
               {navItems.map((item) => {
                 const isActive = pathname.startsWith(item.href);
+                const isSupport = item.label === "Soporte";
 
                 return (
                   <Link
@@ -156,10 +157,12 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
                         ? "bg-white text-black md:rounded-l-full md:rounded-r-none"
                         : "text-white hover:bg-white/15"
                     }`}
-                    href={item.href}
+                    href={isSupport ? "" : item.href}
                   >
                     {item.icon}
-                    <span className="hidden text-lg md:block">{item.label}</span>
+                    <span className={`${isSupport ? "text-gray-400" : ""} hidden text-lg md:block`}>
+                      {item.label}
+                    </span>
                   </Link>
                 );
               })}

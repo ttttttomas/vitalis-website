@@ -59,9 +59,11 @@ export const dataService = {
    * @param patient_id - ID del paciente
    */
   async getStudiesByPatientId(patient_id: string): Promise<Studies[]> {
-    const response = await apiClient.get(`/studies/${patient_id}`, {
+    const response = await apiClient.get(`/studies/patient/${patient_id}`, {
       withCredentials: true,
     });
+
+    console.log(response);
 
     if (!response.data) throw new Error("Error fetching studies");
 
