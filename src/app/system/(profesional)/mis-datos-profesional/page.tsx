@@ -17,7 +17,7 @@ export default function MisDatosProfesionalPage() {
       try {
         const {user} = await authService.getCurrentUser();
 
-        if (user.role === "professional") {
+        if (user?.role === "professional") {
           setUser(user);
           setLoading(false);
         }

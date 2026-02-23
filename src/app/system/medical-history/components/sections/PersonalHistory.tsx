@@ -67,8 +67,8 @@ export const PersonalHistorySection = React.memo(({defaultValues, registerSectio
             </div>
 
             {/* Internaciones */}
-            <div className="flex items-center">
-              <p className="w-[200px]">Internaciones</p>
+            <div className="flex flex-wrap items-center">
+              <p className="w-[150px] shrink-0 md:w-[200px]">Internaciones</p>
               <Controller
                 control={control}
                 name="internations"
@@ -89,11 +89,11 @@ export const PersonalHistorySection = React.memo(({defaultValues, registerSectio
                   </div>
                 )}
               />
-              <div className="ml-6 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-6">
                 <span className="text-sm">En caso de si, indique, ¿por qué?</span>
                 <input
                   {...register("internations_motive")}
-                  className="w-[300px] border border-gray-500 p-1"
+                  className="w-full border border-gray-500 p-1 md:w-[300px]"
                   type="text"
                 />
               </div>

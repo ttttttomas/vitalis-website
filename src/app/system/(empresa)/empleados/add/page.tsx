@@ -23,13 +23,14 @@ export default function AddEmployeePage() {
   const onSubmit = async (data: any) => {
     try {
       const {profile} = await authService.getCurrentUser();
-      const id = profile.company_id;
+      const id = profile?.company_id;
 
       if (!id) {
         setError("No se pudo identificar a la empresa.");
 
         return;
       }
+      console.log(data);
 
       await dataService.createEmployee(id, data as unknown as UserPatient);
       alert("Empleado agregado correctamente");
@@ -122,6 +123,16 @@ export default function AddEmployeePage() {
           placeholder="Ingresa la direccion"
           type="text"
           {...register("address")}
+        />
+        <label className="text-lg font-bold italic" htmlFor="direccion">
+          Tipo de estudio a realizar *
+        </label>
+        <input
+          required
+          className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
+          placeholder="Ingresa el tipo de estudio"
+          type="text"
+          {...register("study_type")}
         />
         <button
           className="bg-blue mt-10 cursor-pointer rounded-lg py-2 font-semibold text-white"

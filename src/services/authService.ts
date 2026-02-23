@@ -32,6 +32,17 @@ interface RegisterPatientFormData {
   insurance?: string;
 }
 
+interface RegisterCompanyFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  company_name: string;
+  responsable_name: string;
+  cuit: string;
+  phone: string;
+  company_address?: string;
+}
+
 export const authService = {
   /**
    * Login de usuario
@@ -85,10 +96,28 @@ export const authService = {
   /**
    * Registar para empresas
    */
-  async registerCompany(userData: User): Promise<void> {
-    await apiClient.post("/auth/register/company", userData, {
+  async registerCompany(userData: RegisterCompanyFormData): Promise<any> {
+    const formData = new URLSearchParams();
+
+    formData.append("email", userData.email);
+    formData.append("password", userData.password);
+    formData.append("confirmPassword", userData.confirmPassword);
+    formData.append("company_name", userData.company_name);
+    formData.append("responsable_name", userData.responsable_name);
+    formData.append("cuit", userData.cuit);
+    formData.append("phone", userData.phone);
+    if (userData.company_address) {
+      formData.append("company_address", userData.company_address);
+    }
+
+    const response = await apiClient.post("/auth/register/company", formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
       withCredentials: true,
     });
+
+    return response as any;
   },
 
   /**

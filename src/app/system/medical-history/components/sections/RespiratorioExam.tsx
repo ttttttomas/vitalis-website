@@ -62,7 +62,7 @@ export const RespiratorioExamSection = React.memo(({defaultValues, registerSecti
               <span>Frecuencia respiratoria:</span>
               <input
                 {...register("freq_respiratoria", {valueAsNumber: true})}
-                className="w-[150px] border border-gray-500 p-1"
+                className="w-full border border-gray-500 p-1 md:w-[150px]"
                 type="text"
               />
               <span className="text-sm italic">por minuto</span>

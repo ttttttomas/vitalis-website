@@ -21,9 +21,12 @@ export default function EstudiosPacientesPage() {
     if (patient_id) {
       const getStudies = async () => {
         try {
-          const response = await apiClient.get<{studies: Studies[]}>(`studies/${patient_id}`, {
-            withCredentials: true,
-          });
+          const response = await apiClient.get<{studies: Studies[]}>(
+            `studies/patient/${patient_id}`,
+            {
+              withCredentials: true,
+            },
+          );
 
           setStudies(response.data.studies);
           setIsLoading(false);

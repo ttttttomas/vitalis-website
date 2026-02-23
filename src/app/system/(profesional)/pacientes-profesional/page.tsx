@@ -9,34 +9,14 @@ import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
 
-interface UsersRow {
-  nombre: string;
-  apellido: string;
-  dni: string;
-  fecha_nacimiento: string;
-  obra_social: string;
-}
-
-const USERS_DATA: UsersRow[] = [
-  {
-    nombre: "Vitalis",
-    apellido: "Vitalis",
-    dni: "11111111",
-    fecha_nacimiento: "1990-01-01",
-    obra_social: "11111111",
-  },
-  {
-    apellido: "Vitalis",
-    nombre: "Vitalis",
-    dni: "11111111",
-    fecha_nacimiento: "1990-01-01",
-    obra_social: "11111111",
-  },
-];
-
 export default function PacientesProfesional() {
   const [patients, setPatients] = useState<UserPatient[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchName, setSearchName] = useState("");
+
+  const filteredPatients = patients.filter((patient) =>
+    patient.first_name.toLowerCase().includes(searchName.toLowerCase()),
+  );
 
   useEffect(() => {
     const data = async () => {
@@ -74,6 +54,14 @@ export default function PacientesProfesional() {
 
   return (
     <Panel pageIcon={<Pacientes />} pageTitle="Pacientes">
+      <h1 className="font-semibold">Filtrar por nombre</h1>
+      <input
+        className="my-5 w-full rounded-md border border-[#4A4A4A] px-3 py-2"
+        placeholder="Buscar"
+        type="text"
+        value={searchName}
+        onChange={(e) => setSearchName(e.target.value)}
+      />
       <table className="w-full text-xs">
         <thead>
           <tr className="bg-[#3A3A3A] text-white">
@@ -90,7 +78,7 @@ export default function PacientesProfesional() {
         </thead>
 
         <tbody>
-          {patients.map((row, idx) => (
+          {filteredPatients.map((row, idx) => (
             <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
               <td className="border-r border-[#4A4A4A] px-3 py-2">{row.first_name}</td>
               <td className="border-r border-[#4A4A4A] px-3 py-2">{row.last_name}</td>

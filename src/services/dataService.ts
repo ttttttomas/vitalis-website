@@ -31,6 +31,15 @@ export const dataService = {
   },
 
   /**
+   * Eliminar paciente
+   */
+  async deletePatient(patient_id: string): Promise<void> {
+    await apiClient.delete(`/admin/users/delete/${patient_id}`, {
+      withCredentials: true,
+    });
+  },
+
+  /**
    * Obtener paciente por ID
    */
   async getPatientById(patient_id: string): Promise<UserPatient> {
@@ -54,6 +63,27 @@ export const dataService = {
 
     return response.data;
   },
+
+  /**
+   * Cambiar estado de estudio
+   */
+
+  async changeStudyStatus(
+    study_id: string,
+    data: {status?: string; study_type?: string},
+  ): Promise<any> {
+    const body = new URLSearchParams();
+
+    if (data.status != null) body.append("status", data.status);
+    if (data.study_type != null) body.append("study_type", data.study_type);
+
+    const response = await apiClient.patch(`/studies/${study_id}`, body, {
+      withCredentials: true,
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    });
+
+    return response.data;
+  },
   /**
    * Obtener estudios por patient_id
    * @param patient_id - ID del paciente
@@ -62,8 +92,6 @@ export const dataService = {
     const response = await apiClient.get(`/studies/patient/${patient_id}`, {
       withCredentials: true,
     });
-
-    console.log(response);
 
     if (!response.data) throw new Error("Error fetching studies");
 
@@ -82,6 +110,10 @@ export const dataService = {
     data: Partial<MedicalRecord>,
     data_img?: File,
     file?: File,
+    firma_medico_evaluador?: Blob | null,
+    fecha_medico_evaluador?: string | null,
+    firma_medico_laboral?: Blob | null,
+    fecha_medico_laboral?: string | null,
   ): Promise<MedicalRecord> {
     const formData = new FormData();
 
@@ -89,7 +121,10 @@ export const dataService = {
     formData.append("patient_id", patient_id);
 
     // Agregar data como JSON string
-    formData.append("data", JSON.stringify(data));
+    formData.append(
+      "data",
+      JSON.stringify(data, (_, v) => (v === undefined ? null : v)),
+    );
 
     // Agregar archivos opcionales si existen
     if (data_img) {
@@ -98,6 +133,19 @@ export const dataService = {
 
     if (file) {
       formData.append("file", file);
+    }
+
+    if (firma_medico_evaluador) {
+      formData.append("firma_medico_evaluador", firma_medico_evaluador);
+    }
+    if (fecha_medico_evaluador) {
+      formData.append("fecha_medico_evaluador", fecha_medico_evaluador);
+    }
+    if (firma_medico_laboral) {
+      formData.append("firma_medico_laboral", firma_medico_laboral);
+    }
+    if (fecha_medico_laboral) {
+      formData.append("fecha_medico_laboral", fecha_medico_laboral);
     }
 
     const response = await apiClient.post(`/medical-records/`, formData, {
@@ -128,11 +176,31 @@ export const dataService = {
     record_id: string,
     patient_id: string,
     data: Partial<MedicalRecord>,
+    firma_medico_evaluador?: Blob | null,
+    fecha_medico_evaluador?: string | null,
+    firma_medico_laboral?: Blob | null,
+    fecha_medico_laboral?: string | null,
   ): Promise<MedicalRecord> {
     const formData = new FormData();
 
     formData.append("patient_id", patient_id);
-    formData.append("data", JSON.stringify(data));
+    formData.append(
+      "data",
+      JSON.stringify(data, (_, v) => (v === undefined ? null : v)),
+    );
+
+    if (firma_medico_evaluador) {
+      formData.append("firma_medico_evaluador", firma_medico_evaluador);
+    }
+    if (fecha_medico_evaluador) {
+      formData.append("fecha_medico_evaluador", fecha_medico_evaluador);
+    }
+    if (firma_medico_laboral) {
+      formData.append("firma_medico_laboral", firma_medico_laboral);
+    }
+    if (fecha_medico_laboral) {
+      formData.append("fecha_medico_laboral", fecha_medico_laboral);
+    }
 
     const response = await apiClient.put(`/medical-records/${record_id}`, formData, {
       withCredentials: true,

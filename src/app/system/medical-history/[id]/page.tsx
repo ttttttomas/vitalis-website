@@ -44,6 +44,7 @@ import {OsteoarticularExamSection} from "../components/sections/OsteoarticularEx
 import {NeuroClinicalExamSection} from "../components/sections/NeuroClinicalExam";
 import {PsychiatricClinicalExamSection} from "../components/sections/PsychiatricClinicalExam";
 import {ImmunizationsSection} from "../components/sections/Immunizations";
+import CanvasFirm from "../components/CanvasFirm";
 
 // const raleway = Raleway({
 //   subsets: ["latin"],
@@ -68,6 +69,12 @@ export default function MedicalHistoryPage({params}: PageProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // States for signatures and dates
+  const [evaluatorDate, setEvaluatorDate] = useState<string>("");
+  const [evaluatorSignatureBlob, setEvaluatorSignatureBlob] = useState<Blob | null>(null);
+  const [laboralDate, setLaboralDate] = useState<string>("");
+  const [laboralSignatureBlob, setLaboralSignatureBlob] = useState<Blob | null>(null);
 
   const registry = useFormRegistry<MedicalRecord>();
 
@@ -95,6 +102,14 @@ export default function MedicalHistoryPage({params}: PageProps) {
         const active = records[0] || ({} as MedicalRecord);
 
         setMedicalRecord(active);
+
+        // Initialize dates if they exist
+        if (active.fecha_medico_evaluador) {
+          setEvaluatorDate(active.fecha_medico_evaluador);
+        }
+        if (active.fecha_medico_laboral) {
+          setLaboralDate(active.fecha_medico_laboral);
+        }
       } catch (_err) {
         // Si falla, asumimos que no hay registro (o error de conexión), pero permitimos crear uno nuevo
         // Ojo: idealmente chequear si es 404. Por ahora ante error asumimos "nuevo".
@@ -138,16 +153,51 @@ export default function MedicalHistoryPage({params}: PageProps) {
 
       let result: MedicalRecord;
 
+      const dataToSend: any = {...merged};
+
+      // Sanitize data to remove top-level fields that are handled separately or shouldn't be in the JSON data
+      delete dataToSend.id;
+      delete dataToSend.patient_id;
+      delete dataToSend.fecha_medico_evaluador;
+      delete dataToSend.fecha_medico_laboral;
+      delete dataToSend.firma_medico_evaluador;
+      delete dataToSend.firma_medico_laboral;
+
+      delete dataToSend.medical_record_data_img;
+      delete dataToSend.medical_record_signatures;
+      delete dataToSend.medical_record_laboral_signatures;
+
       if (medicalRecord.id) {
         // UPDATE
-        result = await dataService.updateMedicalRecord(medicalRecord.id, patientId, merged);
+        result = await dataService.updateMedicalRecord(
+          medicalRecord.id,
+          patientId,
+          dataToSend as unknown as Partial<MedicalRecord>,
+          evaluatorSignatureBlob,
+          evaluatorDate || null,
+          laboralSignatureBlob,
+          laboralDate || null,
+        );
       } else {
         // CREATE
         // merge necesita tener la estructura correcta para el backend
-        result = await dataService.createMedicalRecord(medicalRecord.id, merged);
+        result = await dataService.createMedicalRecord(
+          patientId,
+          dataToSend as unknown as Partial<MedicalRecord>,
+          undefined,
+          undefined,
+          evaluatorSignatureBlob,
+          evaluatorDate || null,
+          laboralSignatureBlob,
+          laboralDate || null,
+        );
       }
+      // After save, preserve the merged form data and update the ID from the response.
+      // The create response only returns {id, detail}, not a full MedicalRecord,
+      // so we must NOT replace the entire state with it.
+      const newId = result.id || medicalRecord.id;
 
-      setMedicalRecord(result);
+      setMedicalRecord({...merged, id: newId, patient_id: patientId} as MedicalRecord);
       setSaved(true);
       console.log("saved", result);
       setTimeout(() => {
@@ -158,7 +208,15 @@ export default function MedicalHistoryPage({params}: PageProps) {
     } finally {
       setSaving(false);
     }
-  }, [medicalRecord, registry, patientId]);
+  }, [
+    medicalRecord,
+    registry,
+    patientId,
+    evaluatorDate,
+    evaluatorSignatureBlob,
+    laboralDate,
+    laboralSignatureBlob,
+  ]);
 
   if (loading)
     return (
@@ -174,17 +232,17 @@ export default function MedicalHistoryPage({params}: PageProps) {
     );
 
   return (
-    <main className="mx-30 my-10">
-      <section className="flex items-start justify-between">
+    <main className="mx-5 my-10 md:mx-30">
+      <section className="flex flex-col items-center gap-4 md:flex-row md:items-start md:justify-between">
         <button
-          className="mt-20 flex cursor-pointer items-center gap-1 font-bold"
+          className="mt-5 flex cursor-pointer items-center gap-1 font-bold md:mt-20"
           onClick={() => router.back()}
         >
           <ArrowLeft />
           Volver al Portal
         </button>
         <MedicalHistoryHeader error={error} saved={saved} saving={saving} onSave={handleSaveAll} />
-        <div className="text-md mt-20 flex h-full flex-col items-end justify-between gap-2 font-medium">
+        <div className="text-md mt-2 flex h-full flex-col items-end justify-between gap-2 font-medium md:mt-20">
           <button
             className="flex cursor-pointer items-center gap-2 font-bold"
             onClick={() => void handlePrint()}
@@ -406,52 +464,76 @@ export default function MedicalHistoryPage({params}: PageProps) {
                   <div className="space-y-4">
                     <p className="text-lg font-semibold">Médico Evaluador</p>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
                       <label className="text-base" htmlFor="fecha-evaluador">
                         Fecha
                       </label>
                       <input
-                        className="border border-gray-500 p-1"
+                        className="border border-gray-500 px-5 py-2"
                         id="fecha-evaluador"
-                        type="text"
+                        type="date"
+                        value={evaluatorDate}
+                        onChange={(e) => setEvaluatorDate(e.target.value)}
                       />
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-center sm:gap-4">
                       <label className="text-base whitespace-nowrap" htmlFor="firma-evaluador">
-                        Firma y matrícula
+                        Firma
                       </label>
-                      <textarea
-                        className="h-24 w-full resize-none border border-gray-500 p-2"
-                        id="firma-evaluador"
+                      <CanvasFirm
+                        uploadOnSave={false}
+                        onSave={(blob) => setEvaluatorSignatureBlob(blob)}
                       />
                     </div>
+                    {medicalRecord.firma_medico_evaluador && !evaluatorSignatureBlob && (
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">Firma guardada:</p>
+                        <img
+                          alt="Firma Médico Evaluador"
+                          className="mt-1 max-h-20 border border-gray-200"
+                          src={medicalRecord.firma_medico_evaluador}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Médico Laboral */}
                   <div className="space-y-4">
                     <p className="text-lg font-semibold">Médico Laboral</p>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
                       <label className="text-base" htmlFor="fecha-laboral">
                         Fecha
                       </label>
                       <input
-                        className="border border-gray-500 p-1"
+                        className="border border-gray-500 px-5 py-2"
                         id="fecha-laboral"
-                        type="text"
+                        type="date"
+                        value={laboralDate}
+                        onChange={(e) => setLaboralDate(e.target.value)}
                       />
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-center sm:gap-4">
                       <label className="text-base whitespace-nowrap" htmlFor="firma-laboral">
-                        Firma y matrícula
+                        Firma
                       </label>
-                      <textarea
-                        className="h-24 w-full resize-none border border-gray-500 p-2"
-                        id="firma-laboral"
+                      <CanvasFirm
+                        uploadOnSave={false}
+                        onSave={(blob) => setLaboralSignatureBlob(blob)}
                       />
                     </div>
+                    {medicalRecord.firma_medico_laboral && !laboralSignatureBlob && (
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">Firma guardada:</p>
+                        <img
+                          alt="Firma Médico Laboral"
+                          className="mt-1 max-h-20 border border-gray-200"
+                          src={medicalRecord.firma_medico_laboral}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

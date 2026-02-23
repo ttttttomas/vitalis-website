@@ -1,8 +1,0 @@
-﻿src/app/system/clientes/page.tsx(61,31): error TS7006: Parameter 'client' implicitly has an 'any' type.
-src/app/system/clientes/page.tsx(66,23): error TS2345: Argument of type '{}' is not assignable to parameter of type 'SetStateAction<undefined>'.
-  Type '{}' provides no match for the signature '(prevState: undefined): undefined'.
-src/app/system/clientes/page.tsx(71,23): error TS2345: Argument of type 'null' is not assignable to parameter of type 'SetStateAction<undefined>'.
-src/app/system/estudios/page.tsx(5,47): error TS2322: Type '{ children: Element; pageIcon: string; pageTitle: string; roles: string; userLabel: string; }' is not assignable to type 'IntrinsicAttributes & DashboardLayoutProps'.
-  Property 'roles' does not exist on type 'IntrinsicAttributes & DashboardLayoutProps'.
-src/app/system/profesionales/add/page.tsx(9,56): error TS2322: Type '{ children: Element[]; pageIcon: Element; pageTitle: string; roles: string; userLabel: string; }' is not assignable to type 'IntrinsicAttributes & DashboardLayoutProps'.
-  Property 'roles' does not exist on type 'IntrinsicAttributes & DashboardLayoutProps'.

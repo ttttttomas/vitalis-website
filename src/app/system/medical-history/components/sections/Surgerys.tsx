@@ -63,7 +63,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
           <div className="flex flex-col gap-3 text-lg">
             {/* Header */}
             <div className="flex items-center">
-              <div className="w-[300px]" />
+              <div className="w-[150px] shrink-0 md:w-[300px]" />
               <div className="flex gap-6">
                 <p className="w-6 text-center font-semibold">Si</p>
                 <p className="w-6 text-center font-semibold">No</p>
@@ -72,23 +72,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Apéndice? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Apéndice?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Apéndice?</p>
               <Controller
                 control={control}
                 name="apendice"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -96,8 +96,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("apendice_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("apendice_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -105,23 +105,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Amígdala? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Amígdala?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Amígdala?</p>
               <Controller
                 control={control}
                 name="amigdala"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -129,8 +129,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("amigdala_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("amigdala_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -138,23 +138,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Hernia? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Hernia?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Hernia?</p>
               <Controller
                 control={control}
                 name="hernia"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -162,8 +162,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("hernia_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("hernia_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -171,23 +171,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Várices? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Várices?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Várices?</p>
               <Controller
                 control={control}
                 name="varices"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -195,8 +195,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("varices_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("varices_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -204,23 +204,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Vesícula? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Vesícula?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Vesícula?</p>
               <Controller
                 control={control}
                 name="vesicula"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -228,8 +228,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("vesicula_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("vesicula_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -237,23 +237,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Columna? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Columna?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Columna?</p>
               <Controller
                 control={control}
                 name="columna"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -261,8 +261,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("columna_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("columna_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -270,23 +270,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* ¿Testículos? */}
             <div className="flex items-center">
-              <p className="w-[300px]">¿Testículos?</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">¿Testículos?</p>
               <Controller
                 control={control}
                 name="testiculos"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -294,8 +294,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("testiculos_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("testiculos_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>
@@ -303,23 +303,23 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
 
             {/* Otros */}
             <div className="flex items-center">
-              <p className="w-[300px]">Otros</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">Otros</p>
               <Controller
                 control={control}
                 name="others"
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-6">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -327,8 +327,8 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  {...register("others_date")}
-                  className="w-[200px] border border-gray-500 p-1"
+                  {...register("others_date", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
                 />
               </div>

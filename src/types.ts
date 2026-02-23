@@ -14,17 +14,6 @@ export interface UserAdmin {
   updatedAt?: string;
 }
 
-export interface Studies {
-  id: string;
-  patient_id: string;
-  professional_id?: string;
-  created_by_user_id?: string;
-  study_type: string;
-  created_at?: string;
-  status: string;
-  study_file: string;
-}
-
 export interface UserProfessional {
   id: string;
   email: string;
@@ -67,12 +56,25 @@ export interface UserPatient {
   last_name: string;
   dni: string;
   date_of_birth: string;
+  user_id: string;
   social_security: string;
   phone: string;
   insurance?: string;
   company_id?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  study_type?: string;
+}
+
+export interface Studies {
+  id: string;
+  patient_id: string;
+  professional_id?: string;
+  created_by_user_id?: string;
+  study_type: string;
+  created_at?: string;
+  status: string;
+  study_file: string;
 }
 
 export interface UserProfile {
@@ -82,8 +84,8 @@ export interface UserProfile {
 }
 
 export interface AuthenticatedUser {
-  user: UserAdmin | UserCompany | UserPatient | UserProfessional;
-  profile: UserProfile;
+  user?: UserAdmin | UserCompany | UserPatient | UserProfessional;
+  profile?: UserProfile;
 }
 
 // Medical Record Interfaces
@@ -393,6 +395,7 @@ export interface MedicalRecordPreviousProblems {
   sexual_transmition_diseases: boolean;
   diabetes: boolean;
   others: string;
+  other_boolean: boolean;
   excesive_nervious: boolean;
   asma: boolean;
   dizziness_or_fainting: boolean;
@@ -436,6 +439,7 @@ export interface MedicalRecordEvaluationType {
   periodic_exams: boolean;
   graduation_exam: boolean;
   other: string;
+  other_boolean: boolean;
   laboral_change_position: boolean;
 }
 
@@ -520,4 +524,8 @@ export interface MedicalRecord {
   medical_record_previous_problems: MedicalRecordPreviousProblems | null;
   medical_record_head_exam: MedicalRecordHeadExam | null;
   medical_record_surgerys: MedicalRecordSurgerys | null;
+  fecha_medico_evaluador?: string | null;
+  firma_medico_evaluador?: string | null;
+  fecha_medico_laboral?: string | null;
+  firma_medico_laboral?: string | null;
 }

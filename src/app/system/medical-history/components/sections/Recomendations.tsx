@@ -73,7 +73,7 @@ export const RecomendationsSection = React.memo(({defaultValues, registerSection
         <div className="relative">
           <img alt="Logo" className="absolute top-0 right-0" src="/logo.png" width={60} />
           <div className="flex flex-col gap-3 text-lg">
-            <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-3">
+            <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-2">
               {/* Apto */}
               <Controller
                 control={control}
@@ -180,7 +180,7 @@ export const RecomendationsSection = React.memo(({defaultValues, registerSection
               <span className="text-base">Duración</span>
               <input
                 {...register("duracion")}
-                className="w-[200px] border border-gray-500 p-1"
+                className="w-full border border-gray-500 p-1 md:w-[200px]"
                 type="text"
               />
             </div>

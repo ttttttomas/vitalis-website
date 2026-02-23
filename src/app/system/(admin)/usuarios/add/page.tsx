@@ -20,13 +20,11 @@ export default function AddUserPage() {
 
   const onSubmit = async (data: AddUserForm) => {
     try {
-      const response = await dataService.createUserAdmin(data);
-
-      console.log(response);
+      await dataService.createUserAdmin(data);
       alert("Usuario agregado correctamente");
       router.push("/system/usuarios");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Error al agregar usuario");
     }
   };
