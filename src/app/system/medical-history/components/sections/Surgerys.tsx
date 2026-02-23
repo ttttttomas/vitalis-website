@@ -96,6 +96,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("apendice_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -129,6 +130,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("amigdala_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -162,6 +164,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("hernia_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -195,6 +198,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("varices_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -228,6 +232,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("vesicula_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -261,6 +266,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("columna_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -294,6 +300,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("testiculos_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -327,6 +334,7 @@ export const SurgerysSection = React.memo(({defaultValues, registerSection}: Pro
               <div className="ml-10 flex items-center gap-2">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
+                  placeholder="Formato: 00/00/0000"
                   {...register("others_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"

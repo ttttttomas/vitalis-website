@@ -2,26 +2,29 @@
 import Link from "next/link";
 import {useEffect, useState} from "react";
 
-import {UserCompany, UserPatient} from "@/types";
+import {UserPatient, UserProfile} from "@/types";
 
 import {Users} from "@/components/ui/Icons";
 import {dataService} from "@/services/dataService";
+import {authService} from "@/services/authService";
 
 import Panel from "../../components/Panel";
 
 export default function EmpleadosPage() {
-  // const [companie, setCompanie] = useState<UserCompany | null>(null);
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState<UserPatient[]>([]);
+  const [profile, setProfile] = useState<UserProfile>();
 
   useEffect(() => {
     const data = async () => {
       try {
-        // const res = await dataService.getCompanie();
-        const res2 = await dataService.getPatientsFilters();
+        const {profile} = await authService.getCurrentUser();
 
-        setEmployees(res2);
-        // setCompanie(res);
+        setProfile(profile);
+
+        const res = await dataService.getPatientsFilters();
+
+        setEmployees(res);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -35,8 +38,11 @@ export default function EmpleadosPage() {
 
   const deleteUser = async (user_id: string) => {
     try {
-      await dataService.deletePatient(user_id);
+      if (!profile?.company_id) return;
+      await dataService.deletePatientCompany(profile.company_id, user_id);
       setEmployees(employees.filter((employee) => employee.user_id !== user_id));
+      alert("Empleado eliminado correctamente");
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -86,7 +92,12 @@ export default function EmpleadosPage() {
                   <Link href={`/system/empleados/${row.id}`}>Ver</Link>
                 </td>
                 <td className="px-3 py-2 text-center underline">
-                  <button className="cursor-pointer" onClick={void deleteUser(row.id)}>
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => {
+                      void deleteUser(row.id);
+                    }}
+                  >
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"

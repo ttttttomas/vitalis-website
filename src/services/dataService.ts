@@ -33,8 +33,8 @@ export const dataService = {
   /**
    * Eliminar paciente
    */
-  async deletePatient(patient_id: string): Promise<void> {
-    await apiClient.delete(`/admin/users/delete/${patient_id}`, {
+  async deletePatientCompany(company_id: string, patient_id: string): Promise<void> {
+    await apiClient.delete(`/companies/${company_id}/employees/${patient_id}`, {
       withCredentials: true,
     });
   },
@@ -230,7 +230,7 @@ export const dataService = {
    * Si te logueas como profesional podes ver o todos los pacientes sin filtrar nada o filtrar con DNI
    */
   async getPatientsFilters(): Promise<UserPatient[]> {
-    const response = await apiClient.get(`/patients`, {
+    const response = await apiClient.get(`/patients/`, {
       withCredentials: true,
     });
 
