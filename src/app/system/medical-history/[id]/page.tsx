@@ -204,7 +204,7 @@ export default function MedicalHistoryPage({params}: PageProps) {
         window.location.reload();
       }, 1000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error guardando historial");
+      setError("Error guardando historial. Rellene todos los campos obligatorios.");
     } finally {
       setSaving(false);
     }

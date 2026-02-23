@@ -44,7 +44,7 @@ export const MedicalHistoryHeader = React.memo(
         </button>
 
         {saving && <p className="font-bold text-blue-600">Actualizando...</p>}
-        {!saving && error && <p className="font-bold text-red-600">Error: {error}</p>}
+        {!saving && error && <p className="font-bold text-red-600">{error}</p>}
         {!saving && !error && saved && (
           <p className="font-bold text-green-600">¡Historial médico actualizado! Guardando...</p>
         )}

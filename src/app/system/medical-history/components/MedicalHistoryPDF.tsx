@@ -422,7 +422,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
               ].map((item, i) => (
                 <SiNoItem key={i} label={item.l} value={item.v} />
               ))}
-              <Text style={{fontSize: 7, marginTop: 3}}>Especificar tipo: {fam?.cancer_type}</Text>
+              <Text style={{fontSize: 7, marginTop: 3}}>Tipo: {fam?.cancer_type}</Text>
             </View>
           </View>
           <View style={styles.obsRow}>
@@ -1087,10 +1087,10 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
             <SiNoHeaders />
             <View style={styles.itemRow}>
               <Text style={[styles.label, {flex: 1}]}>Sars-cov-2</Text>
+              <Text style={{fontSize: 7, marginRight: 10}}>Dosis: {immun?.sars_cov_2_dosis}</Text>
               <Checkbox value={immun?.sars_cov_2 === true} />
               <View style={{width: 2}} />
               <Checkbox value={immun?.sars_cov_2 === false} />
-              <Text style={{fontSize: 7, marginLeft: 10}}>Dosis: {immun?.sars_cov_2_dosis}</Text>
             </View>
             <SiNoItem label="FHA" value={immun?.fha} />
             <SiNoItem label="Triple adultos (tétanos)" value={immun?.triple_adultos_tetanos} />

@@ -55,6 +55,7 @@ export interface UserCompany {
   email: string;
   password: string;
   company_name: string;
+  company_id?: string;
   responsable_name: string;
   cuit: string;
   name: string;

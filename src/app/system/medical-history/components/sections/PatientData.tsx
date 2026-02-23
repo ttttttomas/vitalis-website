@@ -57,7 +57,7 @@ export const PatientDataSection = React.memo(({defaultValues, registerSection}: 
         <div className="flex flex-col gap-5">
           <input
             className="w-full border border-gray-500 p-2 xl:w-[400px]"
-            placeholder="Fecha de nacimiento"
+            placeholder="Fecha de nacimiento. Formato: 00/00/0000"
             type="text"
             {...register("date_of_birthday")}
           />
