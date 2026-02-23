@@ -22,11 +22,13 @@ export const MedicalHistoryHeader = React.memo(
   ({onSave, saving, saved, error}: MedicalHistoryHeaderProps) => {
     return (
       <div className="mx-auto flex flex-col items-center gap-3">
-        <img alt="Logo" className="mx-auto" src="/logo.png" width={200} />
-        <h1 className={`text-center text-[69px] font-bold text-[#134173] ${raleway.className}`}>
+        <img alt="Logo" className="mx-auto w-[120px] md:w-[200px]" src="/logo.png" />
+        <h1
+          className={`text-center text-[36px] font-bold text-[#134173] md:text-[69px] ${raleway.className}`}
+        >
           VITALIS
         </h1>
-        <h2 className="text-center text-[36px] font-semibold text-black">
+        <h2 className="text-center text-[20px] font-semibold text-black md:text-[36px]">
           Centro de salud integral
         </h2>
         <p className="font-bold">Salud Ocupacional</p>
@@ -41,10 +43,10 @@ export const MedicalHistoryHeader = React.memo(
           Guardar
         </button>
 
-        {saving && <p className="font-bold text-blue-600">Guardando...</p>}
+        {saving && <p className="font-bold text-blue-600">Actualizando...</p>}
         {!saving && error && <p className="font-bold text-red-600">Error: {error}</p>}
         {!saving && !error && saved && (
-          <p className="font-bold text-green-600">¡Historial médico guardado!</p>
+          <p className="font-bold text-green-600">¡Historial médico actualizado! Guardando...</p>
         )}
       </div>
     );

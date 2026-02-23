@@ -1,6 +1,58 @@
+"use client";
 import Link from "next/link";
+import {useForm} from "react-hook-form";
+import {useRouter} from "next/navigation";
+
+import {authService} from "@/services/authService";
+
+interface RegisterFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  company_name: string;
+  responsable_name: string;
+  cuit: string;
+  phone: string;
+  company_address?: string;
+}
 
 export default function RegisterPage() {
+  const {register, handleSubmit, watch} = useForm<RegisterFormData>();
+  const router = useRouter();
+
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
+  const passwordsMatch = !confirmPassword || password === confirmPassword;
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      if (data.password !== data.confirmPassword) {
+        return;
+      }
+      await authService.registerCompany(data);
+      alert("Usuario registrado exitosamente");
+      router.push("/login");
+    } catch (error: unknown) {
+      // Axios lanza excepciones para status 4xx/5xx
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as {response?: {status?: number; data?: {detail?: string}}};
+
+        if (axiosError.response?.status === 400) {
+          const detail =
+            axiosError.response.data?.detail &&
+            "Ya existe un usuario con ese DNI o correo electrónico. Por favor, revise los datos.";
+
+          alert(detail);
+
+          return;
+        }
+      }
+      console.error("Error al registrar:", error);
+      alert("Error al registrar usuario. Por favor, intente nuevamente.");
+    }
+  });
+
   return (
     <main className="bg-blue flex items-center justify-center py-10">
       <section className="grid max-h-screen w-full max-w-5xl grid-cols-1 overflow-hidden rounded-3xl bg-white pb-10 md:grid-cols-2">
@@ -8,26 +60,37 @@ export default function RegisterPage() {
         <div className="flex flex-col justify-start p-12">
           <h1 className="mb-8 text-4xl font-bold text-black">Registro</h1>
 
-          <form className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void onSubmit(e);
+            }}
+          >
             {/* Nombre de la empresa */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-black" htmlFor="nameCompany">
+              <label className="text-sm text-black" htmlFor="company_name">
                 Nombre de la empresa <span className="text-red-500">*</span>
               </label>
               <input
                 className="rounded-md border px-3 py-2"
-                id="nameCompany"
-                name="nameCompany"
+                id="company_name"
                 type="text"
+                {...register("company_name", {required: true})}
               />
             </div>
 
             {/* Nombre del responsable */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-black" htmlFor="dni">
+              <label className="text-sm text-black" htmlFor="responsable_name">
                 Nombre del responsable <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="dni" name="dni" type="text" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="responsable_name"
+                type="text"
+                {...register("responsable_name", {required: true})}
+              />
             </div>
 
             {/* CUIT */}
@@ -35,7 +98,12 @@ export default function RegisterPage() {
               <label className="text-sm text-black" htmlFor="cuit">
                 CUIT <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="cuit" name="cuit" type="text" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="cuit"
+                type="text"
+                {...register("cuit", {required: true})}
+              />
             </div>
 
             {/* Correo electrónico */}
@@ -43,7 +111,12 @@ export default function RegisterPage() {
               <label className="text-sm text-black" htmlFor="email">
                 Correo electrónico <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="email" name="email" type="email" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="email"
+                type="email"
+                {...register("email", {required: true})}
+              />
             </div>
 
             {/* Contraseña */}
@@ -55,12 +128,21 @@ export default function RegisterPage() {
                 <input
                   className="w-full rounded-md border px-3 py-2 pr-10"
                   id="password"
-                  name="password"
                   type="password"
+                  {...register("password", {required: true})}
                 />
                 <button
                   className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-500"
                   type="button"
+                  onClick={() => {
+                    const input = document.getElementById("password") as HTMLInputElement;
+
+                    if (input.type === "password") {
+                      input.type = "text";
+                    } else {
+                      input.type = "password";
+                    }
+                  }}
                 >
                   👁
                 </button>
@@ -76,15 +158,27 @@ export default function RegisterPage() {
                 <input
                   className="w-full rounded-md border px-3 py-2 pr-10"
                   id="confirmPassword"
-                  name="confirmPassword"
                   type="password"
+                  {...register("confirmPassword", {required: true})}
                 />
                 <button
                   className="absolute inset-y-0 right-2 flex items-center text-sm text-gray-500"
                   type="button"
+                  onClick={() => {
+                    const input = document.getElementById("confirmPassword") as HTMLInputElement;
+
+                    if (input.type === "password") {
+                      input.type = "text";
+                    } else {
+                      input.type = "password";
+                    }
+                  }}
                 >
                   👁
                 </button>
+                {!passwordsMatch && (
+                  <p className="text-sm text-red-500">Las contraseñas no coinciden</p>
+                )}
               </div>
             </div>
 
@@ -93,7 +187,12 @@ export default function RegisterPage() {
               <label className="text-sm text-black" htmlFor="phone">
                 Teléfono de contacto <span className="text-red-500">*</span>
               </label>
-              <input className="rounded-md border px-3 py-2" id="phone" name="phone" type="tel" />
+              <input
+                className="rounded-md border px-3 py-2"
+                id="phone"
+                type="tel"
+                {...register("phone", {required: true})}
+              />
             </div>
 
             {/* Botón */}

@@ -60,7 +60,7 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
           <div className="flex flex-col gap-3 text-lg">
             {/* Header */}
             <div className="flex items-center text-lg">
-              <div className="w-[300px]" />
+              <div className="w-[150px] shrink-0 md:w-[300px]" />
               <div className="flex gap-6">
                 <p className="w-6 text-center font-semibold">Si</p>
                 <p className="w-6 text-center font-semibold">No</p>
@@ -69,7 +69,7 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
 
             {/* Dieta */}
             <div className="flex items-center text-lg">
-              <p className="w-[300px]">Dieta</p>
+              <p className="w-[150px] shrink-0 md:w-[300px]">Dieta</p>
               <Controller
                 control={control}
                 name="diet"
@@ -93,8 +93,8 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
             </div>
 
             {/* Fuma */}
-            <div className="flex items-center text-lg">
-              <p className="w-[300px]">Fuma</p>
+            <div className="flex flex-wrap items-center text-lg">
+              <p className="w-[150px] shrink-0 md:w-[300px]">Fuma</p>
               <Controller
                 control={control}
                 name="smoke"
@@ -115,19 +115,19 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
                   </div>
                 )}
               />
-              <div className="ml-10 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">¿Cuántos por día?</span>
                 <input
-                  {...register("smoke_quantity")}
-                  className="w-[180px] border border-gray-500 p-1"
+                  {...register("smoke_quantity", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[180px]"
                   type="text"
                 />
               </div>
             </div>
 
             {/* Toma bebidas alcoholicas */}
-            <div className="flex items-center text-lg">
-              <p className="w-[300px]">Toma bebidas alcohólicas</p>
+            <div className="flex flex-wrap items-center text-lg">
+              <p className="w-[150px] shrink-0 md:w-[300px]">Toma bebidas alcohólicas</p>
               <Controller
                 control={control}
                 name="alcoholic_drinks"
@@ -148,19 +148,19 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
                   </div>
                 )}
               />
-              <div className="ml-10 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Cantidad</span>
                 <input
-                  {...register("alcoholic_drinks_quantity")}
-                  className="w-[180px] border border-gray-500 p-1"
+                  {...register("alcoholic_drinks_quantity", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[180px]"
                   type="text"
                 />
               </div>
             </div>
 
             {/* Usa/ha usado drogas en abuso */}
-            <div className="flex items-center text-lg">
-              <p className="w-[300px]">Usa/ha usado drogas en abuso</p>
+            <div className="flex flex-wrap items-center text-lg">
+              <p className="w-[150px] shrink-0 md:w-[300px]">Usa/ha usado drogas en abuso</p>
               <Controller
                 control={control}
                 name="drugs"
@@ -181,19 +181,19 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
                   </div>
                 )}
               />
-              <div className="ml-10 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">¿Cuáles?</span>
                 <input
                   {...register("drugs_type")}
-                  className="w-[180px] border border-gray-500 p-1"
+                  className="w-full border border-gray-500 p-1 md:w-[180px]"
                   type="text"
                 />
               </div>
             </div>
 
             {/* Tiene alteración del sueño */}
-            <div className="flex items-center text-lg">
-              <p className="w-[300px]">Tiene alteración del sueño</p>
+            <div className="flex flex-wrap items-center text-lg">
+              <p className="w-[150px] shrink-0 md:w-[300px]">Tiene alteración del sueño</p>
               <Controller
                 control={control}
                 name="sleep_alteration"
@@ -214,19 +214,19 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
                   </div>
                 )}
               />
-              <div className="ml-10 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">¿Cuántas horas duerme?</span>
                 <input
-                  {...register("sleep_hours")}
-                  className="w-[180px] border border-gray-500 p-1"
+                  {...register("sleep_hours", {setValueAs: (v: string) => v || null})}
+                  className="w-full border border-gray-500 p-1 md:w-[180px]"
                   type="text"
                 />
               </div>
             </div>
 
             {/* Hace alguna dieta */}
-            <div className="flex items-center text-lg">
-              <p className="w-[300px]">Hace alguna dieta</p>
+            <div className="flex flex-wrap items-center text-lg">
+              <p className="w-[150px] shrink-0 md:w-[300px]">Hace alguna dieta</p>
               <Controller
                 control={control}
                 name="daily_diet"
@@ -247,19 +247,19 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
                   </div>
                 )}
               />
-              <div className="ml-10 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">¿De qué tipo?</span>
                 <input
                   {...register("diet_type")}
-                  className="w-[180px] border border-gray-500 p-1"
+                  className="w-full border border-gray-500 p-1 md:w-[180px]"
                   type="text"
                 />
               </div>
             </div>
 
             {/* Realiza actividad física */}
-            <div className="flex items-center text-lg">
-              <p className="w-[300px]">Realiza actividad física</p>
+            <div className="flex flex-wrap items-center text-lg">
+              <p className="w-[150px] shrink-0 md:w-[300px]">Realiza actividad física</p>
               <Controller
                 control={control}
                 name="physic_activity"
@@ -280,15 +280,15 @@ export const HabitsSection = React.memo(({defaultValues, registerSection}: Props
                   </div>
                 )}
               />
-              <div className="ml-10 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">¿Cuál?</span>
                 <input
                   {...register("physic_activity_type")}
-                  className="w-[180px] border border-gray-500 p-1"
+                  className="w-full border border-gray-500 p-1 md:w-[180px]"
                   type="text"
                 />
               </div>
-              <div className="ml-4 flex-col items-center gap-3">
+              <div className="mt-2 flex-col items-center gap-3 md:mt-0 md:ml-4">
                 <Controller
                   control={control}
                   name="frequency"

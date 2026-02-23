@@ -35,7 +35,7 @@ export const EvaluationTypeSection = React.memo(({defaultValues, registerSection
   return (
     <AccordionItem value="item-1">
       <AccordionTrigger>Tipo de evaluación</AccordionTrigger>
-      <AccordionContent className="flex gap-30">
+      <AccordionContent className="flex flex-col gap-5 md:flex-row md:gap-30">
         <div className="flex flex-col gap-2">
           <label className="flex items-center gap-2">
             <input type="checkbox" {...register("preocupational_exam")} />
@@ -49,10 +49,14 @@ export const EvaluationTypeSection = React.memo(({defaultValues, registerSection
             <input type="checkbox" {...register("post_enf_prolonged")} />
             <p className="text-lg">Post. Enf. Prolongada</p>
           </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" {...register("other")} />
+          <div className="flex items-center gap-2">
+            <input
+              className="border border-gray-500 p-1"
+              type="checkbox"
+              {...register("other_boolean")}
+            />
             <p className="text-lg">Otro</p>
-          </label>
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <label className="flex items-center gap-2">
@@ -72,7 +76,7 @@ export const EvaluationTypeSection = React.memo(({defaultValues, registerSection
             <input
               className="w-[200px] border border-gray-500 p-1"
               type="text"
-              {...register("other")}
+              {...register("other", {setValueAs: (v: unknown) => (typeof v === "string" ? v : "")})}
             />
           </label>
         </div>

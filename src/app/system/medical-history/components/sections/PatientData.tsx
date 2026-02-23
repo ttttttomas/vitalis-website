@@ -29,26 +29,26 @@ export const PatientDataSection = React.memo(({defaultValues, registerSection}: 
 
   return (
     <section className="flex flex-col items-center gap-5 px-5">
-      <div className="mt-7 flex w-full justify-between text-2xl font-bold">
+      <div className="mt-7 flex w-full flex-col justify-between gap-2 text-xl font-bold md:flex-row md:text-2xl">
         <p>Datos del paciente *</p>
-        <p>Empresa</p>
+        {/* <p>Empresa</p> */}
       </div>
-      <div className="flex w-full justify-between gap-2">
+      <div className="flex w-full flex-col gap-5 md:flex-row md:justify-between md:gap-2">
         <div className="flex flex-col gap-5">
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Nombre completo"
             type="text"
             {...register("complete_name")}
           />
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="DNI"
             type="text"
             {...register("dni")}
           />
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Dirección"
             type="text"
             {...register("address")}
@@ -56,19 +56,19 @@ export const PatientDataSection = React.memo(({defaultValues, registerSection}: 
         </div>
         <div className="flex flex-col gap-5">
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Fecha de nacimiento"
             type="text"
             {...register("date_of_birthday")}
           />
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Nacionalidad"
             type="text"
             {...register("nacionality")}
           />
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="E-mail"
             type="email"
             {...register("email")}
@@ -76,25 +76,25 @@ export const PatientDataSection = React.memo(({defaultValues, registerSection}: 
         </div>
         <div className="flex flex-col gap-5">
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Estado civil"
             type="text"
             {...register("civil_status")}
           />
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Teléfono"
             type="text"
             {...register("phone")}
           />
           <input
-            className="border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2 xl:w-[400px]"
             placeholder="Hijos"
             type="text"
             {...register("sons")}
           />
         </div>
-        <img alt="Logo" className="object-cover" src="/logo.png" width={150} />
+        <img alt="Logo" className="hidden object-cover md:block" src="/logo.png" width={150} />
       </div>
       <input
         className="mx-5 mb-10 w-full border border-gray-500 p-2"

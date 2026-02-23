@@ -78,7 +78,13 @@ export const PreviousProblems = React.memo(({defaultValues, registerSection}: Pr
 
   useEffect(() => {
     const unregister = registerSection({
-      getValues: () => getValues(),
+      getValues: () => {
+        const values = getValues();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
+        const {others_boolean: _ob, ...rest} = values as any; // Remove others_boolean (column doesn't exist in DB)
+
+        return rest as MedicalRecordPreviousProblems;
+      },
       validate: async () => trigger(),
     });
 
@@ -91,7 +97,7 @@ export const PreviousProblems = React.memo(({defaultValues, registerSection}: Pr
       <AccordionContent>
         <div className="relative">
           <img alt="Logo" className="absolute top-0 right-0" src="/logo.png" width={60} />
-          <div className="flex gap-10 text-lg">
+          <div className="flex flex-col gap-10 text-lg md:flex-row">
             {/* Columna Izquierda */}
             <div className="flex flex-1 flex-col gap-3">
               {/* Header */}
@@ -581,17 +587,12 @@ export const PreviousProblems = React.memo(({defaultValues, registerSection}: Pr
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <p>Otros</p>
-                  <input
-                    className="h-6 w-6 cursor-pointer"
-                    type="checkbox"
-                    {...register("others", {setValueAs: (v) => v === "true"})}
-                  />
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm">¿Cual?</span>
                   <input
                     {...register("others")}
-                    className="w-[200px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[200px]"
                     type="text"
                   />
                 </div>

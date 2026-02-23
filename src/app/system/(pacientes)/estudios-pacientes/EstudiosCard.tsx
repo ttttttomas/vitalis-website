@@ -1,11 +1,29 @@
-import {Studies} from "@/types";
+import {useEffect, useState} from "react";
+
+import {UserAdmin, UserCompany, UserPatient, UserProfessional, Studies} from "@/types";
 
 import {apiClient} from "@/lib/axios";
+import {authService} from "@/services/authService";
+import {dataService} from "@/services/dataService";
 
 export default function EstudiosCard({studies}: {studies: Studies}) {
+  const [userData, setUserData] = useState<
+    UserAdmin | UserCompany | UserPatient | UserProfessional | null
+  >(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {user} = await authService.getCurrentUser();
+
+      setUserData(user ?? null);
+    };
+
+    void fetchUser();
+  }, []);
+
   const downloadStudy = async () => {
     try {
-      // Hacer petición al backend para obtener la URL del archivo
+      // Hacer petición al backend para obtener la URL del archiv o
       const response = await apiClient.get<{
         url: string;
         original_filename: string;
@@ -35,12 +53,24 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
     switch (status) {
       case "pending":
         return "text-yellow-200";
-      case "completado":
-        return "text-green-200";
-      case "cancelado":
-        return "text-red-200";
+      case "Disponible":
+        return "text-green-400";
       default:
-        return "text-gray-200";
+        return "text-red-400";
+    }
+  };
+
+  const updateStudyStatus = async () => {
+    try {
+      await dataService.changeStudyStatus(studies.id, {
+        status: "Disponible",
+        study_type: studies.study_type,
+      });
+      alert("Estudio actualizado correctamente");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error actualizando el estudio:", error);
+      alert("Error al actualizar el estudio. Por favor, intenta nuevamente.");
     }
   };
 
@@ -59,16 +89,34 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-center gap-2">
-        <p>
-          Estado:{" "}
-          <b className={getStatusColor(studies.status)}>
-            {studies.status === "pending" ? "Pendiente" : studies.study_type}
-          </b>
-        </p>
-        <button className="cursor-pointer underline" onClick={() => void downloadStudy()}>
-          Descargar PDF
-        </button>
+      <div className="flex items-center gap-5">
+        <div className="flex flex-col items-start gap-2">
+          <p className="flex items-center gap-1">
+            Estado:
+            <b className={getStatusColor(studies.status)}>
+              {studies.status === "pending"
+                ? "Pendiente"
+                : studies.status === "Disponible"
+                  ? "Disponible"
+                  : "No reconocido"}
+            </b>
+          </p>
+          {studies.status === "Disponible" && userData?.role === "patient" && (
+            <button className="cursor-pointer underline" onClick={() => void downloadStudy()}>
+              Descargar PDF
+            </button>
+          )}
+          {userData?.role === "professional" && (
+            <button className="cursor-pointer underline" onClick={() => void downloadStudy()}>
+              Descargar PDF
+            </button>
+          )}
+        </div>
+        {userData?.role === "professional" && studies.status === "pending" && (
+          <button className="cursor-pointer underline" onClick={() => void updateStudyStatus()}>
+            Cambiar a disponible
+          </button>
+        )}
       </div>
     </section>
   );

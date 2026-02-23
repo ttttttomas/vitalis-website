@@ -9,34 +9,6 @@ import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
 
-interface UsersRow {
-  nombre: string;
-  apellido: string;
-  dni: string;
-  fecha_nacimiento: string;
-  obra_social: string;
-  puesto: string;
-}
-
-const USERS_DATA: UsersRow[] = [
-  {
-    nombre: "Empleado1",
-    apellido: "Empleado1",
-    dni: "11111111",
-    fecha_nacimiento: "1990-01-01",
-    obra_social: "11111111",
-    puesto: "11111111",
-  },
-  {
-    apellido: "Empleado2",
-    nombre: "Empleado2",
-    dni: "11111111",
-    fecha_nacimiento: "1990-01-01",
-    obra_social: "11111111",
-    puesto: "11111111",
-  },
-];
-
 export default function EmpleadosPage() {
   // const [companie, setCompanie] = useState<UserCompany | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,6 +32,15 @@ export default function EmpleadosPage() {
 
     void data();
   }, []);
+
+  const deleteUser = async (user_id: string) => {
+    try {
+      await dataService.deletePatient(user_id);
+      setEmployees(employees.filter((employee) => employee.user_id !== user_id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (loading)
     return (
@@ -105,7 +86,7 @@ export default function EmpleadosPage() {
                   <Link href={`/system/empleados/${row.id}`}>Ver</Link>
                 </td>
                 <td className="px-3 py-2 text-center underline">
-                  <button className="cursor-pointer">
+                  <button className="cursor-pointer" onClick={void deleteUser(row.id)}>
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
@@ -120,6 +101,7 @@ export default function EmpleadosPage() {
             ))}
           </tbody>
         </table>
+        {employees.length === 0 && <p className="mx-auto text-xl">No hay empleados cargados</p>}
       </div>
     </Panel>
   );

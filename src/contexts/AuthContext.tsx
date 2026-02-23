@@ -37,8 +37,8 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
           // Obtener datos del usuario
           const data = await authService.getCurrentUser();
 
-          setUser(data.user);
-          setProfile(data.profile);
+          setUser(data.user ?? null);
+          setProfile(data.profile ?? null);
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
@@ -57,8 +57,8 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     try {
       const {user: authData} = await authService.login({email, password});
 
-      setUser(authData.user);
-      setProfile(authData.profile);
+      setUser(authData.user ?? null);
+      setProfile(authData.profile ?? null);
     } finally {
       setIsLoading(false);
     }
@@ -79,8 +79,8 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     try {
       const data = await authService.getCurrentUser();
 
-      setUser(data.user);
-      setProfile(data.profile);
+      setUser(data.user ?? null);
+      setProfile(data.profile ?? null);
     } catch (error: unknown) {
       console.error("Error refreshing user:", error);
       setUser(null);

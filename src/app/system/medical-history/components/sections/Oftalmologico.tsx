@@ -66,7 +66,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>S/C | OD</span>
                   <input
                     {...register("sc_od_nearby", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -74,7 +74,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>S/C | OI</span>
                   <input
                     {...register("sc_oi_nearby", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -84,7 +84,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>C/C | OD</span>
                   <input
                     {...register("cc_od_nearby", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -92,7 +92,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>C/C | OI</span>
                   <input
                     {...register("cc_oi_nearby", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -105,7 +105,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>S/C | OD</span>
                   <input
                     {...register("sc_od_distant", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -113,7 +113,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>S/C | OI</span>
                   <input
                     {...register("sc_oi_distant", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -123,7 +123,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>C/C | OD</span>
                   <input
                     {...register("cc_od_distant", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -131,7 +131,7 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                   <span>C/C | OI</span>
                   <input
                     {...register("cc_oi_distant", {valueAsNumber: true})}
-                    className="w-[120px] border border-gray-500 p-1"
+                    className="w-full border border-gray-500 p-1 md:w-[120px]"
                     type="text"
                   />
                 </div>
@@ -156,16 +156,16 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-3">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
@@ -181,16 +181,16 @@ export const OftalmologicoExamSection = React.memo(({defaultValues, registerSect
                 render={({field: {onChange, value}}) => (
                   <div className="flex gap-3">
                     <input
-                      checked={value === true}
+                      checked={value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(true)}
                       type="radio"
+                      onChange={() => onChange(true)}
                     />
                     <input
-                      checked={value === false}
+                      checked={!value}
                       className="h-6 w-6 cursor-pointer"
-                      onChange={() => onChange(false)}
                       type="radio"
+                      onChange={() => onChange(false)}
                     />
                   </div>
                 )}
