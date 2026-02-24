@@ -33,68 +33,64 @@ export const PatientDataSection = React.memo(({defaultValues, registerSection}: 
         <p>Datos del paciente *</p>
         {/* <p>Empresa</p> */}
       </div>
-      <div className="flex w-full flex-col gap-5 md:flex-row md:justify-between md:gap-2">
-        <div className="flex flex-col gap-5">
+      <div className="flex w-full flex-col gap-5 md:flex-row md:gap-4">
+        <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2"
             placeholder="Nombre completo"
             type="text"
             {...register("complete_name")}
           />
           <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
-            placeholder="DNI"
-            type="text"
-            {...register("dni")}
-          />
-          <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
-            placeholder="Dirección"
-            type="text"
-            {...register("address")}
-          />
-        </div>
-        <div className="flex flex-col gap-5">
-          <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2"
             placeholder="Fecha de nacimiento. Formato: 00/00/0000"
             type="text"
             {...register("date_of_birthday")}
           />
           <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
-            placeholder="Nacionalidad"
-            type="text"
-            {...register("nacionality")}
-          />
-          <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
-            placeholder="E-mail"
-            type="email"
-            {...register("email")}
-          />
-        </div>
-        <div className="flex flex-col gap-5">
-          <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2"
             placeholder="Estado civil"
             type="text"
             {...register("civil_status")}
           />
           <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2"
+            placeholder="DNI"
+            type="text"
+            {...register("dni")}
+          />
+          <input
+            className="w-full border border-gray-500 p-2"
+            placeholder="Nacionalidad"
+            type="text"
+            {...register("nacionality")}
+          />
+          <input
+            className="w-full border border-gray-500 p-2"
             placeholder="Teléfono"
             type="text"
             {...register("phone")}
           />
           <input
-            className="w-full border border-gray-500 p-2 xl:w-[400px]"
+            className="w-full border border-gray-500 p-2"
+            placeholder="Dirección"
+            type="text"
+            {...register("address")}
+          />
+          <input
+            className="w-full border border-gray-500 p-2"
+            placeholder="E-mail"
+            type="email"
+            {...register("email")}
+          />
+          <input
+            className="w-full border border-gray-500 p-2"
             placeholder="Hijos"
             type="text"
             {...register("sons")}
           />
         </div>
-        <img alt="Logo" className="hidden object-cover md:block" src="/logo.png" width={150} />
+        <img alt="Logo" className="hidden shrink-0 object-cover md:block" src="/logo.png" width={150} />
       </div>
       <input
         className="mx-5 mb-10 w-full border border-gray-500 p-2"
