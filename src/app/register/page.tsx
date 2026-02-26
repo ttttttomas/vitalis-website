@@ -54,14 +54,14 @@ export default function RegisterPage() {
   });
 
   return (
-    <main className="bg-blue flex items-center justify-center py-10">
-      <section className="grid max-h-screen w-full max-w-5xl grid-cols-1 overflow-hidden rounded-3xl bg-white pb-10 md:grid-cols-2">
+    <main className="bg-blue flex min-h-screen items-center justify-center py-10">
+      <section className="grid w-full max-w-5xl grid-cols-1 rounded-3xl bg-white md:grid-cols-2 md:overflow-hidden">
         {/* Columna izquierda – Formulario */}
-        <div className="flex flex-col justify-start p-12">
+        <div className="flex flex-col justify-start p-12 pb-10">
           <h1 className="mb-8 text-4xl font-bold text-black">Registro</h1>
 
           <form
-            className="flex flex-col gap-4"
+            className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto"
             onSubmit={(e) => {
               e.preventDefault();
               void onSubmit(e);
@@ -238,8 +238,12 @@ export default function RegisterPage() {
         </div>
 
         {/* Columna derecha – Imagen */}
-        <div className="hidden md:block">
-          <img alt="Background registro" className="w-full object-cover" src="/bg-register.png" />
+        <div className="hidden h-full md:block">
+          <img
+            alt="Background registro"
+            className="h-full w-full object-cover"
+            src="/bg-register.png"
+          />
         </div>
       </section>
     </main>
