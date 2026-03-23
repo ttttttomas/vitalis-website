@@ -58,8 +58,18 @@ export default function RegisterPage() {
       <section className="grid w-full max-w-5xl grid-cols-1 rounded-3xl bg-white md:grid-cols-2 md:overflow-hidden">
         {/* Columna izquierda – Formulario */}
         <div className="flex flex-col justify-start p-12 pb-10">
-          <h1 className="mb-8 text-4xl font-bold text-black">Registro</h1>
-
+          <h1 className="text-4xl font-bold text-black">Registro</h1>
+          <div className="my-5 flex items-center justify-between text-sm">
+            <Link className="text-gray-500 hover:underline" href="/login" type="button">
+              Ya tengo cuenta
+            </Link>
+            <div className="flex items-center gap-2">
+              <b className="font-medium">¿Sos empresa?</b>
+              <Link className="text-gray-500 underline" href="/register-company" type="button">
+                Registro empresa
+              </Link>
+            </div>
+          </div>
           <form
             className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto"
             onSubmit={(e) => {
@@ -217,18 +227,6 @@ export default function RegisterPage() {
             </button>
 
             {/* Links inferiores */}
-            <div className="mt-2 flex items-center justify-between text-sm">
-              <Link className="text-gray-500 hover:underline" href="/login" type="button">
-                Ya tengo cuenta
-              </Link>
-              <Link
-                className="text-gray-500 hover:underline"
-                href="/register-company"
-                type="button"
-              >
-                Registro empresa
-              </Link>
-            </div>
 
             {/* Logo */}
             {/* <div className="mt-4 mb-10 flex justify-start">

@@ -4,12 +4,12 @@ import {Page, Text, View, Document, StyleSheet, Image} from "@react-pdf/renderer
 import {MedicalRecord} from "@/types";
 
 const styles = StyleSheet.create({
-  page: {padding: 20, fontSize: 9, fontFamily: "Helvetica", color: "#000"},
+  page: {padding: 15, fontSize: 9, fontFamily: "Helvetica", color: "#000"},
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 5,
+    marginBottom: 3,
     borderBottomWidth: 1,
     borderBottomColor: "#000",
     paddingBottom: 5,
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   title: {fontSize: 16, fontWeight: "bold", color: "#2E5887", textTransform: "uppercase"},
   subtitle: {fontSize: 8, marginTop: 2, color: "#444"},
   headerRight: {fontSize: 8, textAlign: "right", width: 100},
-  tableContainer: {borderWidth: 1, borderColor: "#000", marginBottom: 5},
+  tableContainer: {borderWidth: 1, borderColor: "#000", marginBottom: 3},
   row: {flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#000"},
   noBorderBottom: {borderBottomWidth: 0},
   cell: {padding: 2, borderRightWidth: 1, borderRightColor: "#000"},
@@ -119,6 +119,10 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
     medical_record_recomendations,
     medical_record_studies,
     medical_record_derivations,
+    medical_record_cuestionario_riesgos,
+    medical_record_ddjj,
+    medical_record_neuro_medical_exam,
+    medical_record_oftalmologico_medical_exam,
   } = medicalRecord;
 
   const d = medical_record_data;
@@ -146,6 +150,10 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
   const recom = medical_record_recomendations;
   const studies = medical_record_studies;
   const deriv = medical_record_derivations;
+  const cuest = medical_record_cuestionario_riesgos;
+  const ddjj = medical_record_ddjj;
+  const neuroMed = medical_record_neuro_medical_exam;
+  const oftalmoMed = medical_record_oftalmologico_medical_exam;
 
   const formatDate = (date: string | null | undefined) =>
     date ? new Date(date).toLocaleDateString() : "";
@@ -943,6 +951,10 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                   value={geni?.women_alteraciones_ginecologicas}
                 />
                 <SiNoItem label="FUM" value={geni?.women_fum} />
+                <Text style={styles.label}>
+                  Fecha ultima menstruacion:{" "}
+                  <Text style={{fontWeight: "normal"}}>{geni?.women_fum_date}</Text>
+                </Text>
                 <SiNoItem label="Dolores menstruales" value={geni?.women_dolores_menstruales} />
                 <SiNoItem label="Flujos alterados" value={geni?.women_flujos_alterados} />
                 <SiNoItem label="Anticonceptivos" value={geni?.women_anticonceptivos} />
@@ -1093,6 +1105,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
               <Checkbox value={immun?.sars_cov_2 === false} />
             </View>
             <SiNoItem label="FHA" value={immun?.fha} />
+            <SiNoItem label="Dengue" value={immun?.dengue} />
             <SiNoItem label="Triple adultos (tétanos)" value={immun?.triple_adultos_tetanos} />
             <SiNoItem label="Hepatitis A" value={immun?.hepatitis_a} />
             <SiNoItem label="Hepatitis B" value={immun?.hepatitis_b} />
@@ -1166,10 +1179,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
             <Text style={{fontSize: 8}}>{deriv?.derivations_lastname_especialists}</Text>
           </View>
         </View>
-      </Page>
 
-      {/* ========== PAGE 6 ========== */}
-      <Page size="A4" style={styles.page}>
         {/* ESTUDIOS REALIZADOS */}
         <View style={styles.tableContainer}>
           <SectionHeader title="ESTUDIOS REALIZADOS" />
@@ -1225,9 +1235,313 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
             </Text>
           </View>
         </View>
+      </Page>
+
+      {/* ========== PAGE 7: CUESTIONARIO DE RIESGO ========== */}
+      <Page size="A4" style={styles.page}>
+        <Header />
+
+        {/* CUESTIONARIO PARA TRABAJADORES */}
+        <View style={styles.tableContainer}>
+          <SectionHeader title="CUESTIONARIO PARA TRABAJADORES EN ALTURA, CONDUCCIÓN DE VEHÍCULOS Y TRABAJOS EN ESPACIOS CONFINADOS" />
+          <View style={[styles.row, styles.noBorderBottom]}>
+            <View style={[styles.cell, styles.flex1]}>
+              <Text style={styles.label}>
+                Empresa: <Text style={{fontWeight: "normal"}}>{cuest?.company_name}</Text>
+              </Text>
+            </View>
+          </View>
+          <View style={[styles.row, styles.noBorderBottom]}>
+            <View style={[styles.cell, styles.flex1]}>
+              <Text style={styles.label}>
+                Apellido y nombre:{" "}
+                <Text style={{fontWeight: "normal"}}>{cuest?.complete_name}</Text>
+              </Text>
+            </View>
+            <View style={[styles.cell, styles.flex1]}>
+              <Text style={styles.label}>
+                DNI: <Text style={{fontWeight: "normal"}}>{cuest?.dni}</Text>
+              </Text>
+            </View>
+            <View style={[styles.cell, styles.flex1]}>
+              <Text style={styles.label}>
+                Edad: <Text style={{fontWeight: "normal"}}>{cuest?.age}</Text>
+              </Text>
+            </View>
+            <View style={[styles.cell, styles.flex1, styles.lastCell]}>
+              <Text style={styles.label}>
+                Peso: <Text style={{fontWeight: "normal"}}>{cuest?.weight}</Text>
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* DECLARACIÓN JURADA */}
+        <View style={styles.tableContainer}>
+          <SectionHeader title="DECLARACIÓN JURADA PARA COMPLETAR POR EL TRABAJADOR" />
+          <View style={{padding: 3}}>
+            <Text style={{fontSize: 7, fontStyle: "italic", marginBottom: 3}}>
+              Tiene o tuvo en el último año
+            </Text>
+            <View style={{flexDirection: "row"}}>
+              <View style={{width: "50%"}}>
+                <SiNoHeaders />
+                <SiNoItem
+                  label="¿Mareos, vértigos o desmayos?"
+                  value={ddjj?.last_year_mareos_vertigo_desmayos}
+                />
+                <SiNoItem label="¿Pico de presión arterial?" value={ddjj?.pico_presion_arterial} />
+                <SiNoItem label="¿Golpe severo en el cráneo?" value={ddjj?.golpe_severo_craneo} />
+                <SiNoItem
+                  label="¿Trastornos depresivos o fobias?"
+                  value={ddjj?.trastornos_depresivos_fobias}
+                />
+                <SiNoItem
+                  label="¿Inseguridad trabajos en altura / espacios confinados?"
+                  value={ddjj?.inseguridad_trabajos_altura}
+                />
+              </View>
+              <View style={{width: "50%", paddingLeft: 10}}>
+                <SiNoHeaders />
+                <SiNoItem
+                  label="¿Epilepsias y/o convulsiones?"
+                  value={ddjj?.epilepsias_convulsiones}
+                />
+                <SiNoItem
+                  label="¿Medicación neurológica / somnolencia?"
+                  value={ddjj?.medicacion_neurologica}
+                />
+                <SiNoItem label="¿Hipoglucemia?" value={ddjj?.hipoglucemia} />
+                <SiNoItem label="¿Caídas desde altura?" value={ddjj?.caidas} />
+                <SiNoItem
+                  label="¿Inseguridad conducción de vehículos?"
+                  value={ddjj?.inseguridad_conduccion}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.obsRow}>
+            <Text style={styles.label}>
+              Observaciones: <Text style={{fontWeight: "normal"}}>{ddjj?.observations}</Text>
+            </Text>
+          </View>
+        </View>
+
+        {/* EXAMEN NEUROLÓGICO */}
+        <View style={styles.tableContainer}>
+          <SectionHeader title="PARA COMPLETAR POR EL MÉDICO - EXAMEN NEUROLÓGICO" />
+          <View style={{padding: 3}}>
+            <Text style={{fontSize: 7, fontStyle: "italic", marginBottom: 3}}>
+              Tiene o tuvo en el último año
+            </Text>
+            {/* Header */}
+            <View style={{flexDirection: "row", marginBottom: 3}}>
+              <View style={{flex: 1}} />
+              <Text style={{fontSize: 7, fontWeight: "bold", width: 35, textAlign: "center"}}>
+                Normal
+              </Text>
+              <Text style={{fontSize: 7, fontWeight: "bold", width: 35, textAlign: "center"}}>
+                Anormal
+              </Text>
+              <Text style={{fontSize: 7, fontWeight: "bold", width: 120, textAlign: "center"}}>
+                Describir
+              </Text>
+            </View>
+            {[
+              {
+                l: "Prueba dedo - nariz",
+                normal: neuroMed?.test_dedo_nariz_normal,
+                anormal: neuroMed?.test_dedo_nariz_anormal,
+                desc: neuroMed?.test_dedo_nariz_description,
+              },
+              {
+                l: "Prueba de Romberg",
+                normal: neuroMed?.test_romberg_normal,
+                anormal: neuroMed?.test_romberg_anormal,
+                desc: neuroMed?.test_romberg_description,
+              },
+              {
+                l: "Prueba de seguimiento ocular",
+                normal: neuroMed?.test_seguimiento_ocular_normal,
+                anormal: neuroMed?.test_seguimiento_ocular_anormal,
+                desc: neuroMed?.test_seguimiento_ocular_description,
+              },
+              {
+                l: "Examen de miembro Sup. (Sensitivo y Motor)",
+                normal: neuroMed?.exam_miembro_sup_normal,
+                anormal: neuroMed?.exam_miembro_sup_anormal,
+                desc: neuroMed?.exam_miembro_sup_description,
+              },
+              {
+                l: "Examen de miembro Inf. (Sensitivo y Motor)",
+                normal: neuroMed?.exam_miembro_inf_normal,
+                anormal: neuroMed?.exam_miembro_inf_anormal,
+                desc: neuroMed?.exam_miembro_inf_description,
+              },
+            ].map((item, i) => (
+              <View key={i} style={{flexDirection: "row", alignItems: "center", marginBottom: 2}}>
+                <Text style={[styles.label, {flex: 1}]}>{item.l}</Text>
+                <View style={{width: 35, alignItems: "center"}}>
+                  <Checkbox value={item.normal} />
+                </View>
+                <View style={{width: 35, alignItems: "center"}}>
+                  <Checkbox value={item.anormal} />
+                </View>
+                <Text style={{fontSize: 7, width: 120}}>{item.desc}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* EXAMEN OFTALMOLÓGICO */}
+        <View style={styles.tableContainer}>
+          <SectionHeader title="EXAMEN OFTALMOLÓGICO" />
+          <View style={[styles.cyanHeader, {fontSize: 7}]}>
+            <Text>Agudeza Visual</Text>
+          </View>
+          {/* Table header */}
+          <View style={styles.row}>
+            <Text style={[styles.cell, {width: 100, fontSize: 7, fontWeight: "bold"}]}> </Text>
+            <Text
+              style={[styles.cell, {flex: 1, fontSize: 7, fontWeight: "bold", textAlign: "center"}]}
+            >
+              OI
+            </Text>
+            <Text
+              style={[styles.cell, {flex: 1, fontSize: 7, fontWeight: "bold", textAlign: "center"}]}
+            >
+              OD
+            </Text>
+            <Text
+              style={[
+                styles.cell,
+                styles.lastCell,
+                {flex: 1, fontSize: 7, fontWeight: "bold", textAlign: "center"},
+              ]}
+            >
+              BINOCULAR
+            </Text>
+          </View>
+          {[
+            {
+              l: "A. Visual Cercana",
+              oi: oftalmoMed?.visual_cercana_oi,
+              od: oftalmoMed?.visual_cercana_od,
+              bino: oftalmoMed?.visual_cercana_binocular,
+            },
+            {
+              l: "A. Visual Lejana",
+              oi: oftalmoMed?.visual_lejana_oi,
+              od: oftalmoMed?.visual_lejana_od,
+              bino: oftalmoMed?.visual_lejana_binocular,
+            },
+            {
+              l: "Discriminación de colores",
+              oi: oftalmoMed?.discriminacion_colores_oi,
+              od: oftalmoMed?.discriminacion_colores_od,
+              bino: oftalmoMed?.discriminacion_colores_binocular,
+            },
+            {
+              l: "Campimetría",
+              oi: oftalmoMed?.campimetria_oi,
+              od: oftalmoMed?.campimetria_od,
+              bino: oftalmoMed?.campimetria_binocular,
+            },
+          ].map((item, i, arr) => (
+            <View key={i} style={[styles.row, i === arr.length - 1 ? styles.noBorderBottom : {}]}>
+              <Text style={[styles.cell, {width: 100, fontSize: 7}]}>{item.l}</Text>
+              <Text style={[styles.cell, {flex: 1, fontSize: 7, textAlign: "center"}]}>
+                {item.oi}
+              </Text>
+              <Text style={[styles.cell, {flex: 1, fontSize: 7, textAlign: "center"}]}>
+                {item.od}
+              </Text>
+              <Text
+                style={[styles.cell, styles.lastCell, {flex: 1, fontSize: 7, textAlign: "center"}]}
+              >
+                {item.bino}
+              </Text>
+            </View>
+          ))}
+          <View style={styles.obsRow}>
+            <Text style={styles.label}>
+              Dictamen: <Text style={{fontWeight: "normal"}}>{oftalmoMed?.dictamen}</Text>
+            </Text>
+          </View>
+        </View>
+
+        {/* PARA COMPLETAR POR EL MÉDICO */}
+        <View style={styles.tableContainer}>
+          <SectionHeader title="PARA COMPLETAR POR EL MÉDICO" />
+          <View style={{padding: 5}}>
+            <Text style={{fontSize: 8, marginBottom: 5}}>
+              En las Evaluaciones realizadas en este formulario el día de la fecha:
+            </Text>
+            <View style={{flexDirection: "row", alignItems: "center", marginBottom: 3}}>
+              <Checkbox value={false} />
+              <Text style={{fontSize: 7, flex: 1, marginLeft: 3, fontWeight: "bold"}}>
+                NO SE EVIDENCIAN LIMITACIONES PARA REALIZAR TRABAJO EN ALTURA, TRABAJO EN ESPACIOS
+                CONFINADOS Y CONDUCCIÓN DE VEHÍCULOS.
+              </Text>
+            </View>
+            <View style={{flexDirection: "row", alignItems: "center", marginBottom: 5}}>
+              <Checkbox value={false} />
+              <Text style={{fontSize: 7, flex: 1, marginLeft: 3, fontWeight: "bold"}}>
+                SE EVIDENCIAN LIMITACIONES PARA REALIZAR TRABAJO EN ALTURA, TRABAJO EN ESPACIOS
+                CONFINADOS Y CONDUCCIÓN DE VEHÍCULOS.
+              </Text>
+            </View>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: "#000",
+                minHeight: 40,
+                padding: 3,
+                marginBottom: 10,
+              }}
+            >
+              <Text style={{fontSize: 7}}> </Text>
+            </View>
+
+            {/* Firmas */}
+            <View style={{flexDirection: "row", marginTop: 15}}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderColor: "#000",
+                  padding: 5,
+                  marginRight: 10,
+                  minHeight: 60,
+                }}
+              >
+                <View style={{flex: 1}} />
+                <Text style={{fontSize: 7, fontWeight: "bold", textAlign: "center"}}>
+                  Firma y matrícula del médico responsable
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderColor: "#000",
+                  padding: 5,
+                  minHeight: 60,
+                }}
+              >
+                <View style={{flex: 1}} />
+                <Text style={{fontSize: 7, fontWeight: "bold", textAlign: "center"}}>
+                  Firma y aclaración del trabajador
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
 
         {/* FIRMA DIGITAL Y MATRÍCULA */}
-        <View style={[styles.tableContainer, {marginTop: 20}]}>
+        <View style={[styles.tableContainer, {marginTop: 10}]}>
           <SectionHeader title="FIRMA DIGITAL Y MATRÍCULA" />
           <View style={{padding: 10}}>
             <Text style={{fontSize: 9, fontWeight: "bold"}}>

@@ -149,6 +149,15 @@ export const GenitourinarioExamSection = React.memo(({defaultValues, registerSec
                     )}
                   />
                 </div>
+                <div className="flex items-center">
+                  <p className="flex-1 text-base">Fecha ultima menstruacion</p>
+                  <input
+                    className="rounded-md border border-gray-300 p-1"
+                    placeholder="Formato: 00/00/0000"
+                    type="text"
+                    {...register("women_fum_date")}
+                  />
+                </div>
 
                 {/* Dolores menstruales */}
                 <div className="flex items-center">

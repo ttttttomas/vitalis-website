@@ -44,6 +44,7 @@ import {OsteoarticularExamSection} from "../components/sections/OsteoarticularEx
 import {NeuroClinicalExamSection} from "../components/sections/NeuroClinicalExam";
 import {PsychiatricClinicalExamSection} from "../components/sections/PsychiatricClinicalExam";
 import {ImmunizationsSection} from "../components/sections/Immunizations";
+import {CuestionarioRiesgoSection} from "../components/sections/CuestionarioRiesgo";
 import CanvasFirm from "../components/CanvasFirm";
 
 // const raleway = Raleway({
@@ -75,6 +76,7 @@ export default function MedicalHistoryPage({params}: PageProps) {
   const [evaluatorSignatureBlob, setEvaluatorSignatureBlob] = useState<Blob | null>(null);
   const [laboralDate, setLaboralDate] = useState<string>("");
   const [laboralSignatureBlob, setLaboralSignatureBlob] = useState<Blob | null>(null);
+  const [dataImgFile, setDataImgFile] = useState<File | null>(null);
 
   const registry = useFormRegistry<MedicalRecord>();
 
@@ -173,6 +175,7 @@ export default function MedicalHistoryPage({params}: PageProps) {
           medicalRecord.id,
           patientId,
           dataToSend as unknown as Partial<MedicalRecord>,
+          dataImgFile ?? undefined,
           evaluatorSignatureBlob,
           evaluatorDate || null,
           laboralSignatureBlob,
@@ -184,7 +187,7 @@ export default function MedicalHistoryPage({params}: PageProps) {
         result = await dataService.createMedicalRecord(
           patientId,
           dataToSend as unknown as Partial<MedicalRecord>,
-          undefined,
+          dataImgFile ?? undefined,
           undefined,
           evaluatorSignatureBlob,
           evaluatorDate || null,
@@ -258,8 +261,10 @@ export default function MedicalHistoryPage({params}: PageProps) {
           Los campos con * son obligatorios
         </p>
         <PatientDataSection
+          currentImageUrl={medicalRecord.medical_record_data_img?.url ?? null}
           defaultValues={medicalRecord.medical_record_data ?? null}
           registerSection={(handler) => registry.register("medical_record_data", handler)}
+          onImageChange={(file) => setDataImgFile(file)}
         />
         <Accordion collapsible type="single">
           <EvaluationTypeSection
@@ -451,6 +456,24 @@ export default function MedicalHistoryPage({params}: PageProps) {
           <StudiesDoneSection
             defaultValues={medicalRecord.medical_record_studies ?? null}
             registerSection={(handler) => registry.register("medical_record_studies", handler)}
+          />
+        </Accordion>
+        <Accordion collapsible type="single">
+          <CuestionarioRiesgoSection
+            defaultValuesCuestionario={medicalRecord.medical_record_cuestionario_riesgos ?? null}
+            defaultValuesDDJJ={medicalRecord.medical_record_ddjj ?? null}
+            defaultValuesNeuro={medicalRecord.medical_record_neuro_medical_exam ?? null}
+            defaultValuesOftalmo={medicalRecord.medical_record_oftalmologico_medical_exam ?? null}
+            registerCuestionario={(handler) =>
+              registry.register("medical_record_cuestionario_riesgos", handler)
+            }
+            registerDDJJ={(handler) => registry.register("medical_record_ddjj", handler)}
+            registerNeuro={(handler) =>
+              registry.register("medical_record_neuro_medical_exam", handler)
+            }
+            registerOftalmo={(handler) =>
+              registry.register("medical_record_oftalmologico_medical_exam", handler)
+            }
           />
         </Accordion>
         <Accordion collapsible type="single">

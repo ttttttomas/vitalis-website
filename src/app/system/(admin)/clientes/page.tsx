@@ -85,10 +85,10 @@ export default function ClientesAdminPage() {
                 </tr>
               ) : (
                 <tr className="bg-[#3A3A3A] text-white">
-                  <th className="px-3 py-2 text-left">Nombre completo</th>
+                  <th className="px-3 py-2 text-left">Nombre</th>
+                  <th className="px-3 py-2 text-left">Apellido</th>
                   <th className="px-3 py-2 text-left">DNI</th>
                   <th className="px-3 py-2 text-left">Fecha de nacimiento</th>
-                  <th className="px-3 py-2 text-left">Correo electrónico</th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
                   <th className="px-3 py-2 text-left">Obra social</th>
                   {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
@@ -116,12 +116,12 @@ export default function ClientesAdminPage() {
                       key={idx}
                       className="text-md border-t border-[#4A4A4A] bg-[#333333] text-white"
                     >
-                      <td className="px-3 py-2">{row.first_name}</td>
-                      <td className="px-3 py-2">{row.dni}</td>
-                      <td className="px-3 py-2">{row.date_of_birth}</td>
-                      <td className="px-3 py-2">{row.email}</td>
-                      <td className="px-3 py-2">{row.phone}</td>
-                      <td className="px-3 py-2">{row.role}</td>
+                      <td className="px-3 py-2">{row.first_name || "-"}</td>
+                      <td className="px-3 py-2">{row.last_name || "-"}</td>
+                      <td className="px-3 py-2">{row.dni || "-"}</td>
+                      <td className="px-3 py-2">{row.date_of_birth || "-"}</td>
+                      <td className="px-3 py-2">{row.phone || "-"}</td>
+                      <td className="px-3 py-2">{row.social_security || "-"}</td>
                       <td className="px-3 py-2">
                         <Link
                           className="cursor-pointer text-xs underline"
@@ -138,7 +138,7 @@ export default function ClientesAdminPage() {
                           Acceder
                         </Link>
                       </td>
-                      <td className="px-3 py-2">{row.study_type}</td>
+                      <td className="px-3 py-2">{row.study_type ?? "-"}</td>
                     </tr>
                     // <div className="px-3 py-2 text-center">
                     //   <button className="px-2 py-1 text-xs text-white">🗑</button>

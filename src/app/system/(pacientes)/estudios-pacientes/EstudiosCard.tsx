@@ -106,7 +106,7 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
               Descargar PDF
             </button>
           )}
-          {userData?.role === "professional" && (
+          {(userData?.role === "professional" || userData?.role === "admin") && (
             <button className="cursor-pointer underline" onClick={() => void downloadStudy()}>
               Descargar PDF
             </button>

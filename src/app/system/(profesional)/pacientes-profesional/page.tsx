@@ -68,6 +68,7 @@ export default function PacientesProfesional() {
             <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Nombre</th>
             <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Apellido</th>
             <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">DNI</th>
+            <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Tipo</th>
             <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Fecha de nacimiento</th>
             <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Obra social</th>
             <th className="border-r border-[#4A4A4A] px-3 py-2 text-center text-wrap">
@@ -80,11 +81,14 @@ export default function PacientesProfesional() {
         <tbody>
           {filteredPatients.map((row, idx) => (
             <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
-              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.first_name}</td>
-              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.last_name}</td>
-              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni}</td>
-              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.date_of_birth}</td>
-              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.insurance}</td>
+              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.first_name || "-"}</td>
+              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.last_name || "-"}</td>
+              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni || "-"}</td>
+              <td className="border-r border-[#4A4A4A] px-3 py-2">
+                {row.company_id ? "Empresa" : "Particular"}
+              </td>
+              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.date_of_birth || "-"}</td>
+              <td className="border-r border-[#4A4A4A] px-3 py-2">{row.social_security || "-"}</td>
               <td className="border-r border-[#4A4A4A] px-3 py-2 text-center underline">
                 <Link href={`/system/pacientes-profesional/${row.id}`}>Ver</Link>
               </td>

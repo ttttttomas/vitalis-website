@@ -27,6 +27,7 @@ const normalizeBooleanFields = (
     triple_adultos_tetanos: toBool(data.triple_adultos_tetanos),
     hepatitis_a: toBool(data.hepatitis_a),
     hepatitis_b: toBool(data.hepatitis_b),
+    dengue: toBool(data.dengue),
   };
 };
 
@@ -117,6 +118,32 @@ export const ImmunizationsSection = React.memo(({defaultValues, registerSection}
             <Controller
               control={control}
               name="fha"
+              render={({field: {onChange, value}}) => (
+                <div className="flex justify-center gap-8">
+                  <input
+                    checked={value}
+                    className="radio"
+                    type="radio"
+                    onChange={() => onChange(true)}
+                  />
+                  <input
+                    checked={!value}
+                    className="radio"
+                    type="radio"
+                    onChange={() => onChange(false)}
+                  />
+                </div>
+              )}
+            />
+            <span />
+          </div>
+
+          {/* DENGUE */}
+          <div className="grid grid-cols-[260px_120px_1fr] items-center">
+            <span className="text-lg text-gray-900">Dengue</span>
+            <Controller
+              control={control}
+              name="dengue"
               render={({field: {onChange, value}}) => (
                 <div className="flex justify-center gap-8">
                   <input

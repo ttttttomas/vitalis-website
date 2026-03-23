@@ -224,6 +224,7 @@ export const dataService = {
     record_id: string,
     patient_id: string,
     data: Partial<MedicalRecord>,
+    data_img?: File,
     firma_medico_evaluador?: Blob | null,
     fecha_medico_evaluador?: string | null,
     firma_medico_laboral?: Blob | null,
@@ -236,6 +237,10 @@ export const dataService = {
       "data",
       JSON.stringify(data, (_, v) => (v === undefined ? null : v)),
     );
+
+    if (data_img) {
+      formData.append("data_img", data_img);
+    }
 
     if (firma_medico_evaluador) {
       formData.append("firma_medico_evaluador", firma_medico_evaluador);

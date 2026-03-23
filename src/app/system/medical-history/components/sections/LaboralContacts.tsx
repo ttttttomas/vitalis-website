@@ -94,7 +94,7 @@ export const LaboralContactsSection = React.memo(({defaultValues, registerSectio
               <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  placeholder="Formato 0000/00/00"
+                  placeholder="Formato: 00/00/0000"
                   {...register("dusty_environment_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -128,7 +128,7 @@ export const LaboralContactsSection = React.memo(({defaultValues, registerSectio
               <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  placeholder="Formato 0000/00/00"
+                  placeholder="Formato: 00/00/0000"
                   {...register("noisy_environment_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -162,7 +162,7 @@ export const LaboralContactsSection = React.memo(({defaultValues, registerSectio
               <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  placeholder="Formato 0000/00/00"
+                  placeholder="Formato: 00/00/0000"
                   {...register("animal_products_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -196,7 +196,7 @@ export const LaboralContactsSection = React.memo(({defaultValues, registerSectio
               <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  placeholder="Formato 0000/00/00"
+                  placeholder="Formato: 00/00/0000"
                   {...register("chemicals_products_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -230,7 +230,7 @@ export const LaboralContactsSection = React.memo(({defaultValues, registerSectio
               <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  placeholder="Formato 0000/00/00"
+                  placeholder="Formato: 00/00/0000"
                   {...register("ionizing_radiation_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"
@@ -264,7 +264,7 @@ export const LaboralContactsSection = React.memo(({defaultValues, registerSectio
               <div className="mt-2 flex items-center gap-2 md:mt-0 md:ml-10">
                 <span className="text-sm">Fecha aproximada</span>
                 <input
-                  placeholder="Formato 0000/00/00"
+                  placeholder="Formato: 00/00/0000"
                   {...register("other_contamination_date", {setValueAs: (v: string) => v || null})}
                   className="w-full border border-gray-500 p-1 md:w-[200px]"
                   type="text"

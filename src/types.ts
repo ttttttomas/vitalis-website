@@ -257,6 +257,74 @@ export interface MedicalRecordBucodentalExam {
   observations: string;
 }
 
+// TIPADOS NUEVOS
+
+export interface MedicalRecordOftalmologicoMedicalExam {
+  id: string;
+  medical_record_id: string;
+  visual_cercana_oi: string;
+  visual_cercana_od: string;
+  visual_cercana_binocular: string;
+  visual_lejana_oi: string;
+  visual_lejana_od: string;
+  visual_lejana_binocular: string;
+  discriminacion_colores_oi: string;
+  discriminacion_colores_od: string;
+  discriminacion_colores_binocular: string;
+  campimetria_oi: string;
+  campimetria_od: string;
+  campimetria_binocular: string;
+  dictamen: string;
+}
+
+export interface MedicalRecordDDJJ {
+  id: string;
+  medical_record_id: string;
+  last_year_mareos_vertigo_desmayos: boolean;
+  pico_presion_arterial: boolean;
+  golpe_severo_craneo: boolean;
+  trastornos_depresivos_fobias: boolean;
+  inseguridad_trabajos_altura: boolean;
+  epilepsias_convulsiones: boolean;
+  medicacion_neurologica: boolean;
+  hipoglucemia: boolean;
+  caidas: boolean;
+  inseguridad_conduccion: boolean;
+  observations: string;
+}
+
+export interface MedicalRecordCuestionarioRiesgos {
+  id: string;
+  medical_record_id: string;
+  company_name: string;
+  complete_name: string;
+  dni: number;
+  age: number;
+  weight: number;
+}
+
+export interface MedicalRecordNeuroMedicalExam {
+  id: string;
+  medical_record_id: string;
+  test_dedo_nariz_normal: boolean;
+  test_dedo_nariz_anormal: boolean;
+  test_dedo_nariz_description: string;
+  test_romberg_normal: boolean;
+  test_romberg_anormal: boolean;
+  test_romberg_description: string;
+  test_seguimiento_ocular_normal: boolean;
+  test_seguimiento_ocular_anormal: boolean;
+  test_seguimiento_ocular_description: string;
+  exam_miembro_sup_normal: boolean;
+  exam_miembro_sup_anormal: boolean;
+  exam_miembro_sup_description: string;
+  exam_miembro_inf_normal: boolean;
+  exam_miembro_inf_anormal: boolean;
+  exam_miembro_inf_description: string;
+}
+
+// --
+
 export interface MedicalRecordDataImg {
   id: string;
   medical_record_data_id: string;
@@ -274,6 +342,7 @@ export interface MedicalRecordImmunizations {
   medical_record_id: string;
   sars_cov_2: boolean;
   sars_cov_2_dosis: number;
+  dengue: boolean;
   fha: boolean;
   triple_adultos_tetanos: boolean;
   hepatitis_a: boolean;
@@ -294,6 +363,7 @@ export interface MedicalRecordGenitourinarioExam {
   men_alteraciones_testiculares: boolean;
   women_cesarea: boolean;
   women_fum: boolean;
+  women_fum_date: string;
   women_flujos_alterados: boolean;
 }
 
@@ -535,6 +605,10 @@ export interface MedicalRecord {
   medical_record_previous_problems: MedicalRecordPreviousProblems | null;
   medical_record_head_exam: MedicalRecordHeadExam | null;
   medical_record_surgerys: MedicalRecordSurgerys | null;
+  medical_record_cuestionario_riesgos: MedicalRecordCuestionarioRiesgos | null;
+  medical_record_ddjj: MedicalRecordDDJJ | null;
+  medical_record_neuro_medical_exam: MedicalRecordNeuroMedicalExam | null;
+  medical_record_oftalmologico_medical_exam: MedicalRecordOftalmologicoMedicalExam | null;
   fecha_medico_evaluador?: string | null;
   firma_medico_evaluador?: string | null;
   fecha_medico_laboral?: string | null;
