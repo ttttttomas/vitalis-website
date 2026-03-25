@@ -112,11 +112,29 @@ export default function MedicalHistoryPage({params}: PageProps) {
         setMedicalRecord(active);
 
         // Initialize dates if they exist
-        if (active.fecha_medico_evaluador) {
-          setEvaluatorDate(active.fecha_medico_evaluador);
+        const evalCreatedAt =
+          (active as unknown as {medical_record_evaluator_signatures?: {created_at?: string}})
+            .medical_record_evaluator_signatures?.created_at ??
+          active.medical_record_signatures?.created_at;
+        const finalEvalDate = evalCreatedAt
+          ? evalCreatedAt.substring(0, 10)
+          : active.fecha_medico_evaluador
+            ? active.fecha_medico_evaluador.substring(0, 10)
+            : "";
+
+        if (finalEvalDate) {
+          setEvaluatorDate(finalEvalDate);
         }
-        if (active.fecha_medico_laboral) {
-          setLaboralDate(active.fecha_medico_laboral);
+
+        const labCreatedAt = active.medical_record_laboral_signatures?.created_at;
+        const finalLabDate = labCreatedAt
+          ? labCreatedAt.substring(0, 10)
+          : active.fecha_medico_laboral
+            ? active.fecha_medico_laboral.substring(0, 10)
+            : "";
+
+        if (finalLabDate) {
+          setLaboralDate(finalLabDate);
         }
       } catch (_err) {
         // Si falla, asumimos que no hay registro (o error de conexión), pero permitimos crear uno nuevo

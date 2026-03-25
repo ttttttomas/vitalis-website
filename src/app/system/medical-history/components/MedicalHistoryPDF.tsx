@@ -123,6 +123,10 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
     medical_record_cuestionario_riesgos,
     medical_record_ddjj,
     medical_record_neuro_medical_exam,
+    medical_record_medical_responsable_signatures,
+    medical_record_patient_signatures,
+    medical_record_laboral_signatures,
+    medical_record_signatures,
     medical_record_oftalmologico_medical_exam,
   } = medicalRecord;
 
@@ -154,6 +158,11 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
   const deriv = medical_record_derivations;
   const cuest = medical_record_cuestionario_riesgos;
   const ddjj = medical_record_ddjj;
+  const respon = medical_record_medical_responsable_signatures;
+  const patient = medical_record_patient_signatures;
+  const laboralSig = medical_record_laboral_signatures;
+  const signatures = medical_record_signatures;
+
   const neuroMed = medical_record_neuro_medical_exam;
   const oftalmoMed = medical_record_oftalmologico_medical_exam;
 
@@ -1520,7 +1529,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                   minHeight: 60,
                 }}
               >
-                <View style={{flex: 1}} />
+                <Image src={respon?.url} />
                 <Text style={{fontSize: 7, fontWeight: "bold", textAlign: "center"}}>
                   Firma y matrícula del médico responsable
                 </Text>
@@ -1535,7 +1544,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                   minHeight: 60,
                 }}
               >
-                <View style={{flex: 1}} />
+                <Image src={patient?.url} />
                 <Text style={{fontSize: 7, fontWeight: "bold", textAlign: "center"}}>
                   Firma y aclaración del trabajador
                 </Text>
@@ -1547,45 +1556,25 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
         {/* FIRMA DIGITAL Y MATRÍCULA */}
         <View style={[styles.tableContainer, {marginTop: 10}]}>
           <SectionHeader title="FIRMA DIGITAL Y MATRÍCULA" />
-          <View style={{padding: 10}}>
-            <Text style={{fontSize: 9, fontWeight: "bold"}}>
-              Médico Evaluador <Text style={{fontWeight: "normal"}}>Firma y Matrícula</Text>
-            </Text>
-            {medicalRecord.firma_medico_evaluador ? (
-              <Image
-                src={medicalRecord.firma_medico_evaluador}
-                style={{width: 150, height: 50, marginTop: 5}}
-              />
-            ) : (
-              <Text style={{fontSize: 9, fontWeight: "bold"}}>Firma __________________</Text>
-            )}
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 5,
-                borderWidth: 1,
-                borderColor: "#000",
-                padding: 3,
-                width: 200,
-              }}
-            >
-              <Text style={{fontSize: 8}}>
-                Fecha: {formatDate(medicalRecord.fecha_medico_evaluador)}
-              </Text>
-            </View>
-
-            <View style={{marginTop: 15}}>
+          <View
+            style={{flexDirection: "row", marginTop: 15, paddingHorizontal: 10, paddingBottom: 15}}
+          >
+            {/* Médico Evaluador */}
+            <View style={{flex: 1, paddingRight: 10}}>
               <Text style={{fontSize: 9, fontWeight: "bold"}}>
-                Médico Laboral <Text style={{fontWeight: "normal"}}>Firma y Matrícula</Text>
+                Médico Evaluador <Text style={{fontWeight: "normal"}}>Firma y Matrícula</Text>
               </Text>
-              {medicalRecord.firma_medico_laboral ? (
+              {(medicalRecord as any).medical_record_evaluator_signatures?.url ||
+              medicalRecord.medical_record_signatures?.url ||
+              medicalRecord.firma_medico_evaluador ? (
                 <Image
-                  src={medicalRecord.firma_medico_laboral}
+                  src={medicalRecord.medical_record_signatures?.url}
                   style={{width: 150, height: 50, marginTop: 5}}
                 />
               ) : (
-                <Text style={{fontSize: 9, fontWeight: "bold"}}>Firma __________________</Text>
+                <Text style={{fontSize: 9, fontWeight: "bold", marginTop: 10, marginBottom: 10}}>
+                  Firma __________________
+                </Text>
               )}
               <View
                 style={{
@@ -1595,11 +1584,38 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                   borderWidth: 1,
                   borderColor: "#000",
                   padding: 3,
-                  width: 200,
+                  width: "100%",
                 }}
               >
                 <Text style={{fontSize: 8}}>
-                  Fecha: {formatDate(medicalRecord.fecha_medico_laboral)}
+                  Fecha: {formatDate(medicalRecord.medical_record_signatures?.created_at)}
+                </Text>
+              </View>
+            </View>
+
+            {/* Médico Laboral */}
+            <View style={{flex: 1, paddingLeft: 10}}>
+              <Text style={{fontSize: 9, fontWeight: "bold"}}>
+                Médico Laboral <Text style={{fontWeight: "normal"}}>Firma y Matrícula</Text>
+              </Text>
+              {medicalRecord.medical_record_laboral_signatures?.url}
+              <Image
+                src={medicalRecord.medical_record_laboral_signatures?.url}
+                style={{width: 150, height: 50, marginTop: 5}}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 5,
+                  borderWidth: 1,
+                  borderColor: "#000",
+                  padding: 3,
+                  width: "100%",
+                }}
+              >
+                <Text style={{fontSize: 8}}>
+                  Fecha: {formatDate(medicalRecord.medical_record_laboral_signatures?.created_at)}
                 </Text>
               </View>
             </View>
