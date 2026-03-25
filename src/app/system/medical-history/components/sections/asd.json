@@ -323,8 +323,20 @@
     "proceso_agudo": false,
     "observations": null
   },
-  "medical_record_patient_signatures": null,
-  "medical_record_medical_responsable_signatures": null,
+  "medical_record_patient_signatures": {
+    "id": "bb8de584-a83e-44ad-9dff-59f9a1d8a06c",
+    "medical_record_id": "90f59952-ca40-43c3-aca4-31044c8e6585",
+    "url": "https://saludvitalis.org/MdpuF8KsXiRArNlHtl6pXO2XyLSJMTQ8_Vitalis/api/signatures/sig_pat_ce9ea9f3-837b-4231-987c-16acd9e059f8",
+    "patient_id": "9649388e-b569-47b7-8e32-a8d6a71c4d4e",
+    "created_at": "2026-03-25T17:05:27"
+  },
+  "medical_record_medical_responsable_signatures": {
+    "id": "b1c3cfba-903d-4873-9409-e30db8427897",
+    "medical_record_id": "90f59952-ca40-43c3-aca4-31044c8e6585",
+    "url": "https://saludvitalis.org/MdpuF8KsXiRArNlHtl6pXO2XyLSJMTQ8_Vitalis/api/signatures/sig_resp_fa979e2d-6fca-49db-ba51-76d2e1685dd7",
+    "professional_id": "493c99f5-a012-4546-94b9-bd78bd9e64cf",
+    "created_at": "2026-03-25T17:05:28"
+  },
   "medical_record_skin_exam": {
     "id": "96c20f10-dd2c-441d-a2cd-7784b0ac5137",
     "medical_record_id": "90f59952-ca40-43c3-aca4-31044c8e6585",
@@ -391,12 +403,14 @@
   "medical_record_cuestionario_riesgos": {
     "id": "dc3ed79f-0869-4025-bb45-6aeb4020dd16",
     "medical_record_id": "90f59952-ca40-43c3-aca4-31044c8e6585",
-    "company_id": "asd",
+    "company_name": "iWeb Technology",
     "complete_name": "Tomas Barajas",
     "dni": 44363957,
     "age": 22,
     "weight": 80,
-    "company_name": "asd"
+    "es_apto": true,
+    "no_es_apto": true,
+    "observations": "asd"
   },
   "medical_record_neuro_medical_exam": {
     "id": "6fa9fbc7-d470-4abd-87e1-2028a72ba9e3",

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 
 import {
@@ -67,6 +67,8 @@ interface Props {
   registerOftalmo: (handler: SectionHandler<MedicalRecordOftalmologicoMedicalExam>) => () => void;
   onSaveMedicoSignature?: (blob: Blob) => void;
   onSaveTrabajadorSignature?: (blob: Blob) => void;
+  existingMedicoSignatureUrl?: string | null;
+  existingTrabajadorSignatureUrl?: string | null;
 }
 
 export const CuestionarioRiesgoSection = React.memo(
@@ -81,6 +83,8 @@ export const CuestionarioRiesgoSection = React.memo(
     registerOftalmo,
     onSaveMedicoSignature,
     onSaveTrabajadorSignature,
+    existingMedicoSignatureUrl,
+    existingTrabajadorSignatureUrl,
   }: Props) => {
     // Form for Cuestionario Riesgos
     const cuestionarioForm = useForm<MedicalRecordCuestionarioRiesgos>({
@@ -951,6 +955,8 @@ export const CuestionarioRiesgoSection = React.memo(
 
             {/* ── Sección 5: Para completar por el médico ── */}
             <ParaCompletarMedico
+              existingMedicoSignatureUrl={existingMedicoSignatureUrl}
+              existingTrabajadorSignatureUrl={existingTrabajadorSignatureUrl}
               registerCuestionarioField={registerCuestionarioField}
               onSaveMedicoSignature={onSaveMedicoSignature}
               onSaveTrabajadorSignature={onSaveTrabajadorSignature}
@@ -969,13 +975,20 @@ function ParaCompletarMedico({
   registerCuestionarioField,
   onSaveMedicoSignature,
   onSaveTrabajadorSignature,
+  existingMedicoSignatureUrl,
+  existingTrabajadorSignatureUrl,
 }: {
   registerCuestionarioField: ReturnType<
     typeof useForm<MedicalRecordCuestionarioRiesgos>
   >["register"];
   onSaveMedicoSignature?: (blob: Blob) => void;
   onSaveTrabajadorSignature?: (blob: Blob) => void;
+  existingMedicoSignatureUrl?: string | null;
+  existingTrabajadorSignatureUrl?: string | null;
 }) {
+  const [editMedicoSig, setEditMedicoSig] = useState(false);
+  const [editTrabajadorSig, setEditTrabajadorSig] = useState(false);
+
   return (
     <div>
       <p className="mb-2 text-lg font-semibold">Para completar por el médico</p>
@@ -1023,12 +1036,45 @@ function ParaCompletarMedico({
       <div className="mt-8 flex flex-col gap-8 md:flex-row md:gap-12">
         {/* Firma médico responsable */}
         <div className="flex flex-1 flex-col items-center gap-2">
-          <CanvasFirm
-            height={150}
-            uploadOnSave={false}
-            width={350}
-            onSave={(blob) => onSaveMedicoSignature?.(blob)}
-          />
+          {!existingMedicoSignatureUrl || editMedicoSig ? (
+            <div className="flex flex-col items-center gap-2">
+              <CanvasFirm
+                height={150}
+                uploadOnSave={false}
+                width={350}
+                onSave={(blob) => {
+                  onSaveMedicoSignature?.(blob);
+                }}
+              />
+              {existingMedicoSignatureUrl && (
+                <button
+                  className="text-sm text-red-500 hover:underline"
+                  type="button"
+                  onClick={() => {
+                    setEditMedicoSig(false);
+                    onSaveMedicoSignature?.(null as unknown as Blob);
+                  }}
+                >
+                  Cancelar cambio
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <img
+                alt="Firma Médico Responsable"
+                className="max-h-36 border border-gray-200"
+                src={existingMedicoSignatureUrl}
+              />
+              <button
+                className="text-sm text-blue-500 hover:underline"
+                type="button"
+                onClick={() => setEditMedicoSig(true)}
+              >
+                Cambiar firma
+              </button>
+            </div>
+          )}
           <p className="text-center text-sm font-semibold">
             Firma y matrícula del médico responsable
           </p>
@@ -1036,12 +1082,45 @@ function ParaCompletarMedico({
 
         {/* Firma trabajador */}
         <div className="flex flex-1 flex-col items-center gap-2">
-          <CanvasFirm
-            height={150}
-            uploadOnSave={false}
-            width={350}
-            onSave={(blob) => onSaveTrabajadorSignature?.(blob)}
-          />
+          {!existingTrabajadorSignatureUrl || editTrabajadorSig ? (
+            <div className="flex flex-col items-center gap-2">
+              <CanvasFirm
+                height={150}
+                uploadOnSave={false}
+                width={350}
+                onSave={(blob) => {
+                  onSaveTrabajadorSignature?.(blob);
+                }}
+              />
+              {existingTrabajadorSignatureUrl && (
+                <button
+                  className="text-sm text-red-500 hover:underline"
+                  type="button"
+                  onClick={() => {
+                    setEditTrabajadorSig(false);
+                    onSaveTrabajadorSignature?.(null as unknown as Blob);
+                  }}
+                >
+                  Cancelar cambio
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <img
+                alt="Firma Trabajador"
+                className="max-h-36 border border-gray-200"
+                src={existingTrabajadorSignatureUrl}
+              />
+              <button
+                className="text-sm text-blue-500 hover:underline"
+                type="button"
+                onClick={() => setEditTrabajadorSig(true)}
+              >
+                Cambiar firma
+              </button>
+            </div>
+          )}
           <p className="text-center text-sm font-semibold">Firma y aclaración del trabajador</p>
         </div>
       </div>

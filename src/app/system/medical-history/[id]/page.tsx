@@ -81,6 +81,8 @@ export default function MedicalHistoryPage({params}: PageProps) {
   const [medicoResponsableSignatureBlob, setMedicoResponsableSignatureBlob] = useState<Blob | null>(
     null,
   );
+  const [editEvaluatorSig, setEditEvaluatorSig] = useState(false);
+  const [editLaboralSig, setEditLaboralSig] = useState(false);
 
   const registry = useFormRegistry<MedicalRecord>();
 
@@ -474,6 +476,12 @@ export default function MedicalHistoryPage({params}: PageProps) {
             defaultValuesDDJJ={medicalRecord.medical_record_ddjj ?? null}
             defaultValuesNeuro={medicalRecord.medical_record_neuro_medical_exam ?? null}
             defaultValuesOftalmo={medicalRecord.medical_record_oftalmologico_medical_exam ?? null}
+            existingMedicoSignatureUrl={
+              medicalRecord.medical_record_medical_responsable_signatures?.url ?? null
+            }
+            existingTrabajadorSignatureUrl={
+              medicalRecord.medical_record_patient_signatures?.url ?? null
+            }
             registerCuestionario={(handler) =>
               registry.register("medical_record_cuestionario_riesgos", handler)
             }
@@ -516,21 +524,49 @@ export default function MedicalHistoryPage({params}: PageProps) {
                       <label className="text-base whitespace-nowrap" htmlFor="firma-evaluador">
                         Firma
                       </label>
-                      <CanvasFirm
-                        uploadOnSave={false}
-                        onSave={(blob) => setEvaluatorSignatureBlob(blob)}
-                      />
+                      {(!medicalRecord.medical_record_signatures?.url &&
+                        !medicalRecord.firma_medico_evaluador) ||
+                      editEvaluatorSig ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <CanvasFirm
+                            uploadOnSave={false}
+                            onSave={(blob) => setEvaluatorSignatureBlob(blob)}
+                          />
+                          {(medicalRecord.medical_record_signatures?.url ||
+                            medicalRecord.firma_medico_evaluador) && (
+                            <button
+                              className="text-sm text-red-500 hover:underline"
+                              type="button"
+                              onClick={() => {
+                                setEditEvaluatorSig(false);
+                                setEvaluatorSignatureBlob(null);
+                              }}
+                            >
+                              Cancelar cambio
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2">
+                          <img
+                            alt="Firma Médico Evaluador"
+                            className="max-h-32 border border-gray-200"
+                            src={
+                              medicalRecord.medical_record_signatures?.url ??
+                              medicalRecord.firma_medico_evaluador ??
+                              undefined
+                            }
+                          />
+                          <button
+                            className="text-sm text-blue-500 hover:underline"
+                            type="button"
+                            onClick={() => setEditEvaluatorSig(true)}
+                          >
+                            Cambiar firma
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    {medicalRecord.firma_medico_evaluador && !evaluatorSignatureBlob && (
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500">Firma guardada:</p>
-                        <img
-                          alt="Firma Médico Evaluador"
-                          className="mt-1 max-h-20 border border-gray-200"
-                          src={medicalRecord.firma_medico_evaluador}
-                        />
-                      </div>
-                    )}
                   </div>
 
                   {/* Médico Laboral */}
@@ -554,21 +590,49 @@ export default function MedicalHistoryPage({params}: PageProps) {
                       <label className="text-base whitespace-nowrap" htmlFor="firma-laboral">
                         Firma
                       </label>
-                      <CanvasFirm
-                        uploadOnSave={false}
-                        onSave={(blob) => setLaboralSignatureBlob(blob)}
-                      />
+                      {(!medicalRecord.medical_record_laboral_signatures?.url &&
+                        !medicalRecord.firma_medico_laboral) ||
+                      editLaboralSig ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <CanvasFirm
+                            uploadOnSave={false}
+                            onSave={(blob) => setLaboralSignatureBlob(blob)}
+                          />
+                          {(medicalRecord.medical_record_laboral_signatures?.url ||
+                            medicalRecord.firma_medico_laboral) && (
+                            <button
+                              className="text-sm text-red-500 hover:underline"
+                              type="button"
+                              onClick={() => {
+                                setEditLaboralSig(false);
+                                setLaboralSignatureBlob(null);
+                              }}
+                            >
+                              Cancelar cambio
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2">
+                          <img
+                            alt="Firma Médico Laboral"
+                            className="max-h-32 border border-gray-200"
+                            src={
+                              medicalRecord.medical_record_laboral_signatures?.url ??
+                              medicalRecord.firma_medico_laboral ??
+                              undefined
+                            }
+                          />
+                          <button
+                            className="text-sm text-blue-500 hover:underline"
+                            type="button"
+                            onClick={() => setEditLaboralSig(true)}
+                          >
+                            Cambiar firma
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    {medicalRecord.firma_medico_laboral && !laboralSignatureBlob && (
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500">Firma guardada:</p>
-                        <img
-                          alt="Firma Médico Laboral"
-                          className="mt-1 max-h-20 border border-gray-200"
-                          src={medicalRecord.firma_medico_laboral}
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

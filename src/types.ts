@@ -577,6 +577,17 @@ export interface MedicalRecordHabits {
   frequency: string;
 }
 
+
+
+export interface MedicalRecordSignature {
+  id: string;
+  medical_record_id: string;
+  url: string;
+  patient_id?: string;
+  professional_id?: string;
+  created_at: string;
+}
+
 export interface MedicalRecord {
   id: string;
   patient_id: string;
@@ -612,6 +623,10 @@ export interface MedicalRecord {
   medical_record_ddjj: MedicalRecordDDJJ | null;
   medical_record_neuro_medical_exam: MedicalRecordNeuroMedicalExam | null;
   medical_record_oftalmologico_medical_exam: MedicalRecordOftalmologicoMedicalExam | null;
+  medical_record_signatures: MedicalRecordSignature | null;
+  medical_record_laboral_signatures: MedicalRecordSignature | null;
+  medical_record_patient_signatures: MedicalRecordSignature | null;
+  medical_record_medical_responsable_signatures: MedicalRecordSignature | null;
   fecha_medico_evaluador?: string | null;
   firma_medico_evaluador?: string | null;
   fecha_medico_laboral?: string | null;
