@@ -77,6 +77,10 @@ export default function MedicalHistoryPage({params}: PageProps) {
   const [laboralDate, setLaboralDate] = useState<string>("");
   const [laboralSignatureBlob, setLaboralSignatureBlob] = useState<Blob | null>(null);
   const [dataImgFile, setDataImgFile] = useState<File | null>(null);
+  const [patientSignatureBlob, setPatientSignatureBlob] = useState<Blob | null>(null);
+  const [medicoResponsableSignatureBlob, setMedicoResponsableSignatureBlob] = useState<Blob | null>(
+    null,
+  );
 
   const registry = useFormRegistry<MedicalRecord>();
 
@@ -168,6 +172,8 @@ export default function MedicalHistoryPage({params}: PageProps) {
       delete dataToSend.medical_record_data_img;
       delete dataToSend.medical_record_signatures;
       delete dataToSend.medical_record_laboral_signatures;
+      delete dataToSend.firma_paciente;
+      delete dataToSend.firma_responsable;
 
       if (medicalRecord.id) {
         // UPDATE
@@ -180,6 +186,8 @@ export default function MedicalHistoryPage({params}: PageProps) {
           evaluatorDate || null,
           laboralSignatureBlob,
           laboralDate || null,
+          patientSignatureBlob,
+          medicoResponsableSignatureBlob,
         );
       } else {
         // CREATE
@@ -193,6 +201,8 @@ export default function MedicalHistoryPage({params}: PageProps) {
           evaluatorDate || null,
           laboralSignatureBlob,
           laboralDate || null,
+          patientSignatureBlob,
+          medicoResponsableSignatureBlob,
         );
       }
       // After save, preserve the merged form data and update the ID from the response.
@@ -474,6 +484,8 @@ export default function MedicalHistoryPage({params}: PageProps) {
             registerOftalmo={(handler) =>
               registry.register("medical_record_oftalmologico_medical_exam", handler)
             }
+            onSaveMedicoSignature={(blob) => setMedicoResponsableSignatureBlob(blob)}
+            onSaveTrabajadorSignature={(blob) => setPatientSignatureBlob(blob)}
           />
         </Accordion>
         <Accordion collapsible type="single">

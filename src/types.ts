@@ -301,6 +301,9 @@ export interface MedicalRecordCuestionarioRiesgos {
   dni: number;
   age: number;
   weight: number;
+  es_apto: boolean;
+  no_es_apto: boolean;
+  observations: string;
 }
 
 export interface MedicalRecordNeuroMedicalExam {

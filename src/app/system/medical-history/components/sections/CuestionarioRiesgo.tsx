@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Controller, useForm} from "react-hook-form";
 
 import {
@@ -951,6 +951,7 @@ export const CuestionarioRiesgoSection = React.memo(
 
             {/* ── Sección 5: Para completar por el médico ── */}
             <ParaCompletarMedico
+              registerCuestionarioField={registerCuestionarioField}
               onSaveMedicoSignature={onSaveMedicoSignature}
               onSaveTrabajadorSignature={onSaveTrabajadorSignature}
             />
@@ -965,16 +966,16 @@ CuestionarioRiesgoSection.displayName = "CuestionarioRiesgoSection";
 
 // ── Sub-componente: Para completar por el médico ──
 function ParaCompletarMedico({
+  registerCuestionarioField,
   onSaveMedicoSignature,
   onSaveTrabajadorSignature,
 }: {
+  registerCuestionarioField: ReturnType<
+    typeof useForm<MedicalRecordCuestionarioRiesgos>
+  >["register"];
   onSaveMedicoSignature?: (blob: Blob) => void;
   onSaveTrabajadorSignature?: (blob: Blob) => void;
 }) {
-  const [noLimitaciones, setNoLimitaciones] = useState(false);
-  const [siLimitaciones, setSiLimitaciones] = useState(false);
-  const [limitacionTexto, setLimitacionTexto] = useState("");
-
   return (
     <div>
       <p className="mb-2 text-lg font-semibold">Para completar por el médico</p>
@@ -986,10 +987,9 @@ function ParaCompletarMedico({
         {/* Opción 1: No se evidencian limitaciones */}
         <label className="flex cursor-pointer items-start gap-3">
           <input
-            checked={noLimitaciones}
             className="mt-1 h-5 w-5 shrink-0 cursor-pointer"
             type="checkbox"
-            onChange={() => setNoLimitaciones(!noLimitaciones)}
+            {...registerCuestionarioField("es_apto")}
           />
           <span className="text-base font-semibold uppercase">
             NO SE EVIDENCIAN LIMITACIONES PARA REALIZAR TRABAJO EN ALTURA, TRABAJO EN ESPACIOS
@@ -1000,10 +1000,9 @@ function ParaCompletarMedico({
         {/* Opción 2: Se evidencian limitaciones */}
         <label className="flex cursor-pointer items-start gap-3">
           <input
-            checked={siLimitaciones}
             className="mt-1 h-5 w-5 shrink-0 cursor-pointer"
             type="checkbox"
-            onChange={() => setSiLimitaciones(!siLimitaciones)}
+            {...registerCuestionarioField("no_es_apto")}
           />
           <span className="text-base font-semibold uppercase">
             SE EVIDENCIAN LIMITACIONES PARA REALIZAR TRABAJO EN ALTURA, TRABAJO EN ESPACIOS
@@ -1016,8 +1015,7 @@ function ParaCompletarMedico({
         <textarea
           className="h-24 w-full resize-none border border-gray-500 p-2"
           placeholder="Especificar limitaciones..."
-          value={limitacionTexto}
-          onChange={(e) => setLimitacionTexto(e.target.value)}
+          {...registerCuestionarioField("observations")}
         />
       </div>
 

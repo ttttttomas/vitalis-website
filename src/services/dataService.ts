@@ -162,6 +162,8 @@ export const dataService = {
     fecha_medico_evaluador?: string | null,
     firma_medico_laboral?: Blob | null,
     fecha_medico_laboral?: string | null,
+    firma_paciente?: Blob | null,
+    firma_responsable?: Blob | null,
   ): Promise<MedicalRecord> {
     const formData = new FormData();
 
@@ -194,6 +196,12 @@ export const dataService = {
     }
     if (fecha_medico_laboral) {
       formData.append("fecha_medico_laboral", fecha_medico_laboral);
+    }
+    if (firma_paciente) {
+      formData.append("firma_paciente", firma_paciente);
+    }
+    if (firma_responsable) {
+      formData.append("firma_responsable", firma_responsable);
     }
 
     const response = await apiClient.post(`/medical-records/`, formData, {
@@ -229,6 +237,8 @@ export const dataService = {
     fecha_medico_evaluador?: string | null,
     firma_medico_laboral?: Blob | null,
     fecha_medico_laboral?: string | null,
+    firma_paciente?: Blob | null,
+    firma_responsable?: Blob | null,
   ): Promise<MedicalRecord> {
     const formData = new FormData();
 
@@ -253,6 +263,12 @@ export const dataService = {
     }
     if (fecha_medico_laboral) {
       formData.append("fecha_medico_laboral", fecha_medico_laboral);
+    }
+    if (firma_paciente) {
+      formData.append("firma_paciente", firma_paciente);
+    }
+    if (firma_responsable) {
+      formData.append("firma_responsable", firma_responsable);
     }
 
     const response = await apiClient.put(`/medical-records/${record_id}`, formData, {

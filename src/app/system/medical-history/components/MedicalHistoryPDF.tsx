@@ -115,6 +115,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
     medical_record_neuro_clinical_exam,
     medical_record_psychiatric_clinical_exam,
     medical_record_immunizations,
+    medical_record_data_img,
     medical_record_laboral_exam,
     medical_record_recomendations,
     medical_record_studies,
@@ -127,6 +128,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
 
   const d = medical_record_data;
   const habits = medical_record_habits;
+  const img = medical_record_data_img;
   const fam = medical_record_family_history;
   const prev = medical_record_previous_problems;
   const contacts = medical_record_laboral_contacts;
@@ -282,10 +284,12 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                   borderLeftColor: "#000",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: 180,
+                  height: 100,
                 },
               ]}
             >
-              <Text style={{color: "#ccc"}}>FOTO</Text>
+              <Image src={img?.url} />
             </View>
           </View>
         </View>
@@ -1478,14 +1482,14 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
               En las Evaluaciones realizadas en este formulario el día de la fecha:
             </Text>
             <View style={{flexDirection: "row", alignItems: "center", marginBottom: 3}}>
-              <Checkbox value={false} />
+              <Checkbox value={cuest?.es_apto} />
               <Text style={{fontSize: 7, flex: 1, marginLeft: 3, fontWeight: "bold"}}>
                 NO SE EVIDENCIAN LIMITACIONES PARA REALIZAR TRABAJO EN ALTURA, TRABAJO EN ESPACIOS
                 CONFINADOS Y CONDUCCIÓN DE VEHÍCULOS.
               </Text>
             </View>
             <View style={{flexDirection: "row", alignItems: "center", marginBottom: 5}}>
-              <Checkbox value={false} />
+              <Checkbox value={cuest?.no_es_apto} />
               <Text style={{fontSize: 7, flex: 1, marginLeft: 3, fontWeight: "bold"}}>
                 SE EVIDENCIAN LIMITACIONES PARA REALIZAR TRABAJO EN ALTURA, TRABAJO EN ESPACIOS
                 CONFINADOS Y CONDUCCIÓN DE VEHÍCULOS.
@@ -1500,7 +1504,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                 marginBottom: 10,
               }}
             >
-              <Text style={{fontSize: 7}}> </Text>
+              <Text style={{fontSize: 7}}>{cuest?.observations}</Text>
             </View>
 
             {/* Firmas */}
