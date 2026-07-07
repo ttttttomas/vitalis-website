@@ -632,3 +632,15 @@ export interface MedicalRecord {
   fecha_medico_laboral?: string | null;
   firma_medico_laboral?: string | null;
 }
+
+export interface Ticket {
+  id: string;
+  subject: string;
+  body: string;
+  status: "pending" | "answered";
+  user_id: string;
+  user_role: string;
+  response?: string;
+  created_at?: string;
+  updated_at?: string;
+}

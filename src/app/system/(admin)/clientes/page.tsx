@@ -81,6 +81,7 @@ export default function ClientesAdminPage() {
                     Correo electrónico <Lupa />
                   </th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
+                  <th className="px-3 py-2 text-left">Empleados</th>
                   {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
                 </tr>
               ) : (
@@ -108,6 +109,14 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">{row.cuit}</td>
                       <td className="px-3 py-2">{row.email}</td>
                       <td className="px-3 py-2">{row.phone}</td>
+                      <td className="px-3 py-2">
+                        <Link
+                          className="cursor-pointer text-xs underline"
+                          href={`/system/clientes/empresa/${row.id}`}
+                        >
+                          Ver
+                        </Link>
+                      </td>
                       {/* <td className="px-3 py-2">{row.password}</td> */}
                     </tr>
                   ))

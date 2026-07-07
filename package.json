@@ -39,6 +39,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "babel-plugin-react-compiler": "19.0.0-beta-e1e972c-20250221",
+    "baseline-browser-mapping": "^2.10.42",
     "eslint": "^9.38.0",
     "eslint-config-next": "^16.0.0",
     "eslint-config-prettier": "^10.1.8",

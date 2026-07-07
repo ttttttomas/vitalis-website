@@ -52,7 +52,7 @@ export default function TicketResponsePage() {
 
   return (
     <Panel pageIcon={<Support />} pageTitle={`Ticket NRO: #${ticket.id.slice(0, 8)}`}>
-      <Link className="flex items-center gap-1 font-bold text-black" href="/system/soporte-pacientes">
+      <Link className="flex items-center gap-1 font-bold text-black" href="/system/soporte-empresa">
         <ArrowLeft />
         Volver
       </Link>
