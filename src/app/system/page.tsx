@@ -21,6 +21,7 @@ export default function SystemPage() {
     // Redirigir según el rol del usuario
     switch (user.role) {
       case "admin":
+      case "secretary":
         router.push("/system/clientes");
         break;
       case "professional":

@@ -2,12 +2,12 @@
 
 import {createContext, use, useEffect, useState} from "react";
 
-import type {UserAdmin, UserCompany, UserPatient, UserProfessional, UserProfile} from "@/types";
+import type {UserAdmin, UserCompany, UserPatient, UserProfessional, UserProfile, UserSecretary} from "@/types";
 
 import {authService} from "@/services/authService";
 import {dataService} from "@/services/dataService";
 
-type User = UserAdmin | UserCompany | UserPatient | UserProfessional;
+type User = UserAdmin | UserCompany | UserPatient | UserProfessional | UserSecretary;
 
 interface AuthContextType {
   user: User | null;

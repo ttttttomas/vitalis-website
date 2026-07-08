@@ -6,6 +6,7 @@ import type {
   MedicalRecord,
   Studies,
   StudiesCategory,
+  Ticket,
 } from "@/types";
 
 import {apiClient} from "@/lib/axios";
@@ -132,6 +133,24 @@ export const dataService = {
 
     return response.data;
   },
+
+  /**
+   * Agregar un archivo a un estudio existente (e.g. un informe)
+   */
+  async uploadStudyFile(studyId: string, file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await apiClient.post(`/studies/${studyId}/files`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  },
+
   /**
    * Obtener estudios por patient_id
    * @param patient_id - ID del paciente
@@ -357,5 +376,71 @@ export const dataService = {
     });
 
     return response.data.users as UserProfessional[] | UserAdmin[];
+  },
+
+  /**
+   * Obtener todos los tickets de soporte (Admin)
+   */
+  async getTickets(): Promise<Ticket[]> {
+    const response = await apiClient.get(`/support/tickets`, {
+      withCredentials: true,
+    });
+
+    return response.data.tickets as Ticket[];
+  },
+
+  /**
+   * Obtener tickets de soporte del usuario logueado (Empresa/Paciente)
+   */
+  async getMyTickets(): Promise<Ticket[]> {
+    const response = await apiClient.get(`/support/my-tickets`, {
+      withCredentials: true,
+    });
+
+    return response.data.tickets as Ticket[];
+  },
+
+  /**
+   * Crear un nuevo ticket de soporte
+   */
+  async createTicket(data: {subject: string; body: string}): Promise<Ticket> {
+    const response = await apiClient.post(`/support/tickets`, data, {
+      withCredentials: true,
+    });
+
+    return response.data as Ticket;
+  },
+
+  /**
+   * Obtener un ticket de soporte por ID
+   */
+  async getTicketById(id: string): Promise<Ticket> {
+    const response = await apiClient.get(`/support/tickets/${id}`, {
+      withCredentials: true,
+    });
+
+    return response.data as Ticket;
+  },
+
+  /**
+   * Responder a un ticket de soporte (Admin)
+   */
+  async respondTicket(id: string, responseText: string): Promise<Ticket> {
+    const response = await apiClient.patch(`/support/tickets/${id}`, {response: responseText}, {
+      withCredentials: true,
+    });
+
+    return response.data as Ticket;
+  },
+
+  /**
+   * Actualizar estado activo/inactivo de un usuario (Admin)
+   */
+  async updateUserStatus(userId: string, isActive: boolean): Promise<any> {
+    const response = await apiClient.patch(`/users/${userId}?is_active=${isActive}`, null, {
+      withCredentials: true,
+    });
+
+    return response.data;
   },
 };

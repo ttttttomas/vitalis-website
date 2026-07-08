@@ -35,6 +35,11 @@ const navByRole: Record<Roles, NavItem[]> = {
     {label: "Estudios", href: "/system/estudios", icon: <Estudies />},
     {label: "Soporte", href: "/system/soporte", icon: <Support />},
   ],
+  secretary: [
+    {label: "Clientes", href: "/system/clientes", icon: <Clients />},
+    {label: "Estudios", href: "/system/estudios", icon: <Estudies />},
+    {label: "Soporte", href: "/system/soporte", icon: <Support />},
+  ],
   company: [
     {label: "Empleados", href: "/system/empleados", icon: <Clients />},
     {label: "Mis datos", href: "/system/mis-datos-empresa", icon: <Users />},
@@ -63,6 +68,10 @@ function getUserLabel(user: NonNullable<ReturnType<typeof useAuth>["user"]>): st
   if (user.role === "admin") {
     // Admin
     return `${user.first_name} ${user.last_name} - Administrador`;
+  }
+  if (user.role === "secretary") {
+    // Secretary
+    return `${user.first_name} ${user.last_name} - Secretaria`;
   }
   if (user.role === "company") {
     // Company
@@ -147,7 +156,6 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
             <nav className="mx-2 flex w-full flex-row items-center justify-center gap-1 px-4 py-4 md:mt-4 md:flex-col md:items-start md:justify-start md:gap-2 md:px-0">
               {navItems.map((item) => {
                 const isActive = pathname.startsWith(item.href);
-                const isSupport = item.label === "Soporte";
 
                 return (
                   <Link
@@ -157,10 +165,10 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
                         ? "bg-white text-black md:rounded-l-full md:rounded-r-none"
                         : "text-white hover:bg-white/15"
                     }`}
-                    href={isSupport ? "" : item.href}
+                    href={item.href}
                   >
                     {item.icon}
-                    <span className={`${isSupport ? "text-gray-400" : ""} hidden text-lg md:block`}>
+                    <span className="hidden text-lg md:block">
                       {item.label}
                     </span>
                   </Link>

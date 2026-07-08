@@ -9,28 +9,37 @@ import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
 
-interface UsersRow {
-  nombre: string;
-  dni: string;
-  email: string;
-  telefono: string;
-  password: string;
-}
-
 export default function SystemUsuariosPage() {
   const [users, setUsers] = useState<UserAdmin[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getUsers = async () => {
-      const users = await dataService.getUsersFilters("admin");
+      try {
+        const users = await dataService.getUsersFilters("admin");
 
-      setUsers(users as UserAdmin[]);
-      setLoading(false);
+        setUsers(users as UserAdmin[]);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     void getUsers();
   }, []);
+
+  const handleToggleActive = async (userId: string, currentStatus?: boolean) => {
+    try {
+      const newStatus = !currentStatus;
+
+      await dataService.updateUserStatus(userId, newStatus);
+      setUsers((prev) => prev.map((u) => (u.id === userId ? {...u, is_active: newStatus} : u)));
+    } catch (error) {
+      console.error("Error al actualizar el estado del usuario:", error);
+      alert("Error al actualizar el estado del usuario. Por favor intenta nuevamente.");
+    }
+  };
 
   if (loading) {
     return (
@@ -55,11 +64,13 @@ export default function SystemUsuariosPage() {
         <table className="w-full overflow-x-auto text-xs">
           <thead>
             <tr className="bg-[#3A3A3A] text-white">
-              <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Nombre completo</th>
-              <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">DNI</th>
-              <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Correo electrónico</th>
-              <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Teléfono</th>
-              <th className="px-3 py-2 text-left">Contraseña</th>
+              <th className="border-r border-[#4A4A4A] px-3 py-2 text-center">Nombre</th>
+              <th className="border-r border-[#4A4A4A] px-3 py-2 text-center">Apellido</th>
+              <th className="border-r border-[#4A4A4A] px-3 py-2 text-center">
+                Correo electrónico
+              </th>
+              <th className="border-r border-[#4A4A4A] px-3 py-2 text-center">Activo</th>
+              {/* <th className="px-3 py-2 text-center">Acciones</th> */}
             </tr>
           </thead>
 
@@ -67,10 +78,23 @@ export default function SystemUsuariosPage() {
             {users.map((row, idx) => (
               <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.first_name}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.last_name}</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.email}</td>
-                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.phone}</td>
-                <td className="px-3 py-2">{row.password}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2 text-center">
+                  {row.is_active ? "Sí" : "No"}
+                </td>
+                {/* <td className="px-3 py-2 text-center">
+                  <button
+                    onClick={() => void handleToggleActive(row.id, row.is_active)}
+                    className={`rounded px-3 py-1 cursor-pointer font-semibold text-white transition-colors duration-150 ${
+                      row.is_active
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  >
+                    {row.is_active ? "Desactivar" : "Activar"}
+                  </button>
+                </td> */}
               </tr>
             ))}
           </tbody>

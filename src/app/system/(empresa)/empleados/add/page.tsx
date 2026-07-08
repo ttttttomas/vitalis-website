@@ -127,13 +127,32 @@ export default function AddEmployeePage() {
         <label className="text-lg font-bold italic" htmlFor="direccion">
           Tipo de estudio a realizar *
         </label>
-        <input
+        <select
           required
           className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
-          placeholder="Ingresa el tipo de estudio"
-          type="text"
           {...register("study_type")}
-        />
+        >
+          <option disabled selected />
+          <option value="estudio1">
+            Básico de ley (Consentimiento informado + ECG + Radiografía de Tórax frente, Exámen
+            Clínico)
+          </option>
+          <option value="estudio2">
+            Básico de ley + EEG + Audiometria+ Psicotécnico + Radiografía de CLS frente y perfil
+          </option>
+          <option value="estudio1">
+            Básico de ley + EEG+ Audiometría+ Psicotécnico + Radiografía de CLS frente y perfil +
+            Drogas de abuso con Benzodiacepinas y derivados
+          </option>
+          <option value="estudio2">
+            Básico de ley + EEG + Audiometria + Psicotecnico + Radiografía de CLS y CC frente y
+            perfil + Drogas de abuso (Marihuana y Cocaina)
+          </option>
+          <option value="estudio2">
+            Básico de ley + EEG+ Audiometria + Psicotécnico + Radiografía de CLS frente y perfil +
+            Drogas de abuso con benzodiacepinas y derivados+ Test del cereal + Espirometría
+          </option>
+        </select>
         <button
           className="bg-blue mt-10 cursor-pointer rounded-lg py-2 font-semibold text-white"
           type="submit"
