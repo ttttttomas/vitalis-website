@@ -133,6 +133,24 @@ export const dataService = {
 
     return response.data;
   },
+
+  /**
+   * Agregar un archivo a un estudio existente (e.g. un informe)
+   */
+  async uploadStudyFile(studyId: string, file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await apiClient.post(`/studies/${studyId}/files`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  },
+
   /**
    * Obtener estudios por patient_id
    * @param patient_id - ID del paciente
@@ -413,5 +431,16 @@ export const dataService = {
     });
 
     return response.data as Ticket;
+  },
+
+  /**
+   * Actualizar estado activo/inactivo de un usuario (Admin)
+   */
+  async updateUserStatus(userId: string, isActive: boolean): Promise<any> {
+    const response = await apiClient.patch(`/users/${userId}?is_active=${isActive}`, null, {
+      withCredentials: true,
+    });
+
+    return response.data;
   },
 };

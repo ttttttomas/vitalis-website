@@ -35,6 +35,11 @@ const navByRole: Record<Roles, NavItem[]> = {
     {label: "Estudios", href: "/system/estudios", icon: <Estudies />},
     {label: "Soporte", href: "/system/soporte", icon: <Support />},
   ],
+  secretary: [
+    {label: "Clientes", href: "/system/clientes", icon: <Clients />},
+    {label: "Estudios", href: "/system/estudios", icon: <Estudies />},
+    {label: "Soporte", href: "/system/soporte", icon: <Support />},
+  ],
   company: [
     {label: "Empleados", href: "/system/empleados", icon: <Clients />},
     {label: "Mis datos", href: "/system/mis-datos-empresa", icon: <Users />},
@@ -63,6 +68,10 @@ function getUserLabel(user: NonNullable<ReturnType<typeof useAuth>["user"]>): st
   if (user.role === "admin") {
     // Admin
     return `${user.first_name} ${user.last_name} - Administrador`;
+  }
+  if (user.role === "secretary") {
+    // Secretary
+    return `${user.first_name} ${user.last_name} - Secretaria`;
   }
   if (user.role === "company") {
     // Company

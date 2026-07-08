@@ -1,4 +1,19 @@
-export type Roles = "admin" | "company" | "patient" | "professional";
+export type Roles = "admin" | "company" | "patient" | "professional" | "secretary";
+
+export interface UserSecretary {
+  id: string;
+  name?: string;
+  email: string;
+  role: "secretary";
+  first_name: string;
+  last_name: string;
+  dni: string;
+  phone: string;
+  password?: string;
+  is_active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export interface UserAdmin {
   id: string;
@@ -10,6 +25,7 @@ export interface UserAdmin {
   dni: string;
   phone: string;
   password: string;
+  is_active?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -21,6 +37,16 @@ export interface StudiesCategory {
   id?: string;
 }
 
+export interface StudyFile {
+  id: string;
+  study_id: string;
+  file_path: string;
+  original_filename: string;
+  mime_type: string;
+  size_bytes: number;
+  uploaded_at: string;
+}
+
 export interface Studies {
   id: string;
   patient_id: string;
@@ -29,7 +55,8 @@ export interface Studies {
   study_type: string;
   created_at?: string;
   status: string;
-  study_file: string;
+  study_file?: string;
+  files?: StudyFile[];
 }
 
 export interface UserProfessional {
@@ -95,7 +122,7 @@ export interface UserProfile {
 }
 
 export interface AuthenticatedUser {
-  user?: UserAdmin | UserCompany | UserPatient | UserProfessional;
+  user?: UserAdmin | UserCompany | UserPatient | UserProfessional | UserSecretary;
   profile?: UserProfile;
 }
 
