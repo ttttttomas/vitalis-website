@@ -14,6 +14,7 @@ interface AddUserForm {
   speciality: string;
   first_name: string;
   last_name: string;
+  rol: string;
   phone: string;
 }
 
@@ -106,6 +107,21 @@ export default function AddProfessionalPage() {
           type="text"
           {...register("speciality")}
         />
+        <label className="text-lg font-bold italic" htmlFor="profesion">
+          Rol *
+        </label>
+        <select
+          required
+          className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
+          {...register("rol")}
+        >
+          <option disabled selected value="">
+            Selecciona un rol
+          </option>
+          <option value="especialista">Especialista</option>
+          <option value="licenciado">Licenciado</option>
+          <option value="tecnico">Tecnico</option>
+        </select>
         <label className="text-lg font-bold italic" htmlFor="license_number">
           Matrícula *
         </label>

@@ -1,7 +1,7 @@
 "use client";
 import {useEffect, useState} from "react";
 
-import {UserProfessional} from "@/types";
+import {UserProfessional, UserProfile} from "@/types";
 
 import {Users} from "@/components/ui/Icons";
 import {authService} from "@/services/authService";
@@ -10,15 +10,17 @@ import Panel from "../../components/Panel";
 
 export default function MisDatosProfesionalPage() {
   const [user, setUser] = useState<UserProfessional | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const data = async () => {
       try {
-        const {user} = await authService.getCurrentUser();
+        const {user, profile} = await authService.getCurrentUser();
 
         if (user?.role === "professional") {
           setUser(user);
+          setProfile(profile ?? null);
           setLoading(false);
         }
       } catch (error) {
@@ -43,38 +45,49 @@ export default function MisDatosProfesionalPage() {
   if (!user) {
     return (
       <Panel pageIcon={<Users />} pageTitle="Mis datos">
-        <p>No se encontro el usuario</p>
+        <p>No se encontró el usuario</p>
       </Panel>
     );
   }
 
   return (
     <Panel pageIcon={<Users />} pageTitle="Mis datos">
-      <form className="mt-10 flex flex-col gap-2">
-        <label className="text-lg font-bold italic" htmlFor="nombre">
-          Nombre completo *
+      <form className="mt-10 flex flex-col gap-2 text-black">
+        <label className="text-lg font-bold text-black italic" htmlFor="nombre">
+          Nombre completo
         </label>
-        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">{user.first_name}</p>
-        <label className="text-lg font-bold italic" htmlFor="dni">
-          DNI *
-        </label>
-        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">{user.dni}</p>
-        <label className="text-lg font-bold italic" htmlFor="email">
-          Ingresa el correo electrónico *
+        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">
+          {user.first_name} {user.last_name || ""}
+        </p>
+
+        <label className="text-lg font-bold text-black italic" htmlFor="email">
+          Correo electrónico
         </label>
         <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">{user.email}</p>
-        <label className="text-lg font-bold italic" htmlFor="telefono">
-          Teléfono de contacto*
+
+        <label className="text-lg font-bold text-black italic" htmlFor="license_number">
+          Matrícula
         </label>
-        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">{user.phone}</p>
-        {/* <label className="text-lg font-bold italic" htmlFor="password">
-          Contraseña *
+        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">
+          {profile?.license_number}
+        </p>
+
+        <label className="text-lg font-bold text-black italic" htmlFor="speciality">
+          Especialidad
         </label>
-        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">Contraseña</p> */}
-        <label className="text-lg font-bold italic" htmlFor="profesion">
-          Profesión *
+        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">
+          {profile?.speciality}
+        </p>
+
+        <label className="text-lg font-bold text-black italic" htmlFor="rol">
+          Rol
         </label>
-        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">Profesional</p>
+        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">{profile?.rol}</p>
+
+        <label className="text-lg font-bold text-black italic" htmlFor="telefono">
+          Teléfono de contacto
+        </label>
+        <p className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1">{profile?.phone}</p>
       </form>
     </Panel>
   );

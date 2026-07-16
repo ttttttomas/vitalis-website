@@ -1,5 +1,6 @@
 "use client";
 import {useEffect, useState} from "react";
+import {jsPDF} from "jspdf";
 
 import {
   UserAdmin,
@@ -21,7 +22,9 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
 
   // Modal upload states
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
+  const [uploadType, setUploadType] = useState<"file" | "text">("file");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [reportText, setReportText] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -77,23 +80,73 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
 
   const handleConfirmWithReport = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile) {
-      alert("Por favor selecciona un archivo de informe.");
 
-      return;
+    let fileToUpload: File | null = null;
+
+    if (uploadType === "file") {
+      if (!selectedFile) {
+        alert("Por favor selecciona un archivo de informe.");
+
+        return;
+      }
+      fileToUpload = selectedFile;
+    } else {
+      if (!reportText.trim()) {
+        alert("Por favor escribe el contenido del informe.");
+
+        return;
+      }
+
+      try {
+        const doc = new jsPDF();
+
+        // Title Header
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("INFORME MÉDICO", 105, 25, {align: "center"});
+
+        // Metadata Info
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 20, 40);
+        doc.text(`Estudio: ${studies.study_type}`, 20, 47);
+
+        // Divider
+        doc.setLineWidth(0.5);
+        doc.line(20, 52, 190, 52);
+
+        // Body Text
+        doc.setFontSize(11);
+        const splitText = doc.splitTextToSize(reportText, 170);
+        doc.text(splitText, 20, 62);
+
+        const blob = doc.output("blob");
+        fileToUpload = new File(
+          [blob],
+          `informe_${studies.study_type.replace(/\s+/g, "_")}.pdf`,
+          {type: "application/pdf"},
+        );
+      } catch (pdfErr) {
+        console.error("Error generating PDF:", pdfErr);
+        alert("Error al generar el PDF del informe.");
+
+        return;
+      }
     }
 
     setUploading(true);
     try {
       // 1. Subir el archivo de informe usando el endpoint existente
-      await dataService.uploadStudyFile(studies.id, selectedFile);
+      await dataService.uploadStudyFile(studies.id, fileToUpload);
       // 2. Cambiar el estado del estudio a "Disponible"
       await dataService.changeStudyStatus(studies.id, {
         status: "Disponible",
         study_type: studies.study_type,
       });
-      alert("Informe subido y estudio confirmado correctamente.");
+      alert("Informe cargado y estudio confirmado correctamente.");
       setShowUploadModal(false);
+      setSelectedFile(null);
+      setReportText("");
       window.location.reload();
     } catch (error) {
       console.error("Error al confirmar el estudio:", error);
@@ -217,7 +270,7 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
           </div>
 
           {/* Action button for Specialist / Médico */}
-          {userData?.role === "professional" && (
+          {userData?.role === "professional" && studies.status === "pending" && (
             <button
               className="cursor-pointer rounded bg-white/20 px-3 py-1 font-medium underline transition hover:bg-white/30"
               onClick={() => setShowUploadModal(true)}
@@ -236,20 +289,65 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
             <p className="mt-1 mb-4 text-sm text-gray-500">
               Estudio: <strong>{studies.study_type}</strong>
             </p>
+
+            {/* Tab Selection */}
+            <div className="mb-4 flex gap-2 border-b border-gray-200 pb-2">
+              <button
+                type="button"
+                className={`cursor-pointer rounded px-4 py-1.5 text-xs font-semibold transition ${
+                  uploadType === "file"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+                onClick={() => setUploadType("file")}
+                disabled={uploading}
+              >
+                Subir PDF/Imagen
+              </button>
+              <button
+                type="button"
+                className={`cursor-pointer rounded px-4 py-1.5 text-xs font-semibold transition ${
+                  uploadType === "text"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+                onClick={() => setUploadType("text")}
+                disabled={uploading}
+              >
+                Escribir Informe (PDF)
+              </button>
+            </div>
+
             <form className="flex flex-col gap-4" onSubmit={handleConfirmWithReport}>
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-semibold">
-                  Seleccionar archivo de informe (PDF o Imagen):
-                </span>
-                <input
-                  required
-                  accept=".pdf,image/*"
-                  className="rounded-lg border border-gray-300 bg-white p-2 text-sm"
-                  disabled={uploading}
-                  type="file"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                />
-              </label>
+              {uploadType === "file" ? (
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold">
+                    Seleccionar archivo de informe (PDF o Imagen):
+                  </span>
+                  <input
+                    required
+                    accept=".pdf,image/*"
+                    className="rounded-lg border border-gray-300 bg-white p-2 text-sm"
+                    disabled={uploading}
+                    type="file"
+                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                  />
+                </label>
+              ) : (
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold">Contenido del informe médico:</span>
+                  <textarea
+                    required
+                    rows={6}
+                    placeholder="Escribe el informe que se convertirá a PDF..."
+                    className="rounded-lg border border-gray-300 bg-white p-3 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    disabled={uploading}
+                    value={reportText}
+                    onChange={(e) => setReportText(e.target.value)}
+                  />
+                </label>
+              )}
+
               <div className="mt-4 flex justify-end gap-3">
                 <button
                   className="cursor-pointer rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-100"
@@ -258,6 +356,7 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
                   onClick={() => {
                     setShowUploadModal(false);
                     setSelectedFile(null);
+                    setReportText("");
                   }}
                 >
                   Cancelar
@@ -267,7 +366,7 @@ export default function EstudiosCard({studies}: {studies: Studies}) {
                   disabled={uploading}
                   type="submit"
                 >
-                  {uploading ? "Subiendo..." : "Confirmar y Subir"}
+                  {uploading ? "Subiendo..." : "Confirmar y Guardar"}
                 </button>
               </div>
             </form>

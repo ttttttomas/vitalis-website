@@ -11,9 +11,47 @@ import {ArrowLeft, Clients} from "@/components/ui/Icons";
 import {dataService} from "@/services/dataService";
 import {authService} from "@/services/authService";
 
+const studyTypes = [
+  {
+    value: "Básico de ley",
+    label: "Básico de ley",
+    detail:
+      "Básico de ley (Consentimiento informado + ECG + Radiografía de Tórax frente, Exámen Clínico)",
+  },
+  {
+    value: "Básico + EEG + Audiometría + Psicotécnico + RX",
+    label: "Básico + EEG + Audiometría + Psicotécnico + RX",
+    detail: "Básico de ley + EEG + Audiometria+ Psicotécnico + Radiografía de CLS frente y perfil",
+  },
+  {
+    value: "Básico + EEG + Audiometría + Psicotécnico + RX + Drogas",
+    label: "Básico + EEG + Audiometría + Psicotécnico + RX + Drogas",
+    detail:
+      "Básico de ley + EEG+ Audiometría+ Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con Benzodiacepinas y derivados",
+  },
+  {
+    value: "Básico + EEG + Audiometría + Psicotécnico + RX + Drogas (M/C)",
+    label: "Básico + EEG + Audiometría + Psicotécnico + RX + Drogas (M/C)",
+    detail:
+      "Básico de ley + EEG + Audiometria + Psicotecnico + Radiografía de CLS y CC frente y perfil + Drogas de abuso (Marihuana y Cocaina)",
+  },
+  {
+    value: "Básico + EEG + Audiometría + Psicotécnico + RX + Drogas + Test Cereal + Espiro",
+    label: "Básico + EEG + Audiometría + Psicotécnico + RX + Drogas + Test Cereal + Espiro",
+    detail:
+      "Básico de ley + EEG+ Audiometria + Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con benzodiacepinas y derivados+ Test del cereal + Espirometría",
+  },
+  {
+    value: "otro",
+    label: "Otro",
+    detail: "Especifica el tipo de estudio de manera manual",
+  },
+];
+
 export default function AddEmployeePage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [selectedStudy, setSelectedStudy] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -30,9 +68,14 @@ export default function AddEmployeePage() {
 
         return;
       }
-      console.log(data);
+      
+      const payload = { ...data };
+      if (payload.study_type === "otro") {
+        payload.study_type = payload.custom_study_type;
+      }
+      delete payload.custom_study_type;
 
-      await dataService.createEmployee(id, data as unknown as UserPatient);
+      await dataService.createEmployee(id, payload as unknown as UserPatient);
       alert("Empleado agregado correctamente");
       router.push("/system/empleados");
     } catch (e) {
@@ -124,35 +167,50 @@ export default function AddEmployeePage() {
           type="text"
           {...register("address")}
         />
-        <label className="text-lg font-bold italic" htmlFor="direccion">
+        <label className="text-lg font-bold italic" htmlFor="study_type">
           Tipo de estudio a realizar *
         </label>
         <select
           required
-          className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
-          {...register("study_type")}
+          className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1 text-black"
+          {...register("study_type", {
+            onChange: (e) => setSelectedStudy(e.target.value),
+          })}
+          defaultValue=""
+          title={
+            studyTypes.find((s) => s.value === selectedStudy)?.detail ||
+            "Selecciona un tipo de estudio"
+          }
         >
-          <option disabled selected />
-          <option value="estudio1">
-            Básico de ley (Consentimiento informado + ECG + Radiografía de Tórax frente, Exámen
-            Clínico)
+          <option disabled value="">
+            Selecciona una opción
           </option>
-          <option value="estudio2">
-            Básico de ley + EEG + Audiometria+ Psicotécnico + Radiografía de CLS frente y perfil
-          </option>
-          <option value="estudio1">
-            Básico de ley + EEG+ Audiometría+ Psicotécnico + Radiografía de CLS frente y perfil +
-            Drogas de abuso con Benzodiacepinas y derivados
-          </option>
-          <option value="estudio2">
-            Básico de ley + EEG + Audiometria + Psicotecnico + Radiografía de CLS y CC frente y
-            perfil + Drogas de abuso (Marihuana y Cocaina)
-          </option>
-          <option value="estudio2">
-            Básico de ley + EEG+ Audiometria + Psicotécnico + Radiografía de CLS frente y perfil +
-            Drogas de abuso con benzodiacepinas y derivados+ Test del cereal + Espirometría
-          </option>
+          {studyTypes.map((study) => (
+            <option key={study.value} title={study.detail} value={study.value}>
+              {study.label}
+            </option>
+          ))}
         </select>
+        {selectedStudy === "otro" && (
+          <>
+            <label className="text-lg font-bold italic mt-2" htmlFor="custom_study_type">
+              Especificar tipo de estudio *
+            </label>
+            <textarea
+              required
+              className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-2 text-black"
+              placeholder="Especifica el tipo de estudio..."
+              rows={3}
+              {...register("custom_study_type")}
+            />
+          </>
+        )}
+        {selectedStudy && selectedStudy !== "otro" && (
+          <div className="mt-2 rounded-lg border border-[#4A4A4A] bg-[#2d2d2d] p-3 text-xs text-gray-300 italic">
+            <strong>Detalle del estudio:</strong>{" "}
+            {studyTypes.find((s) => s.value === selectedStudy)?.detail}
+          </div>
+        )}
         <button
           className="bg-blue mt-10 cursor-pointer rounded-lg py-2 font-semibold text-white"
           type="submit"
