@@ -119,6 +119,10 @@ export interface UserProfile {
   company_id: string | null;
   patient_id: string | null;
   professional_id: string | null;
+  license_number?: string;
+  speciality?: string;
+  rol?: string;
+  phone?: string;
 }
 
 export interface AuthenticatedUser {
@@ -603,8 +607,6 @@ export interface MedicalRecordHabits {
   smoke_quantity: number;
   frequency: string;
 }
-
-
 
 export interface MedicalRecordSignature {
   id: string;

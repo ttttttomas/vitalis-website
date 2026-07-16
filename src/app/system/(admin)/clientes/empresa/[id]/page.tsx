@@ -8,6 +8,29 @@ import {ArrowLeft, Clients} from "@/components/ui/Icons";
 import {dataService} from "@/services/dataService";
 import Panel from "@/app/system/components/Panel";
 
+const getStudyDetail = (studyType?: string) => {
+  if (!studyType) return "Sin estudio asignado";
+  const trimmed = studyType.trim().toLowerCase();
+  
+  if (trimmed === "estudio1" || trimmed === "basico de ley" || trimmed === "básico de ley") {
+    return "Básico de ley (Consentimiento informado + ECG + Radiografía de Tórax frente, Exámen Clínico)";
+  }
+  if (trimmed === "estudio2" || trimmed === "básico + eeg + audiometría + psicotécnico + rx" || trimmed === "basico + eeg + audiometria + psicotecnico + rx") {
+    return "Básico de ley + EEG + Audiometria+ Psicotécnico + Radiografía de CLS frente y perfil";
+  }
+  if (trimmed === "estudio3" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas") {
+    return "Básico de ley + EEG+ Audiometría+ Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con Benzodiacepinas y derivados";
+  }
+  if (trimmed === "estudio4" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas (m/c)" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas (m/c)") {
+    return "Básico de ley + EEG + Audiometria + Psicotecnico + Radiografía de CLS y CC frente y perfil + Drogas de abuso (Marihuana y Cocaina)";
+  }
+  if (trimmed === "estudio5" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas + test cereal + espiro" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas + test cereal + espiro") {
+    return "Básico de ley + EEG+ Audiometria + Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con benzodiacepinas y derivados+ Test del cereal + Espirometría";
+  }
+  
+  return studyType;
+};
+
 export default function EmpresaEmpleadosPage() {
   const params = useParams();
   const companyId = params.id as string;
@@ -116,7 +139,12 @@ export default function EmpresaEmpleadosPage() {
                       Acceder
                     </Link>
                   </td>
-                  <td className="px-3 py-2">{row.study_type ?? "-"}</td>
+                  <td
+                    className="px-3 py-2 cursor-help underline decoration-dotted"
+                    title={getStudyDetail(row.study_type)}
+                  >
+                    {row.study_type ?? "-"}
+                  </td>
                 </tr>
               ))}
 

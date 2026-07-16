@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import Link from "next/link";
 
 import {UserCompany, UserPatient} from "@/types";
@@ -10,6 +10,29 @@ import {dataService} from "@/services/dataService";
 import Panel from "../../components/Panel";
 
 type Mode = "empresas" | "pacientes";
+
+const getStudyDetail = (studyType?: string) => {
+  if (!studyType) return "Sin estudio asignado";
+  const trimmed = studyType.trim().toLowerCase();
+  
+  if (trimmed === "estudio1" || trimmed === "basico de ley" || trimmed === "básico de ley") {
+    return "Básico de ley (Consentimiento informado + ECG + Radiografía de Tórax frente, Exámen Clínico)";
+  }
+  if (trimmed === "estudio2" || trimmed === "básico + eeg + audiometría + psicotécnico + rx" || trimmed === "basico + eeg + audiometria + psicotecnico + rx") {
+    return "Básico de ley + EEG + Audiometria+ Psicotécnico + Radiografía de CLS frente y perfil";
+  }
+  if (trimmed === "estudio3" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas") {
+    return "Básico de ley + EEG+ Audiometría+ Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con Benzodiacepinas y derivados";
+  }
+  if (trimmed === "estudio4" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas (m/c)" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas (m/c)") {
+    return "Básico de ley + EEG + Audiometria + Psicotecnico + Radiografía de CLS y CC frente y perfil + Drogas de abuso (Marihuana y Cocaina)";
+  }
+  if (trimmed === "estudio5" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas + test cereal + espiro" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas + test cereal + espiro") {
+    return "Básico de ley + EEG+ Audiometria + Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con benzodiacepinas y derivados+ Test del cereal + Espirometría";
+  }
+  
+  return studyType;
+};
 
 export default function ClientesAdminPage() {
   const [mode, setMode] = useState<Mode>("empresas");
@@ -45,16 +68,16 @@ export default function ClientesAdminPage() {
     <Panel pageIcon={<Clients />} pageTitle="Clientes">
       <div className="w-full">
         {/* Header verde con toggle */}
-        <div className="grid grid-cols-2 text-center text-sm font-semibold text-white">
+        <div className="grid grid-cols-2 text-center text-sm font-semibold">
           <button
-            className={`cursor-pointer py-2 transition-all ${isEmpresas ? "bg-[#3F5C3B]" : "bg-green"}`}
+            className={`cursor-pointer py-2 transition-all ${isEmpresas ? "bg-[#3F5C3B] text-white" : "bg-green text-blackW"}`}
             type="button"
             onClick={() => setMode("empresas")}
           >
             Empresas
           </button>
           <button
-            className={`cursor-pointer py-2 transition-all ${!isEmpresas ? "bg-[#3F5C3B]" : "bg-[#A3DFA3]"}`}
+            className={`cursor-pointer py-2 transition-all ${!isEmpresas ? "bg-[#3F5C3B] text-white" : "bg-[#A3DFA3] text-black"}`}
             type="button"
             onClick={() => setMode("pacientes")}
           >
@@ -67,19 +90,11 @@ export default function ClientesAdminPage() {
           <table className="w-full text-xs">
             <thead>
               {isEmpresas ? (
-                <tr className="bg-[#3A3A3A] text-white">
-                  <th className="px-3 py-2 text-left">
-                    Nombre empresa <Lupa />
-                  </th>
-                  <th className="px-3 py-2 text-left">
-                    Nombre responsable <Lupa />
-                  </th>
-                  <th className="px-3 py-2 text-left">
-                    DNI/CUIT <Lupa />
-                  </th>
-                  <th className="px-3 py-2 text-left">
-                    Correo electrónico <Lupa />
-                  </th>
+                <tr className="my-2 bg-[#3A3A3A] text-white">
+                  <th className="px-3 py-2 text-left">Nombre empresa</th>
+                  <th className="px-3 py-2 text-left">Nombre responsable</th>
+                  <th className="px-3 py-2 text-left">DNI/CUIT</th>
+                  <th className="px-3 py-2 text-left">Correo electrónico</th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
                   <th className="px-3 py-2 text-left">Empleados</th>
                   {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
@@ -111,7 +126,7 @@ export default function ClientesAdminPage() {
                       <td className="px-3 py-2">{row.phone}</td>
                       <td className="px-3 py-2">
                         <Link
-                          className="cursor-pointer text-xs underline"
+                          className="cursor-pointer text-center text-xs underline"
                           href={`/system/clientes/empresa/${row.id}`}
                         >
                           Ver
@@ -147,7 +162,12 @@ export default function ClientesAdminPage() {
                           Acceder
                         </Link>
                       </td>
-                      <td className="px-3 py-2">{row.study_type ?? "-"}</td>
+                      <td
+                        className="px-3 py-2 cursor-help underline decoration-dotted"
+                        title={getStudyDetail(row.study_type)}
+                      >
+                        {row.study_type ?? "-"}
+                      </td>
                     </tr>
                     // <div className="px-3 py-2 text-center">
                     //   <button className="px-2 py-1 text-xs text-white">🗑</button>
