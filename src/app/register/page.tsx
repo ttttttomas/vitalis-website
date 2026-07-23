@@ -7,6 +7,7 @@ import {authService} from "@/services/authService";
 
 interface RegisterFormData {
   first_name: string;
+  last_name: string;
   dni: string;
   date_of_birth: string;
   email: string;
@@ -87,6 +88,19 @@ export default function RegisterPage() {
                 id="first_name"
                 type="text"
                 {...register("first_name")}
+              />
+            </div>
+
+            {/* Apellido */}
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-black" htmlFor="last_name">
+                Apellido <span className="text-red-500">*</span>
+              </label>
+              <input
+                className="rounded-md border px-3 py-2"
+                id="last_name"
+                type="text"
+                {...register("last_name")}
               />
             </div>
 

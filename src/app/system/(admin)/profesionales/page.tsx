@@ -13,16 +13,31 @@ export default function ProfessionalesAdminPage() {
   const [users, setUsers] = useState<UserProfessional[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchProfessionals = async () => {
+    const data = await dataService.getProfessionals();
+    setUsers(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const getUsers = async () => {
-      const users = await dataService.getProfessionals();
-
-      setUsers(users);
-      setLoading(false);
-    };
-
-    void getUsers();
+    void fetchProfessionals();
   }, []);
+
+  const handleDelete = async (user: UserProfessional) => {
+    const fullName = `${user.name ?? ""} ${user.lastname ?? ""}`.trim() || user.email;
+    const confirmed = window.confirm(
+      `¿Estás seguro de que deseas eliminar al profesional "${fullName}"? Esta acción no se puede deshacer.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      await dataService.deleteUser(user.user_id);
+      setUsers((prev) => prev.filter((u) => u.user_id !== user.user_id));
+    } catch (err) {
+      console.error("Error al eliminar profesional:", err);
+      alert("Ocurrió un error al eliminar el profesional. Por favor intentá nuevamente.");
+    }
+  };
 
   if (loading) {
     return (
@@ -51,7 +66,8 @@ export default function ProfessionalesAdminPage() {
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">DNI</th>
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Correo electrónico</th>
               <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Teléfono</th>
-              <th className="px-3 py-2 text-left">Profesion</th>
+              <th className="border-r border-[#4A4A4A] px-3 py-2 text-left">Profesion</th>
+              <th className="px-3 py-2 text-left">Acciones</th>
             </tr>
           </thead>
 
@@ -67,9 +83,25 @@ export default function ProfessionalesAdminPage() {
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.dni}</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.email}</td>
                 <td className="border-r border-[#4A4A4A] px-3 py-2">{row.phone}</td>
-                <td className="px-3 py-2 text-left">{row.speciality}</td>
+                <td className="border-r border-[#4A4A4A] px-3 py-2">{row.speciality}</td>
+                <td className="px-3 py-2">
+                  <button
+                    className="cursor-pointer rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white transition hover:bg-red-700"
+                    type="button"
+                    onClick={() => void handleDelete(row)}
+                  >
+                    Eliminar
+                  </button>
+                </td>
               </tr>
             ))}
+            {users.length === 0 && (
+              <tr className="border-t border-[#4A4A4A] bg-[#333333] text-white">
+                <td className="px-3 py-4 text-center" colSpan={6}>
+                  No hay profesionales registrados.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -37,7 +37,7 @@ const navByRole: Record<Roles, NavItem[]> = {
   ],
   secretary: [
     {label: "Clientes", href: "/system/clientes", icon: <Clients />},
-    {label: "Estudios", href: "/system/estudios", icon: <Estudies />},
+    {label: "Registrar", href: "/system/registro-manual", icon: <Users />},
     {label: "Soporte", href: "/system/soporte", icon: <Support />},
   ],
   company: [
@@ -168,9 +168,7 @@ export default function Panel({children, pageTitle, pageIcon}: DashboardLayoutPr
                     href={item.href}
                   >
                     {item.icon}
-                    <span className="hidden text-lg md:block">
-                      {item.label}
-                    </span>
+                    <span className="hidden text-lg md:block">{item.label}</span>
                   </Link>
                 );
               })}

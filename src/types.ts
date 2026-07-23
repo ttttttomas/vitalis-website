@@ -62,6 +62,7 @@ export interface Studies {
 export interface UserProfessional {
   id?: string;
   professional_id: string;
+  user_id: string;
   email: string;
   name?: string;
   lastname?: string;

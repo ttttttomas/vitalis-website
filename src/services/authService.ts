@@ -23,6 +23,7 @@ interface LoginResponse {
 
 interface RegisterPatientFormData {
   first_name: string;
+  last_name: string;
   dni: string;
   date_of_birth: string;
   email: string;
@@ -74,6 +75,7 @@ export const authService = {
     const formData = new URLSearchParams();
 
     formData.append("first_name", userData.first_name);
+    formData.append("last_name", userData.last_name ?? "");
     formData.append("dni", userData.dni);
     formData.append("date_of_birth", userData.date_of_birth);
     formData.append("email", userData.email);

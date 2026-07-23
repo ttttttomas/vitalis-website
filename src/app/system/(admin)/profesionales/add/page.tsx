@@ -14,6 +14,7 @@ interface AddUserForm {
   speciality: string;
   first_name: string;
   last_name: string;
+  dni: string;
   rol: string;
   phone: string;
 }
@@ -66,6 +67,16 @@ export default function AddProfessionalPage() {
           placeholder="Ingresa el apellido"
           type="text"
           {...register("last_name")}
+        />
+        <label className="text-lg font-bold italic" htmlFor="dni">
+          DNI *
+        </label>
+        <input
+          required
+          className="rounded-lg border border-[#4A4A4A] bg-white px-5 py-1"
+          placeholder="Ingresa el DNI"
+          type="text"
+          {...register("dni")}
         />
         <label className="text-lg font-bold italic" htmlFor="email">
           Ingresa el correo electrónico *
