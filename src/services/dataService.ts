@@ -53,6 +53,15 @@ export const dataService = {
   },
 
   /**
+   * Eliminar usuario (admin) - borra en cascada professionals/patients/companies
+   */
+  async deleteUser(user_id: string): Promise<void> {
+    await apiClient.delete(`/admin/users/delete/${user_id}`, {
+      withCredentials: true,
+    });
+  },
+
+  /**
    * Obtener paciente por ID
    */
   async getPatientById(patient_id: string): Promise<UserPatient> {

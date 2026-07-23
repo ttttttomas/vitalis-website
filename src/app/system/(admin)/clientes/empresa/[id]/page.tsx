@@ -38,6 +38,7 @@ export default function EmpresaEmpleadosPage() {
   const [patients, setPatients] = useState<UserPatient[]>([]);
   const [company, setCompany] = useState<UserCompany | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,6 +81,16 @@ export default function EmpresaEmpleadosPage() {
 
   const title = company ? `Empleados de ${company.name}` : "Empleados de Empresa";
 
+  const filteredPatients = patients.filter((p) => {
+    const q = search.toLowerCase();
+    const full = `${p.first_name ?? ""} ${p.last_name ?? ""}`.toLowerCase();
+    return (
+      p.first_name?.toLowerCase().includes(q) ||
+      p.last_name?.toLowerCase().includes(q) ||
+      full.includes(q)
+    );
+  });
+
   return (
     <Panel pageIcon={<Clients />} pageTitle={title}>
       <div className="w-full">
@@ -92,6 +103,18 @@ export default function EmpresaEmpleadosPage() {
             <ArrowLeft />
             Volver
           </Link>
+        </div>
+
+        {/* Barra de búsqueda */}
+        <div className="mb-3">
+          <input
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black placeholder-gray-400 focus:border-blue-400 focus:outline-none"
+            id="empleados-search"
+            placeholder="Buscar empleado por nombre o apellido..."
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
         {/* Patients Table */}
@@ -112,7 +135,7 @@ export default function EmpresaEmpleadosPage() {
             </thead>
 
             <tbody>
-              {patients.map((row, idx) => (
+              {filteredPatients.map((row, idx) => (
                 <tr
                   key={idx}
                   className="text-md border-t border-[#4A4A4A] bg-[#333333] text-white"
@@ -148,10 +171,12 @@ export default function EmpresaEmpleadosPage() {
                 </tr>
               ))}
 
-              {patients.length === 0 && (
+              {filteredPatients.length === 0 && (
                 <tr className="border-t border-[#4A4A4A] bg-[#333333] text-white">
                   <td className="px-3 py-4 text-center" colSpan={9}>
-                    No hay empleados registrados para esta empresa.
+                    {search
+                      ? `No se encontraron empleados para "${search}".`
+                      : "No hay empleados registrados para esta empresa."}
                   </td>
                 </tr>
               )}

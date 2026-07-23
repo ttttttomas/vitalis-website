@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import {UserCompany, UserPatient} from "@/types";
 
-import {Clients, Lupa} from "@/components/ui/Icons";
+import {Clients} from "@/components/ui/Icons";
 import {dataService} from "@/services/dataService";
 
 import Panel from "../../components/Panel";
@@ -14,23 +14,39 @@ type Mode = "empresas" | "pacientes";
 const getStudyDetail = (studyType?: string) => {
   if (!studyType) return "Sin estudio asignado";
   const trimmed = studyType.trim().toLowerCase();
-  
+
   if (trimmed === "estudio1" || trimmed === "basico de ley" || trimmed === "básico de ley") {
     return "Básico de ley (Consentimiento informado + ECG + Radiografía de Tórax frente, Exámen Clínico)";
   }
-  if (trimmed === "estudio2" || trimmed === "básico + eeg + audiometría + psicotécnico + rx" || trimmed === "basico + eeg + audiometria + psicotecnico + rx") {
+  if (
+    trimmed === "estudio2" ||
+    trimmed === "básico + eeg + audiometría + psicotécnico + rx" ||
+    trimmed === "basico + eeg + audiometria + psicotecnico + rx"
+  ) {
     return "Básico de ley + EEG + Audiometria+ Psicotécnico + Radiografía de CLS frente y perfil";
   }
-  if (trimmed === "estudio3" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas") {
+  if (
+    trimmed === "estudio3" ||
+    trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas" ||
+    trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas"
+  ) {
     return "Básico de ley + EEG+ Audiometría+ Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con Benzodiacepinas y derivados";
   }
-  if (trimmed === "estudio4" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas (m/c)" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas (m/c)") {
+  if (
+    trimmed === "estudio4" ||
+    trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas (m/c)" ||
+    trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas (m/c)"
+  ) {
     return "Básico de ley + EEG + Audiometria + Psicotecnico + Radiografía de CLS y CC frente y perfil + Drogas de abuso (Marihuana y Cocaina)";
   }
-  if (trimmed === "estudio5" || trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas + test cereal + espiro" || trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas + test cereal + espiro") {
+  if (
+    trimmed === "estudio5" ||
+    trimmed === "básico + eeg + audiometría + psicotécnico + rx + drogas + test cereal + espiro" ||
+    trimmed === "basico + eeg + audiometria + psicotecnico + rx + drogas + test cereal + espiro"
+  ) {
     return "Básico de ley + EEG+ Audiometria + Psicotécnico + Radiografía de CLS frente y perfil + Drogas de abuso con benzodiacepinas y derivados+ Test del cereal + Espirometría";
   }
-  
+
   return studyType;
 };
 
@@ -40,6 +56,7 @@ export default function ClientesAdminPage() {
   const [patients, setPatients] = useState<UserPatient[]>([]);
   const [companies, setCompanies] = useState<UserCompany[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     const getPatients = async () => {
@@ -53,6 +70,30 @@ export default function ClientesAdminPage() {
 
     void getPatients();
   }, []);
+
+  // Reset search when switching tabs
+  const handleModeChange = (newMode: Mode) => {
+    setMode(newMode);
+    setSearch("");
+  };
+
+  const filteredCompanies = companies.filter((c) => {
+    const q = search.toLowerCase();
+    return (
+      c.name?.toLowerCase().includes(q) ||
+      c.responsable_name?.toLowerCase().includes(q)
+    );
+  });
+
+  const filteredPatients = patients.filter((p) => {
+    const q = search.toLowerCase();
+    const fullName = `${p.first_name ?? ""} ${p.last_name ?? ""}`.toLowerCase();
+    return (
+      p.first_name?.toLowerCase().includes(q) ||
+      p.last_name?.toLowerCase().includes(q) ||
+      fullName.includes(q)
+    );
+  });
 
   if (loading) {
     return (
@@ -72,17 +113,29 @@ export default function ClientesAdminPage() {
           <button
             className={`cursor-pointer py-2 transition-all ${isEmpresas ? "bg-[#3F5C3B] text-white" : "bg-green text-blackW"}`}
             type="button"
-            onClick={() => setMode("empresas")}
+            onClick={() => handleModeChange("empresas")}
           >
             Empresas
           </button>
           <button
             className={`cursor-pointer py-2 transition-all ${!isEmpresas ? "bg-[#3F5C3B] text-white" : "bg-[#A3DFA3] text-black"}`}
             type="button"
-            onClick={() => setMode("pacientes")}
+            onClick={() => handleModeChange("pacientes")}
           >
             Pacientes
           </button>
+        </div>
+
+        {/* Barra de búsqueda */}
+        <div className="my-3 px-1">
+          <input
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black placeholder-gray-400 focus:border-blue-400 focus:outline-none"
+            id="clientes-search"
+            placeholder={isEmpresas ? "Buscar por nombre de empresa o responsable..." : "Buscar por nombre o apellido..."}
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
         {/* Tabla */}
@@ -93,11 +146,10 @@ export default function ClientesAdminPage() {
                 <tr className="my-2 bg-[#3A3A3A] text-white">
                   <th className="px-3 py-2 text-left">Nombre empresa</th>
                   <th className="px-3 py-2 text-left">Nombre responsable</th>
-                  <th className="px-3 py-2 text-left">DNI/CUIT</th>
+                  <th className="px-3 py-2 text-left">CUIT</th>
                   <th className="px-3 py-2 text-left">Correo electrónico</th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
                   <th className="px-3 py-2 text-left">Empleados</th>
-                  {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
                 </tr>
               ) : (
                 <tr className="bg-[#3A3A3A] text-white">
@@ -107,7 +159,6 @@ export default function ClientesAdminPage() {
                   <th className="px-3 py-2 text-left">Fecha de nacimiento</th>
                   <th className="px-3 py-2 text-left">Teléfono</th>
                   <th className="px-3 py-2 text-left">Obra social</th>
-                  {/* <th className="px-3 py-2 text-left">Contraseña</th> */}
                   <th className="px-3 py-2 text-left">Resultados</th>
                   <th className="px-3 py-2 text-left">Ficha</th>
                   <th className="px-3 py-2 text-left">Tipo de estudio</th>
@@ -117,7 +168,7 @@ export default function ClientesAdminPage() {
 
             <tbody>
               {isEmpresas
-                ? companies.map((row, idx) => (
+                ? filteredCompanies.map((row, idx) => (
                     <tr key={idx} className="border-t border-[#4A4A4A] bg-[#333333] text-white">
                       <td className="px-3 py-2">{row.name}</td>
                       <td className="px-3 py-2">{row.responsable_name}</td>
@@ -132,10 +183,9 @@ export default function ClientesAdminPage() {
                           Ver
                         </Link>
                       </td>
-                      {/* <td className="px-3 py-2">{row.password}</td> */}
                     </tr>
                   ))
-                : patients.map((row, idx) => (
+                : filteredPatients.map((row, idx) => (
                     <tr
                       key={idx}
                       className="text-md border-t border-[#4A4A4A] bg-[#333333] text-white"
@@ -163,16 +213,28 @@ export default function ClientesAdminPage() {
                         </Link>
                       </td>
                       <td
-                        className="px-3 py-2 cursor-help underline decoration-dotted"
+                        className="cursor-help px-3 py-2 underline decoration-dotted"
                         title={getStudyDetail(row.study_type)}
                       >
                         {row.study_type ?? "-"}
                       </td>
                     </tr>
-                    // <div className="px-3 py-2 text-center">
-                    //   <button className="px-2 py-1 text-xs text-white">🗑</button>
-                    // </div>
                   ))}
+
+              {isEmpresas && filteredCompanies.length === 0 && (
+                <tr className="border-t border-[#4A4A4A] bg-[#333333] text-white">
+                  <td className="px-3 py-4 text-center" colSpan={6}>
+                    No se encontraron empresas{search ? ` para "${search}"` : ""}.
+                  </td>
+                </tr>
+              )}
+              {!isEmpresas && filteredPatients.length === 0 && (
+                <tr className="border-t border-[#4A4A4A] bg-[#333333] text-white">
+                  <td className="px-3 py-4 text-center" colSpan={9}>
+                    No se encontraron pacientes{search ? ` para "${search}"` : ""}.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
