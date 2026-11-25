@@ -111,8 +111,6 @@ const additionalSections: {
     fields: [
       ["medications", "Medicamentos"],
       ["medications_details", "Detalle de medicamentos"],
-      ["malformations", "Malformaciones"],
-      ["malformations_details", "Detalle de malformaciones"],
     ],
   },
   {
@@ -144,80 +142,19 @@ const additionalSections: {
     ],
   },
   {
-    section: "medical_record_neuro_clinical_exam",
-    title: "NEUROLÓGICO - STOP-BANG",
-    fields: [
-      ["stop_bang_snoring", "Ronquido"],
-      ["stop_bang_tiredness", "Cansancio"],
-      ["stop_bang_observed_apnea", "Apneas observadas"],
-      ["stop_bang_hypertension", "Hipertensión arterial"],
-      ["stop_bang_bmi_over_35", "IMC mayor de 35"],
-      ["stop_bang_age_over_50", "Edad mayor de 50 años"],
-      ["stop_bang_neck_circumference", "Circunferencia del cuello"],
-      ["stop_bang_male", "Sexo masculino"],
-    ],
-  },
-  {
-    section: "medical_record_neuro_clinical_exam",
-    title: "NEUROLÓGICO - TRASTORNO DEL SUEÑO",
-    fields: [
-      ["sleep_disorder_snoring", "Ronquido"],
-      ["sleep_disorder_smoking", "Tabaquismo"],
-      ["sleep_disorder_hta", "HTA"],
-      ["sleep_disorder_obesity", "Obesidad tipo II o más"],
-      ["sleep_disorder_short_neck", "Cuello corto"],
-      ["sleep_disorder_mallampati_3_4", "Mallampati (3 o 4)"],
-      ["sleep_disorder_stop_bang", "STOP-BANG positivo"],
-    ],
-  },
-  {
     section: "medical_record_ophthalmology",
     title: "OFTALMOLOGÍA - ANAMNESIS VISUAL",
     fields: [
-      [
-        "consulted_ophthalmologist",
-        "Consulta oftalmológica en los últimos 2 años",
-      ],
+      ["consulted_ophthalmologist", "Consulta oftalmológica en los últimos 2 años"],
       ["vision_disease", "Enfermedad de la vista"],
       ["vision_treatment", "Tratamiento de la vista"],
       ["vision_surgery", "Cirugía de la vista"],
-      ["vision_surgery_details", "Detalle y fecha de cirugía"],
       ["glasses_or_contacts", "Anteojos o lentes de contacto"],
       ["medications", "Medicamentos"],
-      ["medications_details", "Detalle de medicamentos"],
       ["monocular_vision", "Visión monocular"],
       ["anisometropia", "Anisometropía"],
-      ["night_vision", "Visión nocturna"],
-      ["twilight_vision", "Visión crepuscular"],
-      ["glare_readaptation", "Deslumbramiento (readaptación)"],
-      [
-        "ocular_movement_extrinsic",
-        "Movimientos oculares extrínsecos (estrabismo)",
-      ],
-      [
-        "ocular_movement_intrinsic",
-        "Movimientos oculares intrínsecos (anisocoria)",
-      ],
-    ],
-  },
-  {
-    section: "medical_record_ophthalmology",
-    title: "OFTALMOLOGÍA - EXAMEN",
-    fields: [
-      ["visual_field_od", "Campo visual OD"],
-      ["visual_field_oi", "Campo visual OI"],
-      ["bmc_conjunctivas", "BMC - Conjuntivas"],
-      ["bmc_cornea", "BMC - Córneas"],
-      ["bmc_lens", "BMC - Cristalino"],
-      ["ocular_tension_od", "Tensión ocular OD"],
-      ["ocular_tension_oi", "Tensión ocular OI"],
-      ["fundus_od", "Fondo de ojo OD"],
-      ["fundus_oi", "Fondo de ojo OI"],
-      ["fundus_dilation", "Dilatación"],
-      ["ishihara", "Ishi Hara"],
-      ["trcs", "T.R.C.S."],
-      ["farnsworth", "Farnsworth"],
-      ["head_neck", "Cabeza y cuello"],
+      ["ocular_movement_extrinsic", "Movimientos oculares extrínsecos (estrabismo)"],
+      ["ocular_movement_intrinsic", "Movimientos oculares intrínsecos (anisocoria)"],
     ],
   },
   {
@@ -647,7 +584,7 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
         {/* CONTACTOS LABORALES + CIRUGÍAS */}
         <View style={{flexDirection: "row", gap: 5, marginBottom: 5}}>
           <View style={[styles.tableContainer, {flex: 1, marginBottom: 0}]}>
-            <SectionHeader title="Estuvo alguna vez laboralmente en contacto con:" />
+            <SectionHeader title="Está laboralmente en contacto con:" />
             <View style={{padding: 3}}>
               <View style={{flexDirection: "row", marginBottom: 2}}>
                 <View style={styles.flex1} />
@@ -657,40 +594,31 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                 <Text style={{fontSize: 7, fontWeight: "bold", width: 15, textAlign: "center"}}>
                   NO
                 </Text>
-                <Text style={{fontSize: 7, fontWeight: "bold", width: 60, textAlign: "center"}}>
-                  FECHA APROX.
-                </Text>
               </View>
               {[
                 {
                   l: "Ambiente pulverulento?",
                   v: contacts?.dusty_environment,
-                  dt: contacts?.dusty_environment_date,
                 },
                 {
                   l: "Ambiente ruidoso?",
                   v: contacts?.noisy_environment,
-                  dt: contacts?.noisy_environment_date,
                 },
                 {
                   l: "Productos animales?",
                   v: contacts?.animal_products,
-                  dt: contacts?.animal_products_date,
                 },
                 {
                   l: "Productos químicos?",
                   v: contacts?.chemicals_products,
-                  dt: contacts?.chemicals_products_date,
                 },
                 {
                   l: "Radiaciones ionizantes?",
                   v: contacts?.ionizing_radiation,
-                  dt: contacts?.ionizing_radiation_date,
                 },
                 {
                   l: "Otros contaminantes?",
                   v: contacts?.other_contamination,
-                  dt: contacts?.other_contamination_date,
                 },
               ].map((item, i) => (
                 <View key={i} style={styles.itemRow}>
@@ -698,9 +626,6 @@ export const MedicalHistoryPDF: React.FC<MedicalHistoryPDFProps> = ({medicalReco
                   <Checkbox value={item.v === true} />
                   <View style={{width: 2}} />
                   <Checkbox value={item.v === false} />
-                  <Text style={{fontSize: 7, width: 60, textAlign: "center"}}>
-                    {formatDate(item.dt)}
-                  </Text>
                 </View>
               ))}
             </View>
