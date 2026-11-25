@@ -176,18 +176,6 @@ export const PersonalHistorySection = React.memo(({defaultValues, registerSectio
                 </div>
                 <input className="mt-2 w-full border border-gray-500 p-1" placeholder="¿Cuáles medicamentos?" {...register("medications_details")} />
               </div>
-              <div className="border-b border-gray-200 pb-3">
-                <div className="flex items-center">
-                  <p className="flex-1">Malformaciones</p>
-                  <Controller control={control} name="malformations" render={({field: {onChange, value}}) => (
-                    <div className="flex gap-3">
-                      <input aria-label="Malformaciones: sí" checked={value === true} className="h-6 w-6 cursor-pointer" type="radio" onChange={() => onChange(true)} />
-                      <input aria-label="Malformaciones: no" checked={value === false} className="h-6 w-6 cursor-pointer" type="radio" onChange={() => onChange(false)} />
-                    </div>
-                  )} />
-                </div>
-                <input className="mt-2 w-full border border-gray-500 p-1" placeholder="¿Cuáles malformaciones?" {...register("malformations_details")} />
-              </div>
             </div>
           </div>
         </div>
